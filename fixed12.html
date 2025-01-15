@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload and Send Base64 Image via Email.js</title>
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+</head>
+<body>
+  <h2>Upload and Send Image via Email.js</h2>
+  <p>Select an image file to upload:</p>
+  <input type="file" id="imageFile" />
+  <br /><br />
+  <button id="sendEmailButton" disabled>Send Email</button>
+
+  <script>
+    // Initialize Email.js with your public key
+    emailjs.init('U-DV3EV-FFOkjJsuF'); // Replace with your Email.js public key
+
+    // Disable the send button initially
+    document.getElementById('sendEmailButton').disabled = true;
+
+    // When a file is selected, read it as Base64
+    document.getElementById('imageFile').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+
+        // When the file is read as Base64
+        reader.onload = function(e) {
+          const base64Image = e.target.result;
+
+          // Enable the Send Email button after the file is converted
+          document.getElementById('sendEmailButton').disabled = false;
+
+          // Set up the email send function
+          document.getElementById('sendEmailButton').addEventListener('click', function () {
+            // Retrieve the recipient email from localStorage
+            const email = localStorage.getItem("userEmail");
+
+            if (!email) {
+              alert("No email address found in localStorage.");
+              return;
+            }
+
+            // Prepare template parameters with the Base64 image string
+            const templateParams = {
+              to_email: email,
+              from_name: 'Your Name',
+              message: 'Here is your image!',
+              otp_code: `<html>
+                          <body>
+                            <h2>Your Uploaded Image:</h2>
+                            <img src="${base64Image}" alt="Uploaded Image" style="max-width: 100%; display: block; margin: 0 auto;"/>
+                          </body>
+                        </html>`,
+            };
+
+            // Send email using Email.js
+            emailjs.send('service_7r47p64', 'template_19whrab', templateParams)
+              .then((response) => {
+                alert('Email sent successfully!');
+                console.log('SUCCESS!', response.status, response.text);
+              })
+              .catch((error) => {
+                alert('Failed to send email. Check console for errors.');
+                console.error('FAILED...', error);
+                if (error.text) {
+                  console.error('Error message:', error.text);
+                }
+              });
+          });
+        };
+
+        // Read the file as Base64
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
+</body>
+</html>

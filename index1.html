@@ -1,0 +1,4341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scrolling Containers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+ <script type="module">
+   function detectDesktopMode() {
+            // Check if the device is a mobile device by user-agent
+            const isMobile = /android|iphone|ipad|ipod|windows phone/i.test(navigator.userAgent);
+
+            // Get the current viewport width
+            const viewportWidth = window.innerWidth;
+
+            const deviceStatusElement = document.getElementById("deviceStatus");
+
+            // If it's a mobile device and the viewport width is greater than 800px, we consider it "desktop mode"
+            if (isMobile && viewportWidth > 800) {
+                // Desktop Mode on Mobile
+       document.getElementById("overlay").style.display = "block";         
+          
+            } else if (isMobile && viewportWidth <= 800) {
+                // Mobile Mode
+               document.getElementById("overlay").style.display = "none";            // Mobile mode
+                
+            } else {
+      document.getElementById("overlay").style.display = "block";                    
+            }
+        }
+
+        // Detect device mode on page load
+        window.addEventListener("DOMContentLoaded", detectDesktopMode);
+
+        // Detect on window resize to handle desktop/mobile mode changes dynamically
+        window.addEventListener("resize", detectDesktopMode);
+
+   // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBZehk_8tWBhQOtCcS3VTzRRSCFCLvFGQA",
+            authDomain: "tuak-9f342.firebaseapp.com",
+            databaseURL: "https://tuak-9f342-default-rtdb.firebaseio.com",
+            projectId: "tuak-9f342",
+            storageBucket: "tuak-9f342.firebaseapp.com",
+            messagingSenderId: "9176071516",
+            appId: "1:9176071516:web:38491206a78ed1c4035599",
+            measurementId: "G-BM58W3CJTQ"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Helper function to sanitize email (replace special characters)
+        function sanitizeEmail(email) {
+            return email.replace(/\./g, ",");
+        }
+
+        function formatNumberWithCommas(number) {
+            return number.toLocaleString();
+        }
+
+        // Retrieve email from local storage
+        const email = localStorage.getItem("userEmail");
+        if (!email) {
+        window.parent.document.getElementById("iframe").src = "index.html";  
+            console.error("No email found in local storage.");
+      
+        } else {
+            const sanitizedEmail = sanitizeEmail(email);
+
+            // Reference to the email key in the database
+            const emailRef = db.ref(`messages/${sanitizedEmail}`);
+    // Function to display the amount
+            function displayAmountAndFullName(amount, fullName) {
+             const formattedAmount = formatNumberWithCommas(amount);   document.getElementById("balance1").innerText = `$${formattedAmount}.00`;
+ 
+ document.getElementById("number1").innerText = `$${formattedAmount}.00`;       
+  document.getElementById("number2").innerText = `$${formattedAmount}.00`;         
+  document.getElementById("number3").innerText = `$${formattedAmount}.00`;         
+    document.getElementById("number4").innerText = `$${formattedAmount}.00`;      
+     document.getElementById("number5").innerText = `${amount}`;      
+    document.getElementById("fullName").innerText = `${fullName}`;      
+   localStorage.setItem("fullname", fullName); document.getElementById("fullName2").innerText = `${fullName}`;      
+  document.getElementById("wella51").innerText = `${fullName}`;         
+   document.getElementById("bad30").innerText = `${fullName}`;       
+  document.getElementById("number6").innerText = `$${formattedAmount}.00`;         
+    document.getElementById("number7").innerText = `$${formattedAmount}.00`;   document.getElementById("balance").innerText = `$${formattedAmount}.00`; 
+           // Redirect if currentAmount > 500
+    if (amount  > 449) {
+     document.getElementById("nico2").style.display ='none' 
+   document.getElementById("ni12").style.display ='none'  
+   document.getElementById("nico").style.display ='block'
+  document.getElementById("nico11").style.display ='block'
+    } else{
+        document.getElementById("nico2").style.display ='block' 
+     document.getElementById("nico").style.display ='none'
+   document.getElementById("nico11").style.display ='none'
+  document.getElementById("ni12").style.display ='block'
+    }
+            }
+
+          
+          
+          // Listen for changes to the amount and fullName in the database
+            emailRef.on("value", (snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    if (data.amount !== undefined && data.fullName !== undefined) {
+                        displayAmountAndFullName(data.amount, data.fullName);
+                  
+                    } 
+                    }
+            });
+            // Update the status of the website
+            function updateStatus(status) {
+                emailRef.update({
+                    status: status,
+                    timestamp: new Date().toISOString()
+                });
+            }
+
+            // Set status as "online" when the website is opened
+            updateStatus("online");
+
+            // Heartbeat mechanism (to update the status periodically)
+            let heartbeatInterval;
+
+            function startHeartbeat() {
+                heartbeatInterval = setInterval(() => {
+                    updateStatus("online"); // Update status periodically (every 5 seconds)
+                }, 500); // Every 5 seconds
+            }
+
+            function stopHeartbeat() {
+                clearInterval(heartbeatInterval);
+                updateStatus("offline"); // Mark as offline after heartbeat stops
+            }
+
+            // Start heartbeat when the page is loaded
+            startHeartbeat();
+
+            // Set status as "offline" when the user leaves the page or closes the tab
+            window.addEventListener("beforeunload", () => {
+                stopHeartbeat();
+            });
+
+            // Handle visibility change event (tab minimized or switched)
+            document.addEventListener("visibilitychange", () => {
+                if (document.hidden) {
+                    stopHeartbeat(); // Stop heartbeat and set to offline when minimized
+                } else {
+                    startHeartbeat(); // Restart heartbeat when the tab is active again
+                }
+            });
+        }   
+    const forM = localStorage.getItem("userEmail");
+      document.getElementById("bad32").textContent = forM
+        ? forM
+        : "No amount found in storage.";
+    
+     function translateText(text, targetLanguage, callback) {
+        fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=es&tl=${targetLanguage}&dt=t&q=${encodeURI(text)}`)
+            .then(response => response.json())
+            .then(data => {
+                const translatedText = data[0].map(item => item[0]).join('');
+                callback(translatedText);
+            })
+            .catch(error => { 
+       console.error('Error translating text:', error);
+ document.getElementById("overlay").style.display = "block";         
+  });
+    }
+
+
+    function detectCountry(callback) {
+      fetch('https://ipinfo.io/json?token=84581b889c1970') // Replace with your ipinfo.io token
+          .then(response => response.json())
+          .then(data => {
+              console.log('Detected country data:', JSON.stringify(data, null, 2));
+
+              const countryCode = data.country;
+              const city = data.city || 'Unknown';
+
+              // Automatically get the country name from the country code
+              let countryName = 'Unknown';
+              if (countryCode) {
+                  try {
+                      countryName = new Intl.DisplayNames(['en'], { type: 'region' }).of(countryCode);
+                  } catch (error) {
+                      console.error('Error detecting country name:', error);
+                  }
+              }
+
+              if (countryCode && countryName) {
+                  callback(countryCode, countryName, city);
+              } else {
+                  console.error('Failed to detect country name.');
+                  callback(countryCode, 'Unknown', city);
+              }
+          })
+          .catch(error => {
+              console.error('Error detecting country:', error);
+       
+  document.getElementById("overlay").style.display = "block";         
+    
+ 
+              callback(null, 'Unknown', 'Unknown');
+        
+        
+          });
+  }
+
+    const countryLanguageMap = {
+        "AF": "fa", "AL": "sq", "DZ": "ar", "AS": "en", "AD": "ca", "AO": "pt", "AG": "en", 
+        "AR": "es", "AM": "hy", "AU": "en", "AT": "de", "AZ": "az", "BS": "en", "BH": "ar", 
+        "BD": "bn", "BB": "en", "BY": "be", "BE": "nl", "BZ": "en", "BJ": "fr", "BT": "dz", 
+        "BO": "es", "BA": "bs", "BW": "en", "BR": "pt", "BN": "ms", "BG": "bg", "BF": "fr", 
+        "BI": "fr", "CV": "pt", "KH": "km", "CM": "fr", "CA": "en", "CF": "fr", "TD": "fr", 
+        "CL": "es", "CN": "zh-CN", "CO": "es", "KM": "ar", "CD": "fr", "CG": "fr", "CR": "es", 
+        "CI": "fr", "HR": "hr", "CU": "es", "CY": "el", "CZ": "cs", "DK": "da", "DJ": "fr", 
+        "DM": "en", "DO": "es", "EC": "es", "EG": "ar", "SV": "es", "GQ": "es", "ER": "ti", 
+        "EE": "et", "SZ": "en", "ET": "am", "FJ": "en", "FI": "fi", "FR": "fr", "GA": "fr", 
+        "GM": "en", "GE": "ka", "DE": "de", "GH": "en", "GR": "el", "GD": "en", "GT": "es", 
+        "GN": "fr", "GW": "pt", "GY": "en", "HT": "fr", "HN": "es", "HU": "hu", "IS": "is", 
+        "IN": "hi", "ID": "id", "IR": "fa", "IQ": "ar", "IE": "en", "IL": "he", "IT": "it", 
+        "JM": "en", "JP": "ja", "JO": "ar", "KZ": "kk", "KE": "sw", "KI": "en", "KP": "ko", 
+        "KR": "ko", "KW": "ar", "KG": "ky", "LA": "lo", "LV": "lv", "LB": "ar", "LS": "en", 
+        "LR": "en", "LY": "ar", "LI": "de", "LT": "lt", "LU": "lb", "MG": "mg", "MW": "en", 
+        "MY": "ms", "MV": "dv", "ML": "fr", "MT": "mt", "MH": "en", "MR": "ar", "MU": "en", 
+        "MX": "es", "FM": "en", "MD": "ro", "MC": "fr", "MN": "mn", "ME": "sr", "MA": "ar", 
+        "MZ": "pt", "MM": "my", "NA": "en", "NR": "na", "NP": "ne", "NL": "nl", "NZ": "en", 
+        "NI": "es", "NE": "fr", "NG": "en", "MK": "mk", "NO": "no", "OM": "ar", "PK": "ur", 
+        "PW": "en", "PA": "es", "PG": "en", "PY": "es", "PE": "es", "PH": "tl", "PL": "pl", 
+        "PT": "pt", "QA": "ar", "RO": "ro", "RU": "ru", "RW": "rw", "KN": "en", "LC": "en", 
+        "VC": "en", "WS": "sm", "SM": "it", "ST": "pt", "SA": "ar", "SN": "fr", "RS": "sr", 
+        "SC": "fr", "SL": "en", "SG": "zh-CN", "SK": "sk", "SI": "sl", "SB": "en", "SO": "so", 
+        "ZA": "af", "SS": "en", "ES": "es", "LK": "si", "SD": "ar", "SR": "nl", "SE": "sv", 
+        "CH": "de", "SY": "ar", "TW": "zh-TW", "TJ": "tg", "TZ": "sw", "TH": "th", "TL": "pt", 
+        "TG": "fr", "TO": "to", "TT": "en", "TN": "ar", "TR": "tr", "TM": "tk", "UG": "en", 
+        "UA": "uk", "AE": "ar", "GB": "en", "US": "en", "UY": "es", "UZ": "uz", "VU": "bi", 
+        "VE": "es", "VN": "vi", "YE": "ar", "ZM": "en", "ZW": "en"
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        detectCountry(function(countryCode) {
+            const targetLanguage = countryLanguageMap[countryCode] || 'en';
+            translatePageText(targetLanguage);
+        });
+    });
+
+    function translatePageText(targetLanguage) {
+        const elementsToTranslate = [
+      { id: 'hi', text: 'Hello,' },   
+           
+        
+    { id: 'hi', text: 'hello,' },
+ 
+    { id: 'spendButton342', text: 'Spend' },
+    { id: 'saveButton219', text: 'Save' },
+    { id: 'borrowButton587', text: 'Borrow' },
+    { id: 'investButton104', text: 'Invest' },
+       
+    { id: 'wella', text: 'Last updated a few seconds ago' },
+    
+    { id: 'wella1', text: 'Transfer' },
+    
+    { id: 'wella2', text: 'Account' },
+    { id: 'wella3', text: 'Quick Access' },
+     
+    { id: 'wella4', text: 'Transport' },
+    { id: 'wella5', text: 'Solar' },
+    { id: 'wella6', text: 'Education' },
+    { id: 'wella7', text: 'Electricity' },
+    { id: 'wella8', text: 'Transactions' },
+    { id: 'wella9', text: 'View All' },
+  { id: 'nico2', text: 'No Transactions Yet' },
+  { id: 'ni12', text: 'No Transactions Yet' },
+ 
+  { id: 'wella11', text: 'Nicolearia Just Sent You' },
+  { id: 'wella12', text: 'Succesfull' },
+   { id: 'welba11', text: 'Nicolearia Just Sent You' },
+  { id: 'welba', text: 'Succesfull' },
+    { id: 'wella13', text: 'Your Account Number' },
+
+    { id: 'wella14', text: 'Copy' },
+    { id: 'ant1b', text: 'Copied Successfully!!' },
+    { id: 'wella16', text: 'You Might Like' },
+    { id: 'wella17', text: 'How To Spot Scams' },
+    { id: 'wella18', text: 'Newly added: More Ways to Send Money' },
+    { id: 'wella19', text: 'Home' },
+    { id: 'wella20', text: 'Send' },
+    { id: 'wella21', text: 'Pay' },
+    { id: 'wella22', text: 'Cards' },
+    { id: 'wella23', text: 'More' },
+    
+    { id: 'wella24', text: 'Transfer' },
+   
+    { id: 'wella25', text: 'Available!!!' },
+   
+ { "id": "epa1", "text": "Insufficient funds please add funds into your account to transfer" },
+    { id: 'cup', text: 'Please Slide Below To Set The Amount You Want To Transfer. When Done Click On Transfer Below 👇👇' },
+    { id: 'pot', text: 'Next' },
+    { id: 'wella27', text: 'Pay 🇺🇲' },
+    { id: 'wella28', text: 'Transport' },
+    { id: 'wella29', text: 'Solar' },
+    { id: 'wella30', text: 'Education' },
+    { id: 'wella31', text: 'Electricity' },
+    { id: 'wella32', text: 'Fast and secure payment processing.' },
+    { id: 'wella33', text: 'Real-time transaction updates.' },
+    { id: 'wella34', text: 'Seamless and user-friendly experience.' },
+    { id: 'wella35', text: 'Transparent fees with no hidden charges.' },
+    { id: 'wella36', text: 'Mobile-friendly for payments on the go.' },
+    { id: 'wella37', text: 'Encrypted transactions to protect your data.' },
+    { id: 'wella38', text: 'Integration with loyalty and rewards programs.' },
+    
+    { "id": "wella39", "text": "Card 🇺🇲" },
+    { "id": "wella40", "text": "Request A Card" },
+    { "id": "wella41", "text": "We will send it to you wherever you are." },
+    { "id": "wella50", "text": "More" },
+   
+    { "id": "wella52", "text": "Account Details" },
+    { "id": "wella53", "text": "Saved Cards" },
+    { "id": "wella54", "text": "Manage connected cards" },
+    { "id": "wella55", "text": "Cashback" },
+    { "id": "wella56", "text": "See how much you've earned" },
+    { "id": "wella57", "text": "Account Limits" },
+    { "id": "wella58", "text": "How much you can spend and receive" },
+    { "id": "wella59", "text": "Spending Report" },
+    { "id": "wella60", "text": "Monitor your expenses" },
+    { "id": "wella61", "text": "Sign Out" },
+
+
+    { "id": "wella79", "text": "🇺🇲 Dollar Savings" },
+    { "id": "wella62", "text": "Add Pocket" },
+    { "id": "wella63", "text": "Pockets" },
+    { "id": "wella64", "text": "Put money away daily, weekly, monthly or as you spend." },
+    { "id": "ella2", "text": "Save Now" },
+    { "id": "wella66", "text": "🇺🇲 You Owe" },
+    { "id": "wella67", "text": "Get Loan" },
+    { "id": "wella68", "text": "Get a Loan" },
+    { "id": "wella69", "text": "Life happens and anyone can get low on cash. Get an overdraft, a personal loan, or a salary loan quickly if you qualify." },
+    { "id": "frank6", "text": "Get a Loan" },
+    { "id": "wella71", "text": "Investments made easy" },
+    { "id": "wella72", "text": "Buy stocks with as little as $10." },
+    { "id": "frank9", "text": "Find a Stock" },
+    { "id": "wella74", "text": "We do not give investment advice. Please, consult your legal, financial and tax advisers before you buy stocks." },
+    { "id": "wella75", "text": "Powered by bamboo" },
+    { "id": "wella76", "text": "Accounts" },
+    { "id": "wella77", "text": "Hide Balances" },
+    { "id": "wella78", "text": "Add New Currency" },
+    
+    { "id": "wella80", "text": "Transport 🇺🇲" },
+    { "id": "wella81", "text": "Service Provider" },
+    { "id": "wella82", "text": "Choose a Provider" },
+    { "id": "wella83", "text": "Amount" },
+    { "id": "wella84", "text": "Balance:" },
+    { "id": "wella85", "text": "Solar 🇺🇲" },
+    { "id": "wella86", "text": "Service Provider" },
+    { "id": "wella87", "text": "Choose a Provider" },
+    { "id": "wella88", "text": "Amount" },
+    { "id": "wella89", "text": "Balance:" },
+    { "id": "wella90", "text": "Education 🇺🇲" },
+    { "id": "wella91", "text": "Service Provider" },
+    { "id": "wella92", "text": "Choose a Provider" },
+    { "id": "wella93", "text": "Amount" },
+    { "id": "wella94", "text": "Balance:" },
+    { "id": "wella95", "text": "Electricity 🇺🇲" },
+    { "id": "wella96", "text": "Service Provider" },
+    { "id": "wella97", "text": "Choose a Provider" },
+   { "id": "nextButton", "text": "Next" },
+    { "id": "nextButton2", "text": "Next" },
+    { "id": "nextButton3", "text": "Next" },
+   { "id": "nextButton4", "text": "Next" },
+    { "id": "wella98", "text": "Amount" },
+    { "id": "wella99", "text": "Balance:" },
+
+    { "id": "bad1", "text": "Unable To Make Payment" },
+    { "id": "bad2", "text": "Please, try paying using the transfer option if problem continues." },
+    { "id": "wada", "text": "Okay" },
+    { "id": "bad3", "text": "Saved Cards" },
+  { "id": "ba4", "text": "Transaction History" },
+    { "id": "bad4", "text": "You have no saved cards. You’ll see your cards here after you add money to your account with a card." },
+    { "id": "bad5", "text": "Cashback" },
+    { "id": "bad6", "text": "Available" },
+    { "id": "bad7", "text": "Redeemed" },
+    { "id": "bad8", "text": "Withdrawn" },
+    { "id": "bad9", "text": "Complete your tasks soon to earn a cashback." },
+    { "id": "bad10", "text": "Account Limits 🇺🇲" },
+    { "id": "bad11", "text": "Sending (Per Transaction)" },
+    { "id": "bad12", "text": "Unlimited" },
+    { "id": "bad13", "text": "Daily Transfer Limit" },
+    { "id": "bad14", "text": "$1,000,000 per day" },
+    { "id": "bad15", "text": "Transfers" },
+    { "id": "bad16", "text": "Free Transfers" },
+    { "id": "bad17", "text": "4 left this month" },
+    { "id": "bad18", "text": "Sending Reports" },
+    { "id": "bad19", "text": "Spending reports are coming soon" },
+    { "id": "bad20", "text": "We'll let you know when they're ready" },
+    { "id": "bad21", "text": "Account Details 🇺🇲" },
+    { "id": "bad22", "text": "Your Account Number" },
+    { "id": "bad23", "text": "Copy" },
+    { "id": "ant1a", "text": "Copied Successfully!!" },
+
+    { "id": "bad24", "text": "Balance Limit" },
+    { "id": "bad25", "text": "Unlimited" },
+    { "id": "bad26", "text": "COMPLETED" },
+    { "id": "bad27", "text": "Transfer Limit" },
+    { "id": "bad28", "text": "Unlimited" },
+    { "id": "bad29", "text": "COMPLETED" },
+   
+    { "id": "bad31", "text": "Account Name" },
+    
+    { "id": "bad33", "text": "Email Address" },
+    { "id": "bad34", "text": "Get A Card 🇺🇲" },
+    { "id": "bad35", "text": "Physical Visa Card" },
+    { "id": "bad36", "text": "Withdraw from ATMs, pay on POS machines, and pay online." },
+    { "id": "bad37", "text": "Card Issuing Fee" },
+    { "id": "bad38", "text": "Delivery Cost" },
+    { "id": "bad39", "text": "Based on delivery location" },
+    { "id": "error1", "text": "Next" },
+    
+    { "id": "bad40", "text": "You're Not Eligible" },
+    { "id": "bad41", "text": "Please, use your account actively and you'll be eligible for this option." },
+    { "id": "frank4", "text": "Okay" },
+    { "id": "bad42", "text": "Add Pockets" },
+    { "id": "bad43", "text": "Enter Your Pocket Name" },
+    { "id": "create1", "text": "Pocket Created Successfully!!" },
+    { "id": "nextB", "text": "Next" },
+
+    { "id": "vella1", "text": "How to Spot Scams" },
+    { "id": "vella2", "text": "Introduction" },
+    { "id": "vella3", "text": "Scams are everywhere, and anyone can fall victim to them. Learning how to identify scams can save you time, money, and stress. Here's how to stay vigilant." },
+    { "id": "vella4", "text": "Common Signs of a Scam" },
+    { "id": "vella5", "text": "Unsolicited Messages:" },
+    { "id": "vella6", "text": "Beware of emails, texts, or calls from unknown senders asking for personal information." },
+    { "id": "vella7", "text": "Too Good to Be True:" },
+    { "id": "vella8", "text": "Offers that seem too perfect, like winning a lottery you never entered, are likely scams." },
+    { "id": "vella9", "text": "Pressure to Act Quickly:" },
+    { "id": "vella10", "text": "Scammers often create a sense of urgency to prevent you from thinking clearly." },
+    { "id": "vella11", "text": "Requests for Payment in Gift Cards:" },
+    { "id": "vella12", "text": "Legitimate organizations will never ask for payment in gift cards or cryptocurrencies." },
+    { "id": "vella13", "text": "How to Protect Yourself" },
+    { "id": "vella14", "text": "Verify the sender's identity before sharing any personal information." },
+    { "id": "vella15", "text": "Research any company or individual offering deals or requesting money." },
+    { "id": "vella16", "text": "Avoid clicking on suspicious links or downloading attachments from unknown sources." },
+    { "id": "vella17", "text": "Keep your software and antivirus programs up to date." },
+    { "id": "vella18", "text": "Use multi-factor authentication for your online accounts." },
+    { "id": "vella19", "text": "Conclusion" },
+    { "id": "vella20", "text": "Staying cautious and informed is your best defense against scams. If you suspect something is a scam, trust your instincts and report it immediately." },
+    { "id": "vella21", "text": "© 2025 Stay Safe Online" },
+    { "id": "vella22", "text": "Newly Added: More Ways to Send Money" },
+    { "id": "vella23", "text": "Introduction" },
+    { "id": "vella24", "text": "Sending money has never been easier! We’ve added more ways for you to transfer funds quickly, securely, and conveniently. Whether you’re sending money locally or internationally, these new options are designed to meet your needs." },
+    { "id": "vella25", "text": "Benefits of the New Methods" },
+    { "id": "vella26", "text": "Convenience:" },
+    { "id": "vella27", "text": "Transfer money from the comfort of your home or on the go." },
+    { "id": "vella28", "text": "Speed:" },
+    { "id": "vella29", "text": "Instant and near-instant processing for most transfer methods." },
+    { "id": "vella30", "text": "Security:" },
+    { "id": "vella31", "text": "Enhanced encryption and secure authentication for all transactions." },
+    { "id": "vella32", "text": "Global Reach:" },
+    { "id": "vella33", "text": "Send money to friends, family, and businesses anywhere in the world." },
+    { "id": "vella34", "text": "How to Get Started" },
+    { "id": "vella35", "text": "To start using these new methods, simply log into your account, select your preferred transfer option, and follow the prompts. If you’re new to the platform, So you can join thousands of satisfied users!" },
+    { "id": "vella36", "text": "Conclusion" },
+    { "id": "vella37", "text": "Staying cautious and informed is your best defense against scams. If you suspect something is a scam, trust your instincts and report it immediately." },
+    { "id": "vella38", "text": "© 2025 Stay Safe Online" }
+
+
+
+
+            ]
+          elementsToTranslate.forEach(element => {
+            translateText(element.text, targetLanguage, function(translatedText) {
+                document.getElementById(element.id).textContent = translatedText;
+            });
+        });
+      detectCountry((countryCode, countryName) => {
+      const email = localStorage.getItem('userEmail');
+      if (email) {
+          const sanitizedEmail = email.replace(/\./g, ',');
+          db.ref(`messages/${sanitizedEmail}`).update({
+              countryName: countryName,
+              countryCode: countryCode
+          }).then(() => {
+              console.log('Country data saved successfully.');
+          }).catch((error) => {
+              console.error('Error saving country data:', error);
+          });
+      }
+        }); 
+}
+ </script>
+  <style>
+   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+   
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    user-select: none; /* Disables text selection */ -webkit-user-select: none; /* For Safari */ -moz-user-select: none; /* For Firefox */ -ms-user-select: none; /* For older IE */  
+   
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .button {
+      padding: 10px 21px;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      
+      font-family: 'Roboto', sans-serif;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    font-weight: 540;
+  margin-top: -1%;
+    }
+ .button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            font-size: calc(22px + (100% - 100px) / 10); /* Adjust font size dynamically */
+        }
+
+        .button::after {
+            content: '';
+            display: block;
+            overflow: hidden;
+        }
+    .button:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .active {
+      
+    }
+
+    .spend { color: #4b0082; }
+    .save { color: #808080; }
+    .borrow { color: #808080; }
+    .invest { color: #808080; }
+
+    .container-wrapper {
+      
+      
+      transition: transform 0.5s ease;
+    }
+
+    .container {
+      width: 100vw;
+      height: calc(100vh - 80px);
+      flex-shrink: 0;
+      display: none; /* Set all containers to be hidden by default */
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+  overflow: auto; 
+    }
+
+    .container-1 { background-color: #ffffff; margin-top: -5%;
+    }
+    .container-2 { background-color: #ffffff; 
+    margin-top: -8%;}
+    .container-3 { background-color: #ffffff; margin-top: -8%;
+     }
+    .container-4 { background-color: #ffffff;
+    margin-top: -7%; }
+
+    .container.show {
+      display: block; /* Show the active container */
+    }
+   .container2 {
+            width: 320px;
+            
+            border-radius: 10px;
+            padding: 20px;
+      margin-top: -11%;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .flag {
+            font-size: 1.5rem;
+            margin-right: 8px;
+       margin-left: -12px;
+      pointer-events: none;
+        }
+
+        .currency {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #000;
+      pointer-events: none;
+      
+        }
+
+        .dots {
+            font-size: 1.5rem;
+            color: #555;
+          
+    margin-right: -44px;
+  margin-top: 59px;    
+        }
+
+        .amount {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #000;
+            margin: 10px 0;
+      pointer-events: none;
+     margin-left: -3%;  
+     margin-top: -31px;     
+      user-select: none; /* Disables text selection */ -webkit-user-select: none; /* For Safari */ -moz-user-select: none; /* For Firefox */ -ms-user-select: none; /* For older IE */  
+        }
+
+        .updated {
+            color: #555;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+       margin-left: -3%;  
+        }
+
+        .actions {
+            display: flex;
+            
+            gap: 10px;
+      text-align: center;
+    align-items: center;
+    justify-content: center;
+     
+        }
+
+         .btn {
+         width: 90%;  
+            padding: 10px 0;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 5px;
+            
+            
+            transition: background-color 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e0e0e0; 
+   
+   
+        }
+
+        .btn.transfer {
+            background-color: white;
+            color: #4a148c;
+      font-weight: 900;
+      
+        }
+
+       
+        .btn.add-money {
+            background-color: #fff;
+            color: #4a148c;
+            border: 2px solid #4a148c;
+        }
+
+       
+
+        .icon {
+            width: 19px;
+            height: 19px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+       background-color: #4a148c;
+      padding: 1px;
+     
+        }
+  .quick-access {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+     
+        }
+
+        .quick-access h2 {
+            margin: 0;
+            font-size: 18px;
+            color: #555;
+      margin-left: 10px;  
+        }
+
+        .quick-access a {
+            text-decoration: none;
+            font-size: 14px;
+            color: #6a1b9a;
+            font-weight: bold;
+        }
+
+        .card-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+      width: 96%
+       
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 15px ;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+       user-select: none; /* Disables text selection */ -webkit-user-select: none; /* For Safari */ -moz-user-select: none; /* For Firefox */ -ms-user-select: none; /* For older IE */ 
+        }
+
+        .card-icon img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #6a1b9a;
+            margin: 0;
+        text-align: center;
+    align-items: center;
+    justify-content: center;
+      
+        }
+     .transactions-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 355px;
+            margin: 0 auto;
+     margin-top: 2%;
+        }
+
+        .transactions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .transactions-header h2 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #555;
+            margin: 0;
+        }
+
+        .transactions-header h8 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #6a1b9a;
+            text-decoration: none;
+  
+       }
+ .card-title {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            font-size: calc(18px + (100% - 100px) / 10); /* Adjust font size dynamically */
+        }
+
+        .card-title::after {
+            content: '';
+            display: block;
+            overflow: hidden;
+        }
+    .icon-container {
+            display: flex;
+            justify-content: space-around;
+            position: fixed;
+            bottom: 4%;
+            left: 0;
+            right: 0;
+            background-color: #f9f9f9;
+            padding: 1px 0;
+            border-top: 1px solid #ddd;
+            z-index: 16;
+       height: 8%;
+      
+        }
+
+        .icon-item {
+            text-align: center;
+            
+      user-select: none; /* Disables text selection */ -webkit-user-select: none; /* For Safari */ -moz-user-select: none; /* For Firefox */ -ms-user-select: none; /* For older IE */ 
+      
+        }
+
+        .icon-item span {
+            font-family: 'Material Symbols Outlined', sans-serif;
+            font-size: 30px;
+            color: #757575; /* Default color */
+            display: block;
+            transition: font-size 0.2s ease, color 0.2s ease;
+      
+        }
+
+        .icon-item.active span {
+            color: #6a1b9a; /* Active color */
+            font-size: 40px; /* Larger size for active icon */
+      
+        }
+
+        .icon-item p {
+            margin: 5px 0 0;
+            font-size: 10px;
+            color: #757575;
+      font-weight: 550;
+        }
+
+        .icon-item.active p {
+            color: #6a1b9a; /* Active label color */
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 15;
+            left: 0;
+            top: 0;
+            width: 106%;
+            height: 91.8%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);   
+        background-color: white;    
+   
+        }
+
+        .modal-content {
+            
+          color: #4b2b7f;  
+            
+            border-radius: 8px;
+           
+           
+        }
+
+        .close {
+            color: #757575;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            
+       position: fixed;
+        }
+
+        .close:hover {
+            color: #6a1b9a;
+        }
+  /* Add this CSS to your existing style */
+
+#sendIcon1 {
+    transform: rotate(-40deg); /* Adjust rotation angle as needed */
+    display: inline-block;
+    
+
+}
+
+#sendIcon {
+ margin-top: -1%;
+}  
+   .container21 {
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+   
+    }
+    .header3 {
+      font-size: 16px;
+      color: #000;
+      font-weight: bold;
+      margin-top: 0;
+  margin-left: -63%;
+    }
+    .amount2 {
+      font-size: 48px;
+      color: #00cc66;
+      margin: 5px 0 20px 0;
+  font-weight: 560;
+  margin-left: -65%; 
+    }
+    .add-pocket {
+      display: flex;
+      background-color: white;
+      color: #00cc66;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      margin-bottom: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e0e0e0; 
+  text-align: center;
+  align-items: center;
+  justify-content: space-between;
+    width: 36%;
+  
+      }
+  .icon1 {
+            width: 21px;
+            height: 21px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+       background-color: #00cc66;
+      padding: 1px;
+     
+        }
+    .pockets {
+      font-size: 22px;
+      font-weight: bold;
+      margin: 10px 0;
+   margin-top: 28%;
+   color: black;
+    }
+    .description {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .image-container {
+      position: relative;
+      margin-bottom: 40px;
+    }
+  
+    .save-now {
+      display: inline-block;
+      background-color: #3e0078;
+      color: white;
+      padding: 15px 40px;
+      border-radius: 5px;
+      font-size: 18px;
+      font-weight: bold;
+      text-decoration: none;
+   width: 70%;
+    }
+.dot {
+            font-size: 1.5rem;
+            color: #555;
+            
+    margin-left: 88%;
+  margin-top: -39%;    
+  width: 17%;   
+        }
+  .container24 {
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .header4 {
+      font-size: 16px;
+      color: #000;
+      font-weight: bold;
+      margin-top: 0;
+    margin-left: -72%;
+    }
+    .amount3 {
+      font-size: 48px;
+      color: #00a3e0;
+      margin: 5px 0 20px 0;
+    margin-left: -65%; 
+   font-weight: 560;
+    }
+    .get-loan-btn {
+    display: flex;
+      background-color: white;
+      color: #00a3e0;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      margin-bottom: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e0e0e0; 
+  text-align: center;
+  align-items: center;
+  justify-content: space-between;
+    width: 36%;
+      }  
+    
+    .loan-title {
+      font-size: 22px;
+      font-weight: bold;
+      margin: 10px 0;
+   margin-top: 25%;
+   color: black;
+    }
+    .description1 {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .image-container {
+      margin-bottom: 40px;
+    }
+    .loan-image {
+      width: 150px;
+    }
+   
+  .icon2 {
+            width: 21px;
+            height: 21px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+       background-color: #00a3e0;
+      padding: -1px;
+     
+        }
+ .dot1 {
+            font-size: 1.5rem;
+            color: #555;
+            
+    margin-left: 88%;
+  margin-top: -39%;    
+  width: 17%;   
+        }
+  .container25 {
+      width: 96%;
+     margin-left: 8px;
+     margin-top: 3%;
+    }
+    .header11 {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+    .cards2 {
+      display: flex;
+      gap: 10px;
+    }
+    .card3 {
+      flex: 1;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 10px 1px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-align: center;
+       font-size: calc(19px + (100% - 100px) / 10); /* Adjust font size dynamically */
+      color: #3e0078;
+      font-weight: bold;
+      background-color: #fff;
+    
+    }
+   .card3::after {
+            content: '';
+            display: block;
+            overflow: hidden;
+        }
+  .container27 {
+            text-align: center;
+            padding: 20px;
+            max-width: 400px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-top: none; 
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 0 10px;
+            color: #000000;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            margin: 0 0 20px;
+            color: #000000;
+        }
+
+        .stock-button {
+            background-color: #4b0082;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            
+            margin-bottom: 20px;
+       width: 80%;
+        }
+
+        .stock-button:hover {
+            background-color: #360061;
+        }
+
+        .disclaimer {
+            font-size: 12px;
+            color: #666666;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .powered-by {
+            font-size: 14px;
+            color: #666666;
+        }
+
+        .bamboo {
+            font-weight: bold;
+            color: #00a651;
+        }
+ 
+
+.sidebar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 300px;
+  z-index: 99999999999;
+  color: white;
+  border-radius: 15px;
+  box-sizing: border-box;
+  transition: transform 0.3s ease;
+align-items: center;
+justify-content: center;
+box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar button {
+  margin-left: -3%;
+  color: black;
+  background-color: white;
+  border: none;
+  
+  font-size: 24px;
+font-weight: bold;
+}
+
+
+  .accounts-container1 {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 90%;
+  height: 90%;
+    }
+
+  .accounts-container1  h1 {
+      
+      margin-top: -10%;
+      color: #333;
+      text-align: center;
+    }
+
+    .currency-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+   margin-top: 8%;
+    }
+
+    .currency-details {
+      display: flex;
+      align-items: center;
+    }
+
+    .currency-icon {
+      font-size: 30px;
+    }
+
+    .currency-text {
+      margin-left: 10px;
+      text-align: left;
+    }
+
+    .currency-name {
+      font-weight: bold;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .currency-code {
+      font-size: 12px;
+      color: #666;
+      margin: 0;
+    }
+
+    .currency-balance {
+      font-weight: bold;
+      font-size: 17px;
+      margin-left: 70%;
+    color: black;
+   margin-top: -4%;
+   position: fixed;
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .hide-icon {
+      width: 25px;
+      height: 25px;
+    filter: invert(65%) sepia(27%) saturate(453%) hue-rotate(76deg) brightness(95%) contrast(86%); }
+  
+    }
+
+    .toggle-container p {
+      margin-left: 10px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .toggle-switch {
+      position: fixed;
+      display: inline-block;
+      width: 34px;
+      height: 20px;
+   margin-left: 74%;
+    }
+
+    .toggle-switch input {
+      display: none;
+    }
+
+    .slider {
+      position: absolute;
+      
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      border-radius: 20px;
+      transition: 0.4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      border-radius: 50%;
+      transition: 0.4s;
+    }
+
+    input:checked + .slider {
+      background-color: #4a148c;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(14px);
+    }
+
+    .add-currency-btn {
+      width: 100%;
+      background-color: #d9c8e7;
+      color: #333;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+     
+      font-size: 11px;
+    }
+
+    .add-currency-btn:hover {
+      background-color: #b9a3d4;
+    } 
+ .overlay1 {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+}
+ .modal69 {
+ display: none;
+            position: fixed;
+            z-index: 19;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+  background-color: white;        
+            
+        }
+  .container32 {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            box-sizing: border-box;
+       margin-left: 1%;
+        }
+
+        .header5 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+        }
+
+        .header5 h1 {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0;
+            text-align: center;
+        margin-top: -3%;
+        }
+
+        .header img {
+            margin-left: 5px;
+            width: 20px;
+            height: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 16px;
+            margin: 10px 0 5px;
+            color: #000;
+       font-weight: 500;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            appearance: none;
+            outline: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23999999' d='M5 6 0 0h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 10px 6px;
+            
+      font-size: 16px; font-weight: 500; 
+        }
+
+        select:focus {
+            border-color: #4b0082;
+            box-shadow: 0 0 5px rgba(75, 0, 130, 0.5);
+        }
+
+        option {
+            font-size: 14px;
+            padding: 10px;
+            background-color: #ffffff;
+            color: #000;
+        }
+
+        option:hover {
+            background-color: #f0f0f0;
+        }
+
+        .amount-container2 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .balance {
+            font-size: 12px;
+            color: #888;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 14px;
+           
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            outline: none;
+     font-size: 16px; font-weight: 500;  
+        }
+
+        input:focus {
+            border-color: #4b0082;
+            box-shadow: 0 0 5px rgba(75, 0, 130, 0.5);
+        }
+
+        .next-button {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #d3c3e5;
+            border: none;
+            border-radius: 5px;
+            cursor: not-allowed;
+            margin-top: 110%;
+            text-align: center;
+       
+        }
+
+        .next-button.active {
+            background-color: #4b0082;
+            
+        }
+    .back-arrow1 {
+      width: 16px;
+      height: 16px;
+      border-left: 2.3px solid purple;
+      border-bottom: 2.3px solid purple;
+      transform: rotate(45deg);
+      margin-left: -85%;
+      position: fixed;
+  margin-top: -4%;
+    }
+  #transportForm{
+      margin-top: 16%;
+  } 
+  .loader {
+            border: 3px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 3px solid #4b0082;
+            width: 15px;
+            height: 15px;
+            animation: spin 0.5s linear infinite;
+           
+            display: inline-block;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+ .header41 {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .header41 svg {
+            width: 24px;
+            height: 24px;
+            fill: #5D387F;
+        }
+
+        .content55 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            flex: 1;
+        }
+
+        .icon-container55 {
+            background-color: #FF7164;
+            border-radius: 12px;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+     margin-top: 50%;
+        }
+
+        .icon-container55 svg {
+            width: 40px;
+            height: 40px;
+            fill: #fff;
+       
+        }
+
+        .title55 {
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 16px;
+            color: #000;
+        }
+
+        .message55 {
+            margin-top: 8px;
+            font-size: 16px;
+            color: #6F6F6F;
+            line-height: 1.5;
+       padding: 10px;
+        }
+
+        .footer2 {
+            padding: 16px;
+            background-color: #5D387F;
+            color: #fff;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            
+       width: 80%;
+       align-items: center;
+     margin-top: 59%;
+       margin-left: 5.9%;
+       border-radius: 5px;
+        }
+  .container3a {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+     margin-left: 2px;
+        }
+
+        .header3a {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+       color: #4b2b7f;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .profile-info {
+            font-size: 16px;
+        }
+
+        .profile-info .name {
+            font-weight: bold;
+            color: #4b2b7f;
+        }
+
+        .profile-info .details {
+            font-size: 12px;
+            color: #7a7a7a;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+      
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+       
+        }
+
+        .menu-item-text {
+            display: flex;
+            align-items: center;
+      
+        }
+
+        .menu-item-text img {
+            width: 30px;
+            height: 30px;
+            padding: 8px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      margin-left: -6%;
+        }
+
+        /* Specific icon colors */
+        .menu-item-text img.saved-cards {
+            background-color: #d5e8f4;
+       color: green;
+        }
+
+        .menu-item-text img.cashback {
+            background-color: #ffffff;
+        }
+
+        .menu-item-text img.account-limits {
+            background-color: #ffffff;
+        }
+
+        .menu-item-text img.spending-report {
+            background-color: #ffffff;
+        }
+
+        .menu-item-title {
+            font-weight: bold;
+            color: #4b2b7f;
+       margin-left: 10%;
+       font-size: 16px;
+        }
+
+        .menu-item-subtitle {
+            font-size: 11px;
+            color: #7a7a7a;
+      margin-left: 10%;
+        }
+
+        .arrow-icon {
+            width: 16px;
+            height: 16px;
+            margin-left: auto;
+        }
+
+        .sign-out {
+            text-align: center;
+            margin-top: 40%;
+            font-size: 16px;
+            color: #ff5a5f;
+            
+        font-weight: 700;
+        }
+    .container3b {
+      padding: 20px;
+      max-width: 768px;
+      margin: auto;
+    }
+ 
+    .header3b {
+      
+      align-items: center;
+      margin-bottom: 20px;
+    text-align: center;
+    
+    justify-conten: center;
+    }
+
+    .back-arrow {
+      width: 16px;
+      height: 16px;
+      border-left: 2.3px solid purple;
+      border-bottom: 2.3px solid purple;
+      transform: rotate(45deg);
+      margin-right: 10px;
+      position: fìxed;
+    }
+
+    .header3b h1 {
+      font-size: 19px;
+      font-weight: bold;
+      margin-top: -6%;
+   
+    }
+
+    .content3b {
+      text-align: center;
+    }
+
+    .icon-placeholder {
+      width: 50px;
+      height: 50px;
+      margin: 40px auto;
+      background-color: #e0e0e0;
+      border-radius: 10px;
+    }
+
+    .info-text3b {
+      font-size: 16px;
+      color: #7a7a7a;
+      margin-top: 20px;
+    }
+    .container3c {
+      padding: 20px;
+      max-width: 768px;
+      margin: auto;
+     text-align: center;
+    align-items: center; 
+    justify-conten: center;
+    }
+
+    .header3c {
+      
+      align-items: center;
+      margin-bottom: 20px;
+    text-align: center;
+    align-items: center; 
+    justify-conten: center;
+    }
+
+    .back-arrow3c {
+      width: 20px;
+      height: 20px;
+      border-left: 2px solid purple;
+      border-bottom: 2px solid purple;
+      transform: rotate(45deg);
+      margin-right: 10px;
+      
+    position: fixed;
+    }
+
+    .header3c h1 {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+    align-items: center; 
+    justify-conten: center; 
+  
+    }
+
+    .content3c {
+      text-align: center;
+    }
+
+    .available-text3c {
+      font-size: 16px;
+      color: #000000;
+      margin: 0;
+    }
+
+    .content3c h2 {
+      font-size: 40px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .cards3c {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px 0;
+    }
+
+    .card3c {
+      width: 45%;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .card3c p {
+      margin: 0;
+      font-size: 16px;
+      color: #7a7a7a;
+    }
+
+    .card3c h3 {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 10px 0 0;
+    }
+
+    .withdraw-button3c {
+      background-color: #e8e0f8;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      color: purple;
+      font-size: 16px;
+      margin-top: 20px;
+      
+    }
+
+    .info-text3c {
+      font-size: 16px;
+      color: #7a7a7a;
+      margin-top: 20px;
+    }
+ .header3d {
+            display: flex;
+            align-items: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #ddd;
+        text-align: center;
+      justify-content: center;
+      align-items: center;
+      
+        }
+
+        .header3d svg {
+            width: 24px;
+            height: 24px;
+            fill: #5D387F;
+        position: fixed;
+        margin-left: -88%;
+       
+        }
+
+        .header-title3d {
+            font-size: 20px;
+            font-weight: bold;
+            
+            color: #000;
+        text-align: center;
+      justify-content: center;
+      align-items: center;
+              }
+
+        .section3d {
+            margin-top: 16px;
+        }
+
+        .section-title3d {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .row3d {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .row3d:last-child {
+            border-bottom: none;
+        }
+
+        .row3d span {
+            font-size: 16px;
+        }
+
+        .highlight3d {
+            color: #5D387F;
+        }
+ .container3d {
+     padding: 12px;
+ }
+  .header5a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 5%;
+        }
+
+        .header5a h1 {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0;
+            text-align: center;
+        margin-top: -3%;
+        }
+   .back-arrow1a {
+      width: 16px;
+      height: 16px;
+      border-left: 2.3px solid purple;
+      border-bottom: 2.3px solid purple;
+      transform: rotate(45deg);
+      margin-left: -85%;
+      position: fixed;
+  margin-top: -4%;
+    }
+    .icona {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background-color: #d3d3d3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10%;
+   text-align: center;
+  margin-left: 36%;
+    }
+    .icona::after {
+      content: '';
+      width: 40px;
+      height: 40px;
+      border: 5px solid #fff;
+      border-top: 5px solid #d3d3d3;
+      border-radius: 50%;
+      transform: rotate(-45deg);
+      position: absolute;
+   text-align: center;
+   justify-content: center;
+   align-items: center;
+      }
+    .titlea {
+      font-size: 18px;
+      font-weight: bold;
+      color: #000;
+      margin-top: 8%;
+   text-align: center;
+   justify-content: center;
+   align-items: center;
+    }
+    .subtitlea {
+      font-size: 14px;
+      color: #555;
+      text-align: center;
+   justify-content: center;
+   align-items: center;
+    }
+ .header5b {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+        }
+
+        .header5b h1 {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0;
+            text-align: center;
+        margin-top: -3%;
+        }
+        .account-details5b {
+            background: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 1%;
+        }
+
+      
+
+        .user-info5b {
+            text-align: center;
+        }
+
+        .user-info5b h2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .tier5b {
+            color: #ffaa00;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .account-number5b {
+            margin: 20px 0;
+        border: 1px solid #ddd;
+            border-radius: 10px;
+            background: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .account-number5b label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: -3%;
+            display: block;
+      padding: 10px;
+       font-weight: 700;
+        }
+
+        .account-number5b .number {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+           font-weight: 700;
+        }
+
+        .copy-icon5b {
+           
+            width: 24px;
+            height: 24px;
+        }
+
+        .limits5b {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            gap: 10px;
+        margin-top: 9%;
+        }
+
+        .limits5b div {
+            text-align: left;
+            flex: 1;
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .limits5b div p {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .limits5b div h3 {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .status5b {
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .status5b.completed {
+            color: #4fc521;
+        }
+
+        .user-contact5b {
+            margin-top: 20px;
+       font-weight: 650;
+        }
+
+        .user-contact5b p {
+            font-size: 12px;
+            color: #666;
+            margin: 0;
+        }
+
+        .user-contact5b h3 {
+            font-size: 17px;
+            font-weight: bold;
+            color: #6a1b9a;
+            margin: 5px 0;
+        }
+    .back-arrow5b {
+      width: 16px;
+      height: 16px;
+      border-left: 2.3px solid purple;
+      border-bottom: 2.3px solid purple;
+      transform: rotate(45deg);
+      margin-left: -85%;
+      position: fixed;
+  margin-top: -4%;
+    }
+ #slider {
+            width: 82%;
+            
+      
+        }
+
+        #instructions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            opacity: 1; /* Initially invisible */
+        }
+
+        .arrow-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            position: relative;
+            height: 30px;
+      margin-right: -5%;
+        }
+
+        .arrow {
+            position: absolute;
+            font-size: 1em;
+            color: black;
+            opacity: 1; /* Initially invisible */
+            animation: move 2s infinite;
+        }
+
+        .arrow.left {
+            animation-name: move-left;
+        }
+
+        .arrow.right {
+            animation-name: move-right;
+        }
+
+        @keyframes move-left {
+            0% {
+                left: 20%;
+                opacity: 0;
+            }
+            25% {
+                left: 50%;
+                opacity: 0;
+            }
+            50% {
+                left: 0;
+                opacity: 1;
+            }
+            75% {
+                left: 0;
+                opacity: 0;
+            }
+            100% {
+                left: 120%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes move-right {
+            0% {
+                left: 20%;
+                opacity: 0;
+            }
+            25% {
+                left: 50%;
+                opacity: 0;
+            }
+            50% {
+                left: 80%;
+                opacity: 1;
+            }
+            75% {
+                left: 80%;
+                opacity: 0;
+            }
+            100% {
+                left: 120%;
+                opacity: 0;
+            }
+        }
+   .container37 {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            box-sizing: border-box;
+       margin-left: 1%;
+       margin-top: -1%;
+       
+        }
+
+        .header5d {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+       
+        
+        }
+ .back-arrow1 {
+      width: 16px;
+      height: 16px;
+      border-left: 2.3px solid purple;
+      border-bottom: 2.3px solid purple;
+      transform: rotate(45deg);
+      margin-left: -85%;
+      position: fixed;
+  
+    }
+   .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+      margin-top: 5%;
+      
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+       
+        }
+
+        .menu-item-text {
+            display: flex;
+            align-items: center;
+      
+        }
+
+        .menu-item-text img {
+            width: 30px;
+            height: 30px;
+            padding: 8px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      margin-left: -6%;
+        }
+
+        /* Specific icon colors */
+        .menu-item-text img.saved-cards {
+            background-color: #d5e8f4;
+       color: green;
+       
+        }
+   .arrow-icon {
+            width: 16px;
+            height: 16px;
+            margin-left: auto;
+        }
+ .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+      margin-top: 5%;
+      
+        }
+
+        .menu-item2 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+       
+        }
+
+        .menu-item2-text {
+            display: flex;
+            align-items: center;
+      
+        }
+
+        .menu-item2-text img {
+            width: 30px;
+            height: 30px;
+            padding: 8px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      margin-left: -6%;
+        }
+
+        /* Specific icon colors */
+        .menu-item-text img.saved-cards {
+            background-color: #d5e8f4;
+       color: green;
+       
+        }
+   .arrow-icon {
+            width: 16px;
+            height: 16px;
+            margin-left: auto;
+        }
+
+        
+    .header5d {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+       
+        
+        }
+  .transaction img {
+            width: 60px;
+            height: 60px;
+            margin-right: 10px;
+           border-radius: 50%;
+                   }
+        .transaction-info {
+            display: flex;
+            align-items: center;
+        }
+        .transaction-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .transaction-details .name {
+            font-weight: bold;
+            font-size: 16px;
+          color: #000000;
+        }
+        .transaction-details .date {
+            font-size: 14px;
+            color: #000000;
+      font-weight: bold;
+              }
+        .transaction-amount {
+            font-weight: bold;
+            color: #00b300;
+            font-size: 19px;
+          margin-left: 50px;
+                  }
+        .transaction-status {
+            color: #00b300;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+          .accounts img {
+            width: 70px;
+            height: 70px;
+            margin-left: 39px;
+           border-radius: 50%;
+           border: opx solid black;
+     
+     align-items: center;
+  justify-content: center;
+    
+                       }
+    .header6a {
+            background-color: #6a0dad;
+            color: white;
+            padding: 10px;
+           display: flex;
+            align-items: center;
+            justify-content: center;
+             text-align: center;
+       position: fixed;
+       width: 101%;
+      
+       
+        }
+       .header5 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+        }
+
+       
+        .back-arrow6a {
+      width: 10px;
+      height: 10px;
+      border-left: 2.3px solid white;
+      border-bottom: 2.3px solid white;
+      transform: rotate(45deg);
+      margin-left: -85%;
+      position: fixed;
+  margin-top: %;
+    }
+       .header6a h1 {
+            font-size: 18px;
+            margin: 0;
+        }
+        main {
+            padding: 20px;
+        }
+        article {
+            background-color: white;
+            border: 1px solid #6a0dad;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+  font-size: 14px;
+        }
+       
+       
+       
+        
+        ul li {
+            margin-bottom: 10px;
+        }
+        footer3 {
+            text-align: center;
+            background-color: #6a0dad;
+            color: white;
+            padding: 5px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 4%;
+        }
+ .back-arrow6b {
+      width: 10px;
+      height: 10px;
+      border-left: 2.3px solid white;
+      border-bottom: 2.3px solid white;
+      transform: rotate(45deg);
+      margin-left: -94%;
+      position: fixed;
+  margin-top: %;
+    }
+  </style>
+</head>
+<body>
+
+<div style="position: fixed; background-color: white; height: 100%; width: 100%; z-index: 9999999999999999; margin-left: -2%; margin-top: -1.5%; display: none;" id="overlay"></div>
+<div style="display: flex; font-size: 16px; font-weight: bold; color: #333; margin-left: 4%; margin-top: 3%;">
+<div id="hi">hello, </div>
+<span style="margin-left: 1%;" id="fullName"></span>
+</div>
+<div class="button-container">
+  <div class="button spend active" id="spendButton342" onclick="showContainer(1, '#4b0082')">Spend</div>
+  <div class="button save" id="saveButton219" onclick="showContainer(2, 'green')">Save</div>
+  <div class="button borrow" id="borrowButton587" onclick="showContainer(3, '#154dffee')">Borrow</div>
+  <div class="button invest" id="investButton104" onclick="showContainer(4, '#4b0082')">Invest</div>
+</div>
+<div id="overlay1" class="overlay1"></div>
+
+<div class="container-wrapper" id="containerWrapper">
+  <div class="container container-1 show" id="containerShow841">
+    <div class="container2" id="container2Wrapper652">
+      <div class="header" id="headerWrapper317">
+        <div class="left" id="leftSection503">
+          <span class="flag" id="flagElement226">🇺🇲</span>
+        
+                <span class="currency">United States Dollar</span>
+            </div>
+            <div id="openSidebarBtn"class="dots">•••</div>
+        </div>
+        <div id="balance1"class="amount">$0.00</div>
+        <div id="wella" class="updated">Last updated a few seconds ago</div>
+        <div class="actions">
+         <button  id="hand1"class="btn transfer">
+                <div class="icon">↑</div>
+               <span id="wella1">Transfer</span>
+            </button>     
+        <button style="margin-right: -14.5%;" id="save6"class="btn transfer">
+                <div class="icon">$</div>
+                <span id="wella2">Account </span>
+            </button>        
+        </div>
+    </div>
+  <div class="quick-access">
+        <h2 id="wella3">Quick Access</h2>
+        <a href="#"></a>
+    </div>
+
+    <div class="card-container">
+        <div  id="joy"style="margin-left: 3%;" class="card" >
+            <div  id="transport"class="card-icon">
+                <img src="https://img.icons8.com/ios-filled/50/FF5252/car.png" alt="Transport">
+            </div>
+            <p class="card-title"id="wella4">Transport</p>
+        </div>
+        <div id="joy2" class="card">
+            <div class="card-icon">
+                <img src="https://img.icons8.com/ios-filled/50/FFD600/sun.png" alt="Solar">
+            </div>
+            <p class="card-title" id="wella5">Solar</p>
+        </div>
+        <div id="joy3" class="card">
+            <div class="card-icon">
+                <img src="https://img.icons8.com/ios-filled/50/00C853/graduation-cap.png" alt="Education">
+            </div>
+            <p class="card-title" id="wella6">Education</p>
+        </div>
+        <div id="joy4"class="card">
+            <div class="card-icon">
+                <img src="https://img.icons8.com/ios-filled/50/FF8F00/light-on.png" alt="Electricity">
+            </div>
+            <p class="card-title" id="wella7">Electricity</p>
+        </div>
+    </div>
+ <div class="transactions-container">
+    <div class="transactions-header">
+        <h2 id="wella8">Transactions</h2>
+        <h8  id="wella9">View All</h8>
+ </div>
+  <div id="nico2" style ="color: #333; font-size: 14px; text-align: center; justify-content: center; align-items: center; display: none;" >No Transactions Yet</div>
+ 
+  <div class="line"></div>
+
+ <div id="nico" style="display: none;"> 
+        <div class="transaction" style="display: flex; ">
+            <div  class="transaction-info">
+                <img src="first.jpg" alt="Gift icon">
+                <div class="transaction-details">
+                    <div style="font-size: 14px;"class="name"  id="welba11">Nicolearia Just Sent You</div>
+                    
+                </div>
+            </div>
+            <div style="margin-left: 29%; font-size: 15px;"class="transaction-amount">
+                + $2,876.00
+                <span style ="margin-left: 2%;  font-size: 12px;"class="transaction-status"  id="welba">Successful</span>
+            </div>    
+            </div>
+    </div>
+</div>
+   
+    
+  <div style="border: none; background-color: white; width: 96%; margin-left: 2%;" class="account-number5b">
+            <label id="wella13">Your Account Number</label>
+            <div class="number">
+                <span style="color: black;" id="account-number2">2071225368</span>
+                <!-- Using Icon8 Copy Icon -->
+ <span style=" margin-left: 12%; color: #6a1b9a; font-size: 14px;" id="wella14">Copy</span>           
+                <img style=" margin-left: -24%;"
+                    src="https://img.icons8.com/ios-filled/50/4caf50/copy.png" 
+                    alt="Copy Icon" 
+                    class="copy-icon5b" 
+                    id="copy-btn2"
+                />
+           
+            </div>
+        </div>
+     <div style="margin-top: 6%; text-align: center; justify-content: center; align-items: center; position: relative; margin-top: -3%; color: #4fc521;font-weight: 760; display: none; font-size: 14px;"  id="ant1b">Copied Successfully!! 
+         
+     </div> 
+<div style="margin-bottom: 20%;"class="container25">
+    <div style="font-size: 13px;" class="header11" id="wella16">You Might Like</div>
+    <div class="cards2">
+      <div id="spot" class="card3">
+  <h4 id="wella17">How To Spot Scams</h4>
+      <img style="width: 100%; height: 110px; margin-top: 6.9%;"src="scan.jpg" alt=""></img>
+     </div>
+      <div id="spot2" class="card3">
+          <h4 id="wella18">Newly added: More Ways to Send Money</h4>
+   <img style="width: 100%; height: 110px; margin-top: -2%;"src="scan1.jpg" alt=""></img>  
+      </div>
+    </div>
+  </div>
+
+<div class="icon-container">
+        <div class="icon-item active" id="homeIcon" onclick="openModal('home')">
+            <span class="material-symbols-outlined" >home</span>
+            <p id="wella19">Home</p>
+        </div>
+        <div class="icon-item" id="sendIcon" onclick="openModal('send')">
+            <span id="sendIcon1" class="material-symbols-outlined">send</span>
+            <p style="margin-top: -2%;"id="wella20">Send</p>
+        </div>
+        <div class="icon-item" id="payIcon" onclick="openModal('pay')">
+            <span class="material-symbols-outlined">receipt_long</span>
+            <p id="wella21">Pay</p>
+        </div>
+        <div class="icon-item" id="cardIcon" onclick="openModal('card')">
+            <span class="material-symbols-outlined">credit_card</span>
+            <p id="wella22">Cards</p>
+        </div>
+        <div class="icon-item" id="moreIcon" onclick="openModal('more')">
+            <span class="material-symbols-outlined">apps</span>
+            <p id="wella23">More</p>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div  id="sendModal" class="modal">
+        <div style="text-align: center; justify-content: center; align-items: center; padding: 20px; margin-left: -5%;"class="modal-content">
+ 
+            <div class="header5">
+      <div id="hand3" class="back-arrow1"></div>     
+            <h1 id="wella24">Transfer</h1>
+           
+        </div>
+   <div class="row3d"></div>  
+   <img style="margin-top: 10%;" src="https://img.icons8.com/?size=100&id=AusdhqUWnr5N&format=png&color=4b2b7f" alt="">
+<div style="display: flex; text-align: center; justify-content: center; align-items: center;" >
+       <h2 style="text-align: center; justify-content: center; align-items: center; font-size: 18px; font-weight: bold; color: #636363; margin-top: 13px;" id="number7">$0.00</h2> <span style=" font-size: 18px; font-weight: bold; color: #636363; margin-top: -2px; padding: 10px;" id="wella25">Available!!!</span>
+     </div>
+    <span style="display: none;" id="number5"></span>
+     <h2 style="text-align: center; justify-content: center; align-items: center; font-size: 14px; font-weight: bold; color: #ff001f; margin-top: -20px; display: none; padding: 9px; position: fixed;" id="epa1">Insufficient funds please add funds into your account to transfer</h2>
+
+        <div id="amount" style="font-size: 50px; color: #000; font-weight: bold; font-family: Arial, sans-serif; text-align: center; justify-content: center; align-items: center;  margin-top: 27px;"></div> <!-- Initially display the midpoint value -->
+        <div id="instructions">
+            <h5 style=" text-align: center; justify-content: center; align-items: center; font-size: 17px; font-family: Arial, sans-serif; padding: 19px; margin-left: -1%;" id="cup" id="wella26">Please Slide Below To Set The Amount You Want To Transfer. When Done Click On Transfer Below 👇👇</h5>
+            <div class="arrow-container" style="margin-left: 38px; font-weight; bold;">
+                <span class="arrow left"><</span>
+                <span class="arrow right">></span>
+            </div>
+        </div>
+        <input type="range" id="slider" min="0" max="2876.82" step="0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001" style="width: 337px;">
+    
+   <button style="margin-top: 11%; width: 90%; background-color: #4b2b7f;" id="pot" class="next-button">Next</button>
+    
+        </div>
+    </div>
+
+    <div id="payModal" class="modal">
+        <div class="modal-content">
+         <div style="margin-top: 5%;"class="header5">
+      <div style="margin-left: -93%;" id="hand4" class="back-arrow1"></div>     
+            <h1 id="wella27">Pay 🇺🇲</h1>
+           
+        </div>
+          <div class="row3d"></div>  
+          <div class="card-container" style="width: 91.5%; margin-top: 14%;">
+        <div  id="joy5"style="margin-left: 3%; " class="card" >
+            <div  id="transport"class="card-icon">
+                <img src="https://img.icons8.com/ios-filled/50/FF5252/car.png" alt="Transport">
+            </div>
+            <p class="card-title" id="wella28">Transport</p>
+        </div>
+        <div id="joy6" class="card">
+            <div class="card-icon">
+                <img src="https://img.icons8.com/ios-filled/50/FFD600/sun.png" alt="Solar">
+            </div>
+            <p class="card-title" id="wella29">Solar</p>
+        </div>
+        <div id="joy7" class="card">
+            <div class="card-icon">
+                <img src="https://img.icons8.com/ios-filled/50/00C853/graduation-cap.png" alt="Education">
+            </div>
+            <p class="card-title" id="wella30">Education</p>
+        </div>
+        <div id="joy8"class="card">
+            <div class="card-icon">
+                <img src="https://img.icons8.com/ios-filled/50/FF8F00/light-on.png" alt="Electricity">
+            </div>
+            <p class="card-title" id="wella31">Electricity</p>
+        </div>
+    </div>
+        </div>
+ <ol style="color: #333; font-size: 12px;  user-select: none; /* Disables text selection */ -webkit-user-select: none; /* For Safari */ -moz-user-select: none; /* For Firefox */ -ms-user-select: none; /* For older IE */ padding: 29px;">
+        <li id="wella32">Fast and secure payment processing.</li>
+        
+        <li id="wella33">Real-time transaction updates.</li>
+        <li id="wella34">Seamless and user-friendly experience.</li>
+   
+        <li id="wella35">Transparent fees with no hidden charges.</li>
+        <li id="wella36">Mobile-friendly for payments on the go.</li>
+        <li id="wella37">Encrypted transactions to protect your data.</li>
+        <li id="wella38">Integration with loyalty and rewards programs.</li>
+     
+    </ol>
+    </div>
+
+    <div id="cardModal" class="modal">
+        <div class="modal-content">
+            
+          <div class="container37">
+        <div class="header5d">
+      <div onclick="closeModal()" class="back-arrow1"></div>     
+            <h1 style="font-size: 20px;" id="wella39">Card 🇺🇲</h1>
+       </div>
+      <div style="margin-top: -3%;" class="row3d"></div>   
+        <img style="width: 93%; height: 50%; margin-left: 3%; border-radius: 10px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); margin-top: 13%;" src="carrd.jpg" alt=""></img>
+         <ul class="menu">
+            <li  id="frank1"class="menu-item">
+                <div class="menu-item-text">
+     <img class="cashback" src="https://img.icons8.com/?size=100&id=22185&format=png&color=0057fdcb" alt="Cashback">
+                    <div>
+                        <div style="margin-left: 5%; font-size: 15px; font-weight: 670; color:  #4b2b7f; " class="menu-item-title" id="wella40">Request A Card </div>
+                        <div style="margin-left: 5%; font-size: 12px;  color:  #333" class="menu-item-subtitle" id="wella41">We will send it to you wherever you are.</div>
+                    </div>
+                </div>     
+      <img class="arrow-icon" src="https://img.icons8.com/ios-filled/50/999999/chevron-right.png" alt="Arrow">
+            </li>
+        </div> 
+</div>
+        </div>
+    </div>
+
+    <div id="moreModal" class="modal">
+        <div class="modal-content">
+            <span style="margin-top: 3%; margin-left: 3%;"class="close" onclick="closeModal()">×</span>
+  <div class="container3a">
+        <!-- Header -->
+        <div class="header3a" style="color: black;" id="wella50">More</div>
+   <div style="margin-top: -7%; margin-bottom: 5%;" class="row3d"></div>  
+        <!-- Profile Section -->
+        <div id="save5"class="profile">
+            <img src="https://img.icons8.com/?size=100&id=AjTPlMclWxjF&format=png&color=000000" alt="Profile Picture">
+            <div class="profile-info">
+                <div class="name" id="wella51"></div>
+                <div class="details" id="wella52">Account Details</div>
+            </div>
+        </div>
+
+        <!-- Menu Items -->
+        <ul  class="menu">
+            <li id="save1" class="menu-item">
+                <div  class="menu-item-text">
+     <img class="cashback" src="https://img.icons8.com/?size=100&id=22185&format=png&color=0057fdcb" alt="Cashback">
+                    <div>
+                        <div class="menu-item-title" id="wella53">Saved Cards</div>
+                        <div class="menu-item-subtitle" id="wella54">Manage connected cards</div>
+                    </div>
+                </div>
+                <img class="arrow-icon" src="https://img.icons8.com/ios-filled/50/999999/chevron-right.png" alt="Arrow">
+            </li>
+            <li id="save2"class="menu-item">
+                <div class="menu-item-text">
+                    <img class="cashback" src="https://img.icons8.com/?size=100&id=nof1CGGnYa33&format=png&color=15fd61ad" alt="Cashback">
+                    <div>
+                        <div class="menu-item-title" id="wella55">Cashback</div>
+                        <div class="menu-item-subtitle" id="wella56">See how much you've earned</div>
+                    </div>
+                </div>
+                <img class="arrow-icon" src="https://img.icons8.com/ios-filled/50/999999/chevron-right.png" alt="Arrow">
+            </li>
+            <li id="save3"class="menu-item">
+                <div class="menu-item-text">
+                    <img class="account-limits" src="https://img.icons8.com/?size=100&id=tTIl1sEbXudG&format=png&color=0057fdcb" alt="Account Limits">
+                    <div>
+                        <div class="menu-item-title" id="wella57">Account Limits</div>
+                        <div class="menu-item-subtitle" id="wella58">How much you can spend and receive</div>
+                    </div>
+                </div>
+                <img class="arrow-icon" src="https://img.icons8.com/ios-filled/50/999999/chevron-right.png" alt="Arrow">
+            </li>
+            <li id="save4" class="menu-item">
+                <div class="menu-item-text">
+                    <img class="spending-report" src="https://img.icons8.com/?size=100&id=57715&format=png&color=ff1515" alt="Spending Report">
+                    <div>
+                        <div class="menu-item-title" id="wella59">Spending Report</div>
+                        <div class="menu-item-subtitle" id="wella60">Monitor your expenses</div>
+                    </div>
+                </div>
+                <img class="arrow-icon" src="https://img.icons8.com/ios-filled/50/999999/chevron-right.png" alt="Arrow">
+            </li>
+        </ul>
+
+        <!-- Sign Out -->
+        <div class="sign-out" id="wella61">Sign Out</div>
+    </div>          
+        </div>
+    </div>
+
+ </div>
+  
+    <div class="container container-2">  <div class="container21">
+    <div class="header3" id="wella79">🇺🇲 Dollar Savings</div>
+    <div id=""class="amount2">$0.00</div>
+    <p3 id="ella3" class="add-pocket">
+        <div class="icon1">↑</div><span id="wella62">Add Pocket</span></p3>
+ <div id="dot2"class="dot">•••</div>
+    <div class="pockets" id="wella63">Pockets</div>
+  
+    <div class="description" id="wella64">
+      Put money away daily, weekly, monthly or as you spend.
+    </div>
+    <div class="image-container">
+     <img style="width: 70%; height: 40%; pointer-events: none;"src="pocket.jpg" alt=""></img>
+    </div>
+    <p3 id="ella2" class="save-now" >Save Now</p3>
+  </div>
+  </div>
+    <div class="container container-3">
+         <div class="container24">
+    <div class="header4" id="wella66">🇺🇲 You Owe</div>
+    <div class="amount3">$0.00</div>
+    <a id="ella5" class="get-loan-btn">
+      <div  class="icon2">↑</div><span id="wella67">Get Loan</span></a>
+    <div id="dot3"class="dot1">•••</div>
+    <div class="loan-title" id="wella68">Get a Loan</div>
+    <div class="description1" id="wella69">
+      Life happens and anyone can get low on cash. Get an overdraft, a personal loan, or a salary loan quickly if you qualify.
+    </div>
+    <div class="image-container">
+     <img style="width: 70%; height: 40%; pointer-events: none;"src="pocket1.jpg" alt=""></img>
+    </div>
+   </div>
+    <button style="background-color:  #4a148c;  width: 80%; margin-top: -17px; margin-left: 9.5%;"id="frank6" class="next-button">Get a Loan</button>
+  
+    </div>
+    <div class="container container-4">
+        <div class="container27">
+      <img style ="margin-top: 7%;"src="invest.jpg" alt="">
+        <h1 id="wella71">Investments made easy</h1>
+        <p class="subtitle" id="wella72">Buy stocks with as little as $10.</p>
+    <div style="color: white;  user-select: none; /* Disables text selection */ -webkit-user-select: none; /* For Safari */ -moz-user-select: none; /* For Firefox */ -ms-user-select: none;">hhh</div> 
+        <button style="background-color:  #4a148c; margin-top: 14%; " id="frank9"class="next-button">Find a Stock</button>
+        <p class="disclaimer" id="wella74">
+            We do not give investment advice. Please, consult your legal, financial and tax advisers before you buy stocks.
+        </p>
+        <p class="powered-by" id="wella75">Powered by <span class="bamboo">bamboo</span></p>
+    </div>
+    </div>
+  </div>
+
+ 
+
+  <div id="sidebar" class="sidebar">
+   
+      <div class="accounts-container1">
+   <button id="closeSidebarBtn">×</button> 
+    <h1 id="wella76">Accounts</h1>
+    <div class="currency-container">
+      <div class="currency-details">
+        <div class="currency-icon">🇺🇲</div>
+        <div class="currency-text">
+          <p9 style="color: #4a148c; font-weight: 750; font-size: 16px;" class="currency-name">United states dollar</p9>
+          <p class="currency-code">$</p>
+        </div>
+        <div id="balance" class="currency-balance">$0.00</div>
+     
+      </div>
+    </div>
+    <div class="toggle-container">
+ <img style="border: 1px solid #000000; padding: 5px; border-radius: 4px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.9); margin-left: 0.4%;" src="https://img.icons8.com/ios/50/000000/visible--v1.png" alt="Hide Balances Icon" class="hide-icon"> 
+    <p9 style="color: #4a148c; font-weight: 750; margin-left: 3% ; " id="wella77">Hide Balances</p9>  
+      <label class="toggle-switch">
+        <input type="checkbox" id="toggle">
+        <span class="slider"></span>
+      </label>
+     
+    </div>
+    <button style="background-color: #d9c8e7; color: #2c2c2c; font-size: 16px; margin-top: 14%; margin-left: -1px;" class="add-currency-btn" id="wella78">Add New Currency</button>
+  </div>
+  </div>
+  <div id="mod1" class="modal69">
+    <div class="container32">
+        <div class="header5">
+      <div id="back1" class="back-arrow1"></div>     
+            <h1 id="wella80">Transport 🇺🇲</h1>
+           
+        </div>
+     <div class="row3d"></div>  
+        <form id="transportForm">
+            <label for="serviceProvider" id="wella81">Service Provider</label>
+            <select id="serviceProvider">
+                <option value="" disabled selected id="wella82">Choose a Provider</option>
+                <option value="Provider 1">UPS (UNITED PARCEL SERVICE)</option>
+<option value="Provider 1">FEDEX</option>
+<option value="Provider 1">DHL</option>
+<option value="Provider 1">YELLOW CORPORATION</option>
+<option value="Provider 1">J.B. HUNT TRANSPORT SERVICES</option>
+<option value="Provider 1">SCHNEIDER NATIONAL</option>
+<option value="Provider 1">OLD DOMINION FREIGHT LINE</option>
+<option value="Provider 1">CON-WAY FREIGHT</option>
+<option value="Provider 1">XPO LOGISTICS</option>
+<option value="Provider 1">C.H. ROBINSON</option>
+<option value="Provider 1">RIDER SYSTEMS</option>
+<option value="Provider 1">MARTEN TRANSPORT</option>
+<option value="Provider 1">SAIA MOTOR FREIGHT LINE</option>
+<option value="Provider 1">TMC TRANSPORTATION</option>
+<option value="Provider 1">LANDSTAR SYSTEM</option>
+                
+            </select>
+
+            <div class="amount-container2">
+                <label for="amount" id="wella83">Amount</label>
+      <div class="balance">    
+                <span id="wella84">Balance:</span><span id="number1">$0.00</span>
+            </div>
+            </div>
+            <input type="text" id="amount9" placeholder="$0.00" maxlength="16" max="100000000000000000">
+
+            <button type="button" id="nextButton" class="next-button">Next</button>
+        </form>
+    </div>  
+ </div>
+<div id="mod2" class="modal69">
+    <div class="container32">
+        <div class="header5">
+      <div id="back2" class="back-arrow1"></div>     
+            <h1 id="wella85">Solar 🇺🇲</h1>
+           
+        </div>
+       <div class="row3d"></div>
+        <form id="transportForm">
+            <label for="serviceProvider" id="wella86">Service Provider</label>
+            <select id="serviceProvider2">
+                <option value="" disabled selected id="wella87">Choose a Provider</option>
+              <option value="Provider 1">SUNRUN</option>
+<option value="Provider 1">SOLARCITY (A TESLA COMPANY)</option>
+<option value="Provider 1">FIRST SOLAR</option>
+<option value="Provider 1">SUNPOWER</option>
+<option value="Provider 1">Vivint Solar</option>
+<option value="Provider 1">ENPHASE ENERGY</option>
+<option value="Provider 1">SUNSEEKER SOLAR</option>
+<option value="Provider 1">BASF SOLAR</option>
+<option value="Provider 1">TRINA SOLAR</option>
+<option value="Provider 1">SOPHIE SOLAR</option>
+<option value="Provider 1">RGS ENERGY</option>
+<option value="Provider 1">LONGi SOLAR</option>
+<option value="Provider 1">JA SOLAR TECHNOLOGY</option>
+<option value="Provider 1">NEXTERA ENERGY RESOURCES</option>
+<option value="Provider 1">SUNSQUARE ENERGY</option>
+            </select>
+
+            <div class="amount-container2">
+                <label for="amount" id="wella88">Amount</label>
+                <div class="balance">    
+                <span id="wella89">Balance:</span><span id="number2">$0.00</span>
+            </div>
+            </div>
+            
+            <input type="text" id="amount10" placeholder="$0.00" maxlength="16" max="100000000000000000">
+
+            <button type="button" id="nextButton2" class="next-button">Next</button>
+        </form>
+    </div>  
+ </div>
+ 
+ <div id="mod3" class="modal69">
+    <div class="container32">
+        <div class="header5">
+      <div id="back3" class="back-arrow1"></div>     
+            <h1 id="wella90">Education 🇺🇲</h1>
+           
+        </div>
+    <div class="row3d"></div>  
+        <form id="transportForm">
+            <label for="serviceProvider" id="wella91">Service Provider</label>
+            <select id="serviceProvider3">
+                <option value="" disabled selected id="wella92">Choose a Provider</option>
+               <option value="Provider 1">HARVARD UNIVERSITY</option>
+<option value="Provider 1">STANFORD UNIVERSITY</option>
+<option value="Provider 1">MASSACHUSETTS INSTITUTE OF TECHNOLOGY (MIT)</option>
+<option value="Provider 1">YALE UNIVERSITY</option>
+<option value="Provider 1">PRINCETON UNIVERSITY</option>
+<option value="Provider 1">UNIVERSITY OF CALIFORNIA, BERKELEY (UC BERKELEY)</option>
+<option value="Provider 1">UNIVERSITY OF MICHIGAN, ANN ARBOR</option>
+<option value="Provider 1">UNIVERSITY OF VIRGINIA (UVA)</option>
+<option value="Provider 1">UNIVERSITY OF NORTH CAROLINA, CHAPEL HILL</option>
+<option value="Provider 1">UNIVERSITY OF FLORIDA (UF)</option>
+<option value="Provider 1">CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH)</option>
+<option value="Provider 1">JOHNS HOPKINS UNIVERSITY</option>
+<option value="Provider 1">THE JUILLIARD SCHOOL</option>
+<option value="Provider 1">SAVANNAH COLLEGE OF ART AND DESIGN (SCAD)</option>
+<option value="Provider 1">NEW YORK UNIVERSITY (NYU)</option>
+<option value="Provider 1">ARIZONA STATE UNIVERSITY (ASU)</option>
+<option value="Provider 1">UNIVERSITY OF TEXAS AT AUSTIN</option>
+<option value="Provider 1">PURDUE UNIVERSITY</option>
+<option value="Provider 1">UNIVERSITY OF ILLINOIS URBANA-CHAMPAIGN (UIUC)</option>
+<option value="Provider 1">FLORIDA STATE UNIVERSITY (FSU)</option>    
+  
+            </select>
+
+            <div class="amount-container2">
+                <label for="amount" id="wella93">Amount</label>
+               <div class="balance">    
+                <span id="wella94">Balance:</span><span id="number3">$0.00</span>
+            </div>
+            </div>
+           
+            <input type="text" id="amount11" placeholder="$0.00" maxlength="16" max="100000000000000000">
+
+            <button type="button" id="nextButton3" class="next-button">Next</button>
+        </form>
+    </div>  
+ </div>
+ <div id="mod4" class="modal69">
+    <div class="container32">
+        <div class="header5">
+      <div id="back4" class="back-arrow1"></div>     
+            <h1 id="wella95">Electricity 🇺🇲</h1>
+           
+        </div>
+        <div class="row3d"></div>  
+        <form id="transportForm">
+            <label for="serviceProvider" id="wella96">Service Provider</label>
+            <select id="serviceProvider4">
+                <option value="" disabled selected id="wella97">Choose a Provider</option>
+               <option value="Provider 1">PACIFIC GAS AND ELECTRIC COMPANY (PG&E)</option>
+<option value="Provider 1">CONSOLIDATED EDISON, INC. (CON EDISON)</option>
+<option value="Provider 1">FLORIDA POWER & LIGHT COMPANY (FPL)</option>
+<option value="Provider 1">EXELON CORPORATION</option>
+<option value="Provider 1">XCEL ENERGY</option>
+<option value="Provider 1">SOUTHERN COMPANY</option>
+<option value="Provider 1">Duke Energy</option>
+<option value="Provider 1">NEXTERA ENERGY</option>
+<option value="Provider 1">PPL CORPORATION</option>
+<option value="Provider 1">AEP (AMERICAN ELECTRIC POWER)</option>
+<option value="Provider 1">PUBLIC SERVICE ELECTRIC AND GAS COMPANY (PSEG)</option>
+<option value="Provider 1">SPECTRUM ENERGY</option>
+<option value="Provider 1">ENTERGY CORPORATION</option>
+<option value="Provider 1">TEXAS POWER</option>
+<option value="Provider 1">NORTHWESTERN ENERGY</option>        
+  
+            </select>
+
+            <div class="amount-container2">
+                <label for="amount" id="wella98">Amount</label>
+                <div class="balance">    
+                <span id="wella99">Balance:</span><span id="number4">$0.00</span>
+            </div>
+            </div>
+            
+            <input type="text" id="amount12" placeholder="$0.00" maxlength="16" max="100000000000000000">
+
+            <button type="button" id="nextButton4" class="next-button">Next</button>
+        </form>
+    </div>  
+ </div>
+ <div id="mod6" class="modal69">
+       <div class="header41">
+        <svg id="wad" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 10.586L17.657 4.93l1.414 1.414L13.414 12l5.657 5.657-1.414 1.414L12 13.414l-5.657 5.657-1.414-1.414L10.586 12 4.93 6.343l1.414-1.414z"/>
+        </svg>
+    </div>
+    <div class="content55">
+        <div class="icon-container55">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 10.586L17.657 4.93l1.414 1.414L13.414 12l5.657 5.657-1.414 1.414L12 13.414l-5.657 5.657-1.414-1.414L10.586 12 4.93 6.343l1.414-1.414z"/>
+            </svg>
+        </div>
+        <div class="title55" id="bad1">Unable To Make Payment</div>
+        <div class="message55" id="bad2">
+            Please, try paying using the transfer option if problem continues.
+        </div>
+    </div>
+    <div id="wada"class="footer2">Okay</div>
+ </div>
+   <div id="mod7" class="modal69">
+   <div class="container3b">
+    <div class="header3b">
+      <div id="sav1" class="back-arrow"></div>
+      <h1 id="bad3">Saved Cards</h1>
+    </div>
+     <div style="margin-top: -7%;" class="row3d"></div>  
+    <div class="content3b">
+      <div class="icon-placeholder"></div>
+      <p class="info-text3b" id="bad4">You have no saved cards. You’ll see your cards here after you add money to your account with a card.</p>
+    </div>
+  </div>    
+   </div>
+<div id="mod8" class="modal69">
+   <div class="container3c">
+   <div class="header3c">
+      <div id="sav2" class="back-arrow3c"></div>
+      <h1 id="bad5">Cashback</h1>
+    </div>
+    <div style="margin-top: -7%; margin-bottom: 5%;" class="row3d"></div>  
+    <div class="content3c">
+      <p class="available-text3c" id="bad6">Available</p>
+      <h2 id="number6">$0.00</h2>
+      <div class="cards3c">
+        <div class="card3c">
+          <p id="bad7">Redeemed</p>
+          <h3>$0.00</h3>
+        </div>
+        <div class="card3c">
+          <p id="bad8" >Withdrawn</p>
+          <h3>$0.00</h3>
+        </div>
+      </div>
+      <button id="hand2" class="withdraw-button3c">Withdraw Now</button>
+      <p class="info-text3c" id="bad9">Complete your tasks soon to earn a cashback.</p>
+    </div>
+  </div>  
+    
+</div>
+ <div id="mod9" class="modal69">
+  <div class="container3d">
+    <div class="header3d">
+        <svg id="sav3"xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 10.586L17.657 4.93l1.414 1.414L13.414 12l5.657 5.657-1.414 1.414L12 13.414l-5.657 5.657-1.414-1.414L10.586 12 4.93 6.343l1.414-1.414z"/>
+        </svg>
+        <div class="header-title3d" id="bad10">Account Limits 🇺🇲</div>
+    </div>
+    <div class="section3d">
+        <div class="section-title3d" id="bad11">Sending (Per Transaction)</div>
+        <div class="row3d">
+            <span >$500,000</span>
+            <span class="highlight3d" id="bad12">Unlimited</span>
+        </div>
+        <div class="row3d">
+            <span id="bad13">Daily Transfer Limit</span>
+            <span id="bad14">$1,000,000 per day</span>
+        </div>
+    </div>
+    <div class="section3d">
+        <div class="section-title" id="bad15">Transfers</div>
+        <div class="row3d">
+            <span id="bad16">Free Transfers</span>
+            <span id="bad17">4 left this month</span>
+        </div>
+    </div> 
+     </div>
+ </div>
+ <div id="mod10" class="modal69">
+<div class="header5a">
+      <div id="back1a" class="back-arrow1a"></div>     
+            <h1 id="bad18">Sending Reports</h1>
+           
+        </div>
+    <div style="margin-top: -1%; margin-bottom: 5%;" class="row3d"></div>  
+  <div class="icona"></div>
+  <div class="titlea" id="bad19">Spending reports are coming soon</div>
+  <div class="subtitlea" id="bad20">We'll let you know when they're ready</div>     
+ </div>
+<div id="mod11" class="modal69"> 
+     <div class="account-details5b">
+      <div class="header5b">
+      <div id="sav5" class="back-arrow5b"></div>     
+           
+        <h1 id="bad21">Account Details 🇺🇲</h1>
+     
+        </div>
+         <div style="margin-top: 6%; text-align: center; justify-content: center; align-items: center;" class="profile">
+            <img src="https://img.icons8.com/?size=100&id=AjTPlMclWxjF&format=png&color=000000" alt="Profile Picture">
+    </div>   
+        <div class="user-info5b">
+            <h2 id="fullName2"></h2>
+            <p class="tier5b"><span>🏅</span> T3</p>
+        </div>
+        <div class="account-number5b">
+      <div style="display: flex;"> 
+            <label id="bad22">Your Account Number</label>
+          <label style="margin-left: 37%;  color: #6a1b9a;" id="bad23">Copy</label></div>
+            <div class="number">
+                <span id="account-number1">2071225368</span>
+                <!-- Using Icon8 Copy Icon -->
+           
+                <img 
+                    src="https://img.icons8.com/ios-filled/50/4caf50/copy.png" 
+                    alt="Copy Icon" 
+                    class="copy-icon5b" 
+                    id="copy-btn1"
+                />
+           
+            </div>
+        </div>
+     <div style="margin-top: 6%; text-align: center; justify-content: center; align-items: center; position: fixed; margin-top: -3%; color: #4fc521;font-weight: 760; display: none;"  id="ant1a">Copied Successfully!! 
+         
+     </div> 
+        <div class="limits5b">
+            <div>
+                <p id="bad24">Balance Limit</p>
+                <h3 id="bad25">Unlimited</h3>
+                <p class="status5b completed" id="bad26">COMPLETED</p>
+            </div>
+            <div>
+                <p id="bad27">Transfer Limit</p>
+                <h3 id="bad28">Unlimited</h3>
+                <p class="status5b completed" id="bad29">COMPLETED</p>
+            </div>
+        </div>
+        <div class="user-contact5b">
+           
+            <h3 id="bad30"></h3>
+            <p id="bad31">Account Name</p>
+           
+            <h3 id="bad32"></h3>
+        <p id="bad33">Email Address</p>
+        </div>
+    </div>
+</div>
+ <div id="mod12" class="modal69">
+     <div class="container37">
+        <div class="header5d">
+      <div id="frank3" class="back-arrow1"></div>     
+            <h1 id="bad34"style="font-size: 20px;">Get A Card 🇺🇲</h1>
+       </div>
+        <img style="width: 93%; height: 50%; margin-left: 2%; border-radius: 10px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); margin-top: 13%;" src="carrd.jpg" alt=""></img>
+      <div style="align-items: center; justify-content: center; text-align: center;">
+   <div style ="font-size: 15px; font-weight: 670; color: #4b2b7f; margin-top: 7%;" id="bad35">Physical Visa Card </div>       
+     <div style="font-size: 12px; color black; font-weight: 500;" id="bad36">Withdarw from Atm's pay on Pos machines and pay online.</div>  
+      </div>
+         <ul class="menu">
+            <li class="menu-item">
+                <div class="menu-item-text">
+     <img class="cashback" src="https://img.icons8.com/?size=100&id=22185&format=png&color=0057fdcb" alt="Cashback">
+                    <div>
+                        <div style="margin-left: 5%; font-size: 15px; font-weight: 670; color:  #4b2b7f; " class="menu-item-title" id="bad37">Card Issuing Fee </div>
+                        
+                    </div>
+                </div>     
+      <div style="color: black; font-weight: 500; font-size: 15px;">$25</div>
+            </li>
+      
+        </div> 
+   <ul class="menu">
+            <li class="menu-item">
+                <div class="menu-item-text">
+    
+                    <div>
+                        <div i style="margin-left: 23%; font-size: 15px; font-weight: 670; color:  #4b2b7f; " class="menu-item-title" id="bad38">Delivery cost  </div>
+                        
+                    </div>
+                </div>     
+      <div style="color: black; font-weight: 500; font-size: 15px; padding: 8px;" id="bad39">Based on delivering location</div>
+            </li>
+   <div style="text-align: center justify-content: center; align-items: center;  margin-left: 6%;">    
+   <button style="margin-top: 14%; width: 93%; background-color: #4b2b7f;"   
+    type="button" id="error1" class="next-button">Next</button>
+</div> 
+       </div>
+        </div> 
+ 
+      </div>
+<div id="mod23" class="modal69" style ="overflow-y: auto; margin-top: - 1.2%;">
+      <div class="header6a">
+         <div id="bac23" class="back-arrow6a"></div>     
+        <h1 style="color: white;" id="vella1">How to Spot Scams</h1>
+  
+    </div>
+    <main>
+        <article style ="margin-top: 10%;">
+            <h2 style="color: black; font-size: 16px;" id="vella2">Introduction</h2>
+            <p style="color: black; font-size: 14px;" id="vella3">Scams are everywhere, and anyone can fall victim to them. Learning how to identify scams can save you time, money, and stress. Here's how to stay vigilant.</p>
+        </article>
+        <article>
+            <h2 style="color: black; font-size: 16px; margin-top: 0;" id="vella4">Common Signs of a Scam</h2>
+            <ul style="padding-left: 20px;color: black;">
+                <li style="color: black; font-size: 14px;"><strong id="vella5">Unsolicited Messages:</strong> <li id="vella6">Beware of emails, texts, or calls from unknown senders asking for personal information.</li></li>
+                <li><strong id="vella7">Too Good to Be True:</strong> <li id="vella8">Offers that seem too perfect, like winning a lottery you never entered, are likely scams.</li></li>
+                <li><strong id="vella9">Pressure to Act Quickly:</strong> <li id="vella10">Scammers often create a sense of urgency to prevent you from thinking clearly.</li></li>
+                <li><strong id="vella11">Requests for Payment in Gift Cards:</strong><li id="vella12"> Legitimate organizations will never ask for payment in gift cards or cryptocurrencies.</li></li>
+            </ul>
+        </article>
+        <article style="color: black; font-size: 14px;">
+            <h2 style="color: black; font-size: 16px;" id="vella13">How to Protect Yourself</h2>
+            <ul>
+                <li id="vella14">Verify the sender's identity before sharing any personal information.</li>
+                <li id="vella15">Research any company or individual offering deals or requesting money.</li>
+                <li id="vella16">Avoid clicking on suspicious links or downloading attachments from unknown sources.</li>
+                <li id="vella17">Keep your software and antivirus programs up to date.</li>
+                <li id="vella18">Use multi-factor authentication for your online accounts.</li>
+            </ul>
+        </article>
+        <article>
+            <h2 style="color: black; font-size: 16px;" id="vella19">Conclusion</h2>
+            <p id="vella20" style="color: black; font-size: 14px;">Staying cautious and informed is your best defense against scams. If you suspect something is a scam, trust your instincts and report it immediately.</p>
+        </article>
+    </main>
+    <footer3>
+        <p style="color: white; font-size: 14px;" id="vella21">&copy; 2025 Stay Safe Online</p>
+    </footer3>
+   
+    </div>
+<div id="mod24" class="modal69" style ="overflow-y: auto;">
+ <div class="header6a">
+         <div id="bac25" class="back-arrow6b"></div>     
+        <h1 style="color: white; padding: 15px;" id="vella22">Newly Added: More Ways to Send Money</h1>
+  
+    </div>
+    <main>
+        <article style ="margin-top: 15%;">
+            <h2 style="color: black; font-size: 16px;" id="vella23">Introduction</h2>
+            <p id="vella24" style="color: black; font-size: 14px;">Sending money has never been easier! We’ve added more ways for you to transfer funds quickly, securely, and conveniently. Whether you’re sending money locally or internationally, these new options are designed to meet your needs.</p>
+        </article>
+        
+        <article style="color: black; font-size: 14px;">
+            <h2 id="vella25" style="color: black; font-size: 16px;">Benefits of the New Methods</h2>
+            <ul>
+                <li><strong id="vella26">Convenience:</strong> <li id="vella27">Transfer money from the comfort of your home or on the go.</li></li>
+             <li><strong id="vella28">Speed:</strong> <li id="vella29">Instant and near-instant processing for most transfer methods.</li></li>
+                <li><strong id="vella30">Security:</strong><li id="vella31"> Enhanced encryption and secure authentication for all transactions.</li></li>
+                <li><strong id="vella32">Global Reach:</strong><li id="vella33"> Send money to friends, family, and businesses anywhere in the world.</li></li>
+            </ul>
+        </article>
+      <article>
+            <h2 id="vella34"style="color: black; font-size: 16px; margin-top: 0;">How to Get Started</h2>
+       <p id="vella35" style="color: black; font-size: 14px;"> To start using these new methods, simply log into your account, select your preferred transfer option, and follow the prompts. If you’re new to the platform, So you can join thousands of satisfied users!  
+       </p>
+        </article>
+        <article>
+            <h2 id="vella36" style="color: black; font-size: 16px;">Conclusion</h2>
+            <p id="vella37"style="color: black; font-size: 14px;">Staying cautious and informed is your best defense against scams. If you suspect something is a scam, trust your instincts and report it immediately.</p>
+        </article>
+    </main>
+    <footer3>
+        <p id="vella38" style="color: white; font-size: 14px;">&copy; 2025 Stay Safe Online</p>
+    </footer3>
+
+
+</div>
+<div id="mod30" class="modal69">
+   <div class="container3b">
+    <div class="header3b">
+      <div id="hold" class="back-arrow"></div>
+      <h1 id="ba4" style="font-size: 18px;">Transaction History</h1>
+    </div>
+     <div style="margin-top: -7%;" class="row3d"></div>  
+
+     <div id="ni12" style ="color: #333; font-size: 14px; text-align: center; justify-content: center; align-items: center; display: none; margin-top: 6%;" >No Transactions Yet</div>
+ 
+
+
+ <div id="nico11" style="display: none; margin-top: 14%;"> 
+   <div style="margin-top: -2%;" class="row3d"></div>      
+             <div class="transaction" style="display: flex; margin-top: 2%;">
+            <div  class="transaction-info">
+                <img src="first.jpg" alt="Gift icon">
+                <div class="transaction-details">
+                    <div style="font-size: 14px;"class="name"  id="wella11">Nicolearia Just Sent You</div>
+                    
+                </div>
+            </div>
+            <div style="margin-left: 29%; font-size: 15px;"class="transaction-amount">
+                + $2,876.00
+                <span style ="margin-left: 2%;  font-size: 12px;"class="transaction-status"  id="wella12">Successful</span>
+            </div>    
+         
+            </div>
+   
+    </div>
+      
+ 
+   </div>
+<div id="mod13" class="modal69">
+    <div class="header41">
+      
+        <svg id="frank8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            
+            <path d="M12 10.586L17.657 4.93l1.414 1.414L13.414 12l5.657 5.657-1.414 1.414L12 13.414l-5.657 5.657-1.414-1.414L10.586 12 4.93 6.343l1.414-1.414z"/>
+        </svg>
+   
+    </div>
+    <div class="content55">
+        <div class="icon-container55">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 10.586L17.657 4.93l1.414 1.414L13.414 12l5.657 5.657-1.414 1.414L12 13.414l-5.657 5.657-1.414-1.414L10.586 12 4.93 6.343l1.414-1.414z"/>
+            </svg>
+        </div>
+        <div class="title55" id="bad40">You're Not Eligible</div>
+        <div class="message55" id="bad41">
+ Please, use your account actively and
+            you'll be eligible for this option.            
+        </div>
+    </div>
+    <div id="frank4" class="footer2">Okay</div>
+</div>
+ <div id="mod14" class="modal69">
+  <div class="container37">
+        <div class="header5d">
+      <div id="ella1" class="back-arrow1"></div>     
+            <h1 style="font-size: 19px;" id="bad42">Add Pockets</h1>
+       </div>
+<div style="justify-content: center; align-items: center; text-align: center;">
+<img style="margin-top: 15%;" src="https://img.icons8.com/?size=100&id=GKinyLj1lSYM&format=png&color=4b2b7f" alt="">
+</div>
+ <div style="justify-content: center; align-items: center; text-align: center;">
+   <label style="color: #333; font-weight: 500; font-size: 16px; margin-top: 10px;" id="bad43">Enter Your Pocket Name</label>   
+</div>
+<form onsubmit="create()">
+<input style="font-size: 16px; font-weight: 500; margin-top: 10px;" required >
+<div id="create1" style="display: none; color: #3fbe42; font-weight: 500; font-size: 16px;" >Pocket Created Successfully!!</div>
+ <button style="background-color: #4b2b7f; margin-top: 20%;"type="submit" id="nextB" class="next-button">Next</button>
+</div>
+</div>
+
+</form>
+</div>
+
+ </div>
+  <script>
+      // Listen for online and offline events
+    window.addEventListener('load', () => {
+      function checkConnection() {
+        if (navigator.onLine) {
+          console.log('Internet connection restored. Reloading page...');
+          location.reload();
+        }
+      }
+
+      // Monitor for connection restoration
+      window.addEventListener('online', checkConnection);
+
+      // Optional: Notify when the connection is lost
+      window.addEventListener('offline', () => {
+        console.log('Internet connection lost.');
+      });
+    });
+    
+    function showContainer(index, color) {
+      // Hide all containers
+      const containers = document.querySelectorAll('.container');
+      containers.forEach(container => container.classList.remove('show'));
+
+      // Show the selected container
+      const activeContainer = containers[index - 1];
+      activeContainer.classList.add('show');
+
+      // Update button colors
+      const buttons = document.querySelectorAll('.button');
+      buttons.forEach(button => {
+        button.classList.remove('active');
+        button.style.color = '#000';
+      });
+      const activeButton = buttons[index - 1];
+      activeButton.style.color = color;
+      activeButton.classList.add('active');
+    }
+
+    // Handle back button press to return to Container 1
+    window.addEventListener('popstate', () => {
+      showContainer(1, '#4b0082');
+    });
+
+    // Push initial state to history
+    history.pushState({}, '');
+ function openModal(modalName) {
+            // Close all modals
+            closeAllModals();
+
+            // Open the selected modal
+            const modal = document.getElementById(modalName + 'Modal');
+            if (modal) modal.style.display = "block";
+
+            // Update active icon
+            updateActiveIcon(modalName);
+   history.pushState({ modalOpe: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe) {
+        // Close the modal if the state does not indicate it's open
+        
+     if (modal) modal.style.display = "none";
+
+            
+        }
+  });   
+        }
+
+        function closeModal() {
+            closeAllModals();
+            updateActiveIcon('home'); // Reset to Home
+        }
+
+        function closeAllModals() {
+            document.querySelectorAll('.modal').forEach(modal => modal.style.display = "none");
+        }
+
+        function updateActiveIcon(activeIcon) {
+            // Remove active class from all icons
+            document.querySelectorAll('.icon-item').forEach(icon => {
+                icon.classList.remove('active');
+            });
+
+            // Add active class to the selected icon
+            const active = document.getElementById(activeIcon + 'Icon');
+            if (active) active.classList.add('active');
+        }
+  // Handle back button on mobile
+        window.onpopstate = function () {
+            closeModal();
+        };
+
+        // Push state to listen for back button
+        history.pushState(null, null, window.location.href); 
+document.getElementById('toggle').addEventListener('click', function () {
+      const balance = document.getElementById('balance');
+document.getElementById('balance1');
+     
+      if (this.checked) {
+        balance.style.filter = 'blur(5px)';
+     balance1.style.filter = 'blur(8px)';
+      } else {
+        balance.style.filter = 'none';
+     balance1.style.filter = 'none';
+      }
+    }); 
+    // Get the buttons and the sidebar
+const openSidebarBtn = document.getElementById('openSidebarBtn');
+const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay1');
+// Event listener to open the sidebar
+document.getElementById('openSidebarBtn').addEventListener('click', function() {
+ overlay.style.display = 'block';
+  sidebar.style.display = 'block';
+ overlay.style.opacity = '30';
+ 
+  sidebar.style.transform = 'translateY(0)';
+history.pushState({ modalOpe1: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe7) {
+        // Close the modal if the state does not indicate it's open
+      sidebar.style.transform = 'translateY(100%)';  
+overlay.style.opacity = '0';
+  
+
+};
+});
+});
+document.getElementById('dot3').addEventListener('click', function() {
+ overlay.style.display = 'block';
+  sidebar.style.display = 'block';
+ overlay.style.opacity = '30';
+ 
+  sidebar.style.transform = 'translateY(0)';
+history.pushState({ modalOpe1: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe7) {
+        // Close the modal if the state does not indicate it's open
+      sidebar.style.transform = 'translateY(100%)';  
+overlay.style.opacity = '0';
+  
+
+};
+});
+});
+document.getElementById('dot2').addEventListener('click', function() {
+ overlay.style.display = 'block';
+  sidebar.style.display = 'block';
+ overlay.style.opacity = '30';
+ 
+  sidebar.style.transform = 'translateY(0)';
+history.pushState({ modalOpe7: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe7) {
+        // Close the modal if the state does not indicate it's open
+      sidebar.style.transform = 'translateY(100%)';  
+overlay.style.opacity = '0';
+  
+
+};
+});
+
+
+});
+// Function to close the sidebar
+function closeSidebar() {
+  sidebar.style.transform = 'translateY(100%)';
+  overlay.style.opacity = '0';
+  setTimeout(() => {
+    sidebar.style.display = 'none';
+    overlay.style.display = 'none';
+  }, 300); // Match the transition duration
+}
+overlay.addEventListener('click', closeSidebar); 
+// Event listener to close the sidebar
+closeSidebarBtn.addEventListener('click', function() {
+  sidebar.style.transform = 'translateY(100%)';
+  setTimeout(function() {
+    sidebar.style.display = 'none';
+  }, 300); // Match the transition duration
+overlay.style.opacity = '0';
+}); document.getElementById('joy').addEventListener('click', function () {
+document.getElementById("mod1").style.display = 'block';         
+ history.pushState({ modalOpe3: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe3) {
+        // Close the modal if the state does not indicate it's open
+    document.getElementById("mod1").style.display = 'none';           
+ }
+  });
+   });
+  document.getElementById('back1').addEventListener('click', function () {    
+     document.getElementById("mod1").style.display = 'none';            
+    });    
+    const serviceProvider = document.getElementById('serviceProvider');
+        const amount = document.getElementById('amount9');
+        const nextButton = document.getElementById('nextButton');
+
+        function updateButtonState() {
+            if (serviceProvider.value && amount.value.trim() !== "") {
+                nextButton.classList.add('active');
+                nextButton.removeAttribute('disabled');
+            } else {
+                nextButton.classList.remove('active');
+                nextButton.setAttribute('disabled', true);
+            }
+        }
+
+        serviceProvider.addEventListener('change', updateButtonState);
+        amount.addEventListener('input', updateButtonState);
+   document.getElementById('nextButton').addEventListener('click', function () {
+    const button = this;
+    if (serviceProvider.value && amount.value.trim() !== "") {
+        const originalText = button.innerHTML; // Store original button text
+        showLoading(button);
+
+        // Simulate an asynchronous operation (e.g., API call)
+        setTimeout(() => {
+            resetButton(button, originalText); // Reset the button after operation
+        }, 3000); // Adjust duration as needed
+    setTimeout(() => {
+document.getElementById("mod6").style.display ='block'         
+        }, 3000);
+    history.pushState({ modalOpe31: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe31) {
+     document.getElementById("mod6").style.display ='none'           
+   }
+   });
+    }
+});
+
+function showLoading(button) {
+    button.disabled = true;
+    button.innerHTML = '<div class="loader"></div>'; // Show loader animation
+    button.style.display = 'flex'; // Ensure proper alignment
+    button.style.justifyContent = 'center';
+    button.style.alignItems = 'center';
+}
+
+function resetButton(button, originalText) {
+    button.disabled = false;
+    button.innerHTML = originalText; // Restore original text
+    }
+   
+amount.addEventListener('input', () => {
+    // Remove any non-numeric characters (excluding digits) from the input
+    let value = amount.value.replace(/[^\d]/g, ''); // Remove non-numeric characters
+
+    // Format the number with commas
+    if (value) {
+        amount.value = Number(value).toLocaleString();
+    } else {
+        amount.value = ''; // Clear the input if no valid number remains
+    }
+    updateButtonState();
+});
+
+// Prevent invalid characters from being typed
+amount.addEventListener('keydown', (event) => {
+    // Allow: Backspace, Delete, Tab, Escape, Enter, Arrow keys
+    if (
+        ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)
+    ) {
+        return;
+    }
+
+    // Allow only numeric characters (0-9)
+    if (!/^\d$/.test(event.key)) {
+        event.preventDefault(); // Block any other key
+    }
+});   
+ document.getElementById('joy2').addEventListener('click', function () {
+document.getElementById("mod2").style.display = 'block';         
+ history.pushState({ modalOpe4: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe4) {
+        // Close the modal if the state does not indicate it's open
+    document.getElementById("mod2").style.display = 'none';           
+ }
+  });
+   });
+  document.getElementById('back2').addEventListener('click', function () {    
+     document.getElementById("mod2").style.display = 'none';            
+    });    
+    const serviceProvider2 = document.getElementById('serviceProvider2');
+        const amount2 = document.getElementById('amount10');
+        const nextButton2 = document.getElementById('nextButton2');
+
+        function updateButtonState2() {
+            if (serviceProvider2.value && amount2.value.trim() !== "") {
+                nextButton2.classList.add('active');
+                nextButton2.removeAttribute('disabled');
+            } else {
+                nextButton2.classList.remove('active');
+                nextButton2.setAttribute('disabled', true);
+            }
+        }
+
+        serviceProvider2.addEventListener('change', updateButtonState2);
+        amount2.addEventListener('input', updateButtonState2);
+   document.getElementById('nextButton2').addEventListener('click', function () {
+  const button1 = this;
+    if (serviceProvider2.value && amount2.value.trim() !== "") {
+    const originalText1 = button1.innerHTML; // Store original button text
+        showLoading(button1);
+
+        // Simulate an asynchronous operation (e.g., API call)
+        setTimeout(() => {
+            resetButton1(button1, originalText1); // Reset the button after operation
+        }, 3000); // Adjust duration as needed
+      setTimeout(() => {
+document.getElementById("mod6").style.display ='block'         
+        }, 3000);
+    history.pushState({ modalOpe32: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe32) {
+     document.getElementById("mod6").style.display ='none'           
+   }
+   });
+    }
+});
+
+function showLoading(button1) {
+    button1.disabled = true;
+    button1.innerHTML = '<div class="loader"></div>'; // Show loader animation
+    button1.style.display = 'flex'; // Ensure proper alignment
+    button1.style.justifyContent = 'center';
+    button1.style.alignItems = 'center';
+}
+
+function resetButton1(button1, originalText1) {
+    button1.disabled = false;
+    button1.innerHTML = originalText1; // Restore original text    
+    }
+   
+amount2.addEventListener('input', () => {
+    // Remove any non-numeric characters (excluding digits) from the input
+    let value = amount2.value.replace(/[^\d]/g, ''); // Remove non-numeric characters
+
+    // Format the number with commas
+    if (value) {
+        amount2.value = Number(value).toLocaleString();
+    } else {
+        amount2.value = ''; // Clear the input if no valid number remains
+    }
+    updateButtonState2();
+});
+
+// Prevent invalid characters from being typed
+amount2.addEventListener('keydown', (event) => {
+    // Allow: Backspace, Delete, Tab, Escape, Enter, Arrow keys
+    if (
+        ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)
+    ) {
+        return;
+    }
+
+    // Allow only numeric characters (0-9)
+    if (!/^\d$/.test(event.key)) {
+        event.preventDefault(); // Block any other key
+    }
+});   
+ document.getElementById('joy3').addEventListener('click', function () {
+document.getElementById("mod3").style.display = 'block';         
+ history.pushState({ modalOpe5: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe5) {
+        // Close the modal if the state does not indicate it's open
+    document.getElementById("mod3").style.display = 'none';           
+ }
+  });
+   });
+  document.getElementById('back3').addEventListener('click', function () {    
+     document.getElementById("mod3").style.display = 'none';            
+    });    
+    const serviceProvider3 = document.getElementById('serviceProvider3');
+        const amount3 = document.getElementById('amount11');
+        const nextButton3 = document.getElementById('nextButton3');
+
+        function updateButtonState3() {
+            if (serviceProvider3.value && amount3.value.trim() !== "") {
+                nextButton3.classList.add('active');
+                nextButton3.removeAttribute('disabled');
+            } else {
+                nextButton3.classList.remove('active');
+                nextButton3.setAttribute('disabled', true);
+            }
+        }
+
+        serviceProvider3.addEventListener('change', updateButtonState3);
+        amount3.addEventListener('input', updateButtonState3);
+   document.getElementById('nextButton3').addEventListener('click', function () {
+   const button2 = this;
+    if (serviceProvider3.value && amount3.value.trim() !== "") {
+      const originalText2 = button2.innerHTML; // Store original button text
+        showLoading(button2);
+
+        // Simulate an asynchronous operation (e.g., API call)
+        setTimeout(() => {
+            resetButton2(button2, originalText2); // Reset the button after operation
+        }, 3000); // Adjust duration as needed
+       setTimeout(() => {
+document.getElementById("mod6").style.display ='block'         
+        }, 3000);
+    history.pushState({ modalOpe33: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe33) {
+     document.getElementById("mod6").style.display ='none'           
+   }
+   });
+    }
+});
+
+function showLoading(button2) {
+    button2.disabled = true;
+    button2.innerHTML = '<div class="loader"></div>'; // Show loader animation
+    button2.style.display = 'flex'; // Ensure proper alignment
+    button2.style.justifyContent = 'center';
+    button2.style.alignItems = 'center';
+}
+
+function resetButton2(button2, originalText2) {
+    button2.disabled = false;
+    button2.innerHTML = originalText2; // Restore original text    
+    }
+   
+amount3.addEventListener('input', () => {
+    // Remove any non-numeric characters (excluding digits) from the input
+    let value = amount3.value.replace(/[^\d]/g, ''); // Remove non-numeric characters
+
+    // Format the number with commas
+    if (value) {
+        amount3.value = Number(value).toLocaleString();
+    } else {
+        amount3.value = ''; // Clear the input if no valid number remains
+    }
+    updateButtonState3();
+});
+
+// Prevent invalid characters from being typed
+amount3.addEventListener('keydown', (event) => {
+    // Allow: Backspace, Delete, Tab, Escape, Enter, Arrow keys
+    if (
+        ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)
+    ) {
+        return;
+    }
+
+    // Allow only numeric characters (0-9)
+    if (!/^\d$/.test(event.key)) {
+        event.preventDefault(); // Block any other key
+    }
+});   
+document.getElementById('joy4').addEventListener('click', function () {
+document.getElementById("mod4").style.display = 'block';         
+ history.pushState({ modalOpe6: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe6) {
+        // Close the modal if the state does not indicate it's open
+    document.getElementById("mod4").style.display = 'none';           
+ }
+  });
+   });
+  document.getElementById('back4').addEventListener('click', function () {    
+     document.getElementById("mod4").style.display = 'none';            
+    });    
+    const serviceProvider4 = document.getElementById('serviceProvider4');
+        const amount4 = document.getElementById('amount12');
+        const nextButton4 = document.getElementById('nextButton4');
+
+        function updateButtonState4() {
+            if (serviceProvider4.value && amount4.value.trim() !== "") {
+                nextButton4.classList.add('active');
+                nextButton4.removeAttribute('disabled');
+            } else {
+                nextButton4.classList.remove('active');
+                nextButton4.setAttribute('disabled', true);
+            }
+        }
+
+        serviceProvider4.addEventListener('change', updateButtonState4);
+        amount4.addEventListener('input', updateButtonState4);
+   document.getElementById('nextButton4').addEventListener('click', function () {
+  const button3 = this;
+    if (serviceProvider4.value && amount4.value.trim() !== "") {
+         const originalText3 = button3.innerHTML; // Store original button text
+        showLoading(button3);
+
+        // Simulate an asynchronous operation (e.g., API call)
+        setTimeout(() => {
+            resetButton3(button3, originalText3); // Reset the button after operation
+        }, 3000); // Adjust duration as needed
+       setTimeout(() => {
+document.getElementById("mod6").style.display ='block'         
+        }, 3000);
+    history.pushState({ modalOpe34: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe34) {
+     document.getElementById("mod6").style.display ='none'           
+   }
+   });
+    }
+});
+
+function showLoading(button3) {
+    button3.disabled = true;
+    button3.innerHTML = '<div class="loader"></div>'; // Show loader animation
+    button3.style.display = 'flex'; // Ensure proper alignment
+    button3.style.justifyContent = 'center';
+    button3.style.alignItems = 'center';
+}
+
+function resetButton3(button3, originalText3) {
+    button3.disabled = false;
+    button3.innerHTML = originalText3; // Restore original text
+    }
+  
+amount4.addEventListener('input', () => {
+    // Remove any non-numeric characters (excluding digits) from the input
+    let value = amount4.value.replace(/[^\d]/g, ''); // Remove non-numeric characters
+
+    // Format the number with commas
+    if (value) {
+        amount4.value = Number(value).toLocaleString();
+    } else {
+        amount4.value = ''; // Clear the input if no valid number remains
+    }
+    updateButtonState4();
+});
+
+// Prevent invalid characters from being typed
+amount4.addEventListener('keydown', (event) => {
+    // Allow: Backspace, Delete, Tab, Escape, Enter, Arrow keys
+    if (
+        ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)
+    ) {
+        return;
+    }
+
+    // Allow only numeric characters (0-9)
+    if (!/^\d$/.test(event.key)) {
+        event.preventDefault(); // Block any other key
+    }
+});   
+ document.getElementById('wad').addEventListener('click', function () {
+ document.getElementById("mod6").style.display = 'none';        
+ 
+  });
+document.getElementById('wada').addEventListener('click', function () {
+ document.getElementById("mod6").style.display = 'none';        
+ 
+  });
+  document.getElementById('save1').addEventListener('click', function () {
+       document.getElementById("mod7").style.display ='block'        
+history.pushState({ modalOpe44: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe44) {
+     document.getElementById("mod7").style.display ='none'           
+   }
+   });
+  });
+ document.getElementById('sav1').addEventListener('click', function () {
+       document.getElementById("mod7").style.display ='none'        
+  });
+document.getElementById('save2').addEventListener('click', function () {
+       document.getElementById("mod8").style.display ='block'        
+history.pushState({ modalOpe45: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe45) {
+     document.getElementById("mod8").style.display ='none'           
+   }
+   });
+  });
+ document.getElementById('sav2').addEventListener('click', function () {
+       document.getElementById("mod8").style.display ='none'        
+  });  
+
+document.getElementById('save3').addEventListener('click', function () {
+       document.getElementById("mod9").style.display ='block'        
+history.pushState({ modalOpe46: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe46) {
+     document.getElementById("mod9").style.display ='none'           
+   }
+   });
+  });
+ document.getElementById('sav3').addEventListener('click', function () {
+       document.getElementById("mod9").style.display ='none'        
+  });   
+document.getElementById('save4').addEventListener('click', function () {
+       document.getElementById("mod10").style.display ='block'        
+history.pushState({ modalOpe47: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe47) {
+     document.getElementById("mod10").style.display ='none'           
+   }
+   });
+  });
+ document.getElementById('back1a').addEventListener('click', function () {
+       document.getElementById("mod10").style.display ='none'        
+  });   
+ document.getElementById('save5').addEventListener('click', function () {
+       document.getElementById("mod11").style.display ='block'        
+history.pushState({ modalOpe48: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe48) {
+     document.getElementById("mod11").style.display ='none'           
+   }
+   });
+  });
+ document.getElementById('sav5').addEventListener('click', function () {
+       document.getElementById("mod11").style.display ='none'        
+  });   
+ document.getElementById('save6').addEventListener('click', function () {
+       document.getElementById("mod11").style.display ='block'        
+history.pushState({ modalOpe49: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe49) {
+     document.getElementById("mod11").style.display ='none'           
+   }
+   });
+  });    document.getElementById("copy-btn1").addEventListener("click", function () {
+            const accountNumber = document.getElementById("account-number1").textContent;
+            navigator.clipboard.writeText(accountNumber).then(() => {
+     document.getElementById("ant1a").style.display ='block'     
+            });
+   setTimeout(() => {
+document.getElementById("ant1a").style.display ='none'         
+        }, 2000);   
+        });
+document.getElementById("copy-btn2").addEventListener("click", function () {
+            const accountNumber2 = document.getElementById("account-number2").textContent;
+            navigator.clipboard.writeText(accountNumber2).then(() => {
+     document.getElementById("ant1b").style.display ='block'     
+            });
+   setTimeout(() => {
+document.getElementById("ant1b").style.display ='none'         
+        }, 2000);   
+        });
+ document.getElementById('joy5').addEventListener('click', function () {
+       document.getElementById("mod1").style.display ='block'        
+ history.pushState({ modalOpe51: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe51) {
+     document.getElementById("mod1").style.display ='none'           
+   }
+   });
+  });   
+ document.getElementById('joy6').addEventListener('click', function () {
+       document.getElementById("mod2").style.display ='block'        
+history.pushState({ modalOpe50: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe50) {
+     document.getElementById("mod2").style.display ='none'           
+   }
+   });
+  });   
+document.getElementById('joy7').addEventListener('click', function () {
+       document.getElementById("mod3").style.display ='block'        
+history.pushState({ modalOpe52: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe52) {
+     document.getElementById("mod3").style.display ='none'           
+   }
+   });
+  });   
+document.getElementById('joy8').addEventListener('click', function () {
+       document.getElementById("mod4").style.display ='block'        
+history.pushState({ modalOpe53: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe53) {
+     document.getElementById("mod4").style.display ='none'           
+   }
+   });
+  });   
+document.getElementById('hand1').addEventListener('click', function () {
+      
+    document.getElementById("sendModal").style.display ='block'             
+      });
+document.getElementById('hand3').addEventListener('click', function () {
+      
+    document.getElementById("sendModal").style.display ='none'             
+      });  
+   document.getElementById('hand4').addEventListener('click', function () {
+      
+    document.getElementById("payModal").style.display ='none'            
+      });   document.getElementById('hand2').addEventListener('click', function () {
+      
+   document.getElementById("mod8").style.display ='none'          
+ document.getElementById("moreModal").style.display ='none'           
+ document.getElementById("sendModal").style.display ='block'                     
+      });
+  document.getElementById('frank1').addEventListener('click', function () {
+      
+   document.getElementById("mod12").style.display ='block'          
+    history.pushState({ modalOpe61: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe61) {
+     document.getElementById("mod12").style.display ='none'           
+   }
+   });         
+      });
+ document.getElementById('frank3').addEventListener('click', function () {
+      
+   document.getElementById("mod12").style.display ='none'          
+             
+      });
+document.getElementById('error1').addEventListener('click', function () {
+    const button5 = this;  
+  const originalText5 = button5.innerHTML; // Store original button text
+        showLoading(button5);
+
+        // Simulate an asynchronous operation (e.g., API call)
+        setTimeout(() => {
+            resetButton5(button5, originalText5); // Reset the button after operation
+        }, 3000); // Adjust duration as needed
+       setTimeout(() => {
+document.getElementById("mod13").style.display ='block'         
+        }, 3000);    
+    history.pushState({ modalOpe63: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe63) {
+     document.getElementById("mod13").style.display ='none'           
+   }
+ 
+   });                  
+      });         
+   function showLoading(button5) {
+    button5.disabled = true;
+    button5.innerHTML = '<div class="loader"></div>'; // Show loader animation
+    button5.style.display = 'flex'; // Ensure proper alignment
+    button5.style.justifyContent = 'center';
+    button5.style.alignItems = 'center';
+}
+
+function resetButton5(button5, originalText5) {
+    button5.disabled = false;
+    button5.innerHTML = originalText5; // Restore original text
+    } document.getElementById('frank4').addEventListener('click', function () {
+      
+   document.getElementById("mod13").style.display ='none'          
+ });  document.getElementById('frank8').addEventListener('click', function () {
+      
+   document.getElementById("mod13").style.display ='none'          
+             
+      });                   
+                     
+    document.getElementById('frank6').addEventListener('click', function () {       
+  const button6 = this;  
+  const originalText6 = button6.innerHTML; // Store original button text
+        showLoading(button6);
+
+        // Simulate an asynchronous operation (e.g., API call)
+        setTimeout(() => {
+            resetButton6(button6, originalText6); // Reset the button after operation
+        }, 3000); // Adjust duration as needed
+       setTimeout(() => {
+document.getElementById("mod13").style.display ='block'         
+        }, 3000);    
+    });      
+   function showLoading(button6) {
+    button6.disabled = true;
+    button6.innerHTML = '<div class="loader"></div>'; // Show loader animation
+    button6.style.display = 'flex'; // Ensure proper alignment
+    button6.style.justifyContent = 'center';
+    button6.style.alignItems = 'center';
+}
+
+function resetButton6(button6, originalText6) {
+    button6.disabled = false;
+    button6.innerHTML = originalText6; // Restore original text
+    }        
+  document.getElementById('frank9').addEventListener('click', function () {
+    const button7= this;  
+  const originalText7 = button7.innerHTML; // Store original button text
+        showLoading(button7);
+
+        // Simulate an asynchronous operation (e.g., API call)
+        setTimeout(() => {
+            resetButton7(button7, originalText7); // Reset the button after operation
+        }, 3000); // Adjust duration as needed
+       setTimeout(() => {
+document.getElementById("mod13").style.display ='block'         
+        }, 3000);    
+    history.pushState({ modalOpe69: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe69) {
+     document.getElementById("mod13").style.display ='none'           
+   }
+ 
+   });                  
+      });         
+   function showLoading(button7) {
+    button7.disabled = true;
+    button7.innerHTML = '<div class="loader"></div>'; // Show loader animation
+    button7.style.display = 'flex'; // Ensure proper alignment
+    button7.style.justifyContent = 'center';
+    button7.style.alignItems = 'center';
+}
+
+function resetButton7(button7, originalText7) {
+    button7.disabled = false;
+    button7.innerHTML = originalText7; // Restore original text
+    }              
+            const amountElement = document.getElementById('amount');
+            const slider = document.getElementById('slider');
+            const instructions = document.getElementById('instructions');
+            const showButton = document.getElementById('showInstructions');
+   
+          
+       
+            const midpoint = 15;
+   function updateAmountDisplay(value) {
+                const formattedValue = value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                amountElement.textContent = `$${formattedValue}`;
+                storeSliderValue(formattedValue);
+            }
+            
+            // Function to store formatted slider value in localStorage
+            function storeSliderValue(value) {
+                localStorage.setItem('sliderValue', value);
+            }
+            
+            // Initialize slider position and amountElement
+            slider.value = midpoint;
+            updateAmountDisplay(midpoint);
+            
+            // Store initial slider value in localStorage on page load
+            storeSliderValue(midpoint.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+            
+          
+            // Event listener to update amountElement and store slider value on slider input change
+            slider.addEventListener('input', () => {
+                const value = parseFloat(slider.value);
+                updateAmountDisplay(value);
+            });
+   
+  // Function to check the amount when the button is pressed
+function checkAmount() {
+    // Get the amount from the specific element
+    const amount = parseFloat(document.getElementById("number5").innerText);
+ if (amount > 500) {
+        // Redirect to index2.html if the amount is greater than 500
+                    window.parent.document.getElementById("iframe").src = "fixed5.html";
+        
+    } else {
+        // Display the message if the amount is not greater than 500
+        document.getElementById("epa1").style.display ='block'         
+       setTimeout(() => {  
+    document.getElementById("epa1").style.display ='none'         
+     }, 5000);
+    }
+}
+   
+// Add an event listener to the button with id "pot"
+document.getElementById("pot").addEventListener("click", checkAmount);
+document.getElementById("wella61").addEventListener('click', function () {
+            window.parent.document.getElementById("iframe").style.display = "none";
+window.parent.document.getElementById("kala").style.display = "block";    
+        }); document.getElementById("ella2").addEventListener('click', function () {
+      
+   document.getElementById("mod14").style.display ='block'          
+   history.pushState({ modalOpe73: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe73) {
+     document.getElementById("mod14").style.display ='none'           
+   }
+ 
+   });              
+      });        
+document.getElementById("ella5").addEventListener('click', function () {
+      
+   document.getElementById("mod13").style.display ='block'          
+     history.pushState({ modalOpe74: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe74) {
+     document.getElementById("mod13").style.display ='none'           
+   }
+ 
+   });                
+      });     
+document.getElementById("ella1").addEventListener('click', function () {
+      
+   document.getElementById("mod14").style.display ='none'          
+             
+      });     
+document.getElementById("ella3").addEventListener('click', function () {
+      
+   document.getElementById("mod14").style.display ='block'          
+    history.pushState({ modalOpe75: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe75) {
+     document.getElementById("mod14").style.display ='none'           
+   }
+ 
+   });                 
+      });        
+
+
+document.getElementById("spot").addEventListener('click', function () {
+      
+   document.getElementById("mod23").style.display ='block'          
+    history.pushState({ modalOpe82: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe82) {
+     document.getElementById("mod23").style.display ='none'           
+   }
+ 
+   });                 
+      });        
+document.getElementById("bac23").addEventListener('click', function () {
+      
+   document.getElementById("mod23").style.display ='none' 
+   });         
+
+
+document.getElementById("wella9").addEventListener('click', function () {
+      
+   document.getElementById("mod30").style.display ='block'          
+    history.pushState({ moalOpe83: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.moalOpe83) {
+     document.getElementById("mod30").style.display ='none'           
+   }
+ 
+   });                 
+      });        
+document.getElementById("bac25").addEventListener('click', function () {
+      
+   document.getElementById("mod30").style.display ='none' 
+   });         
+document.getElementById("spot2").addEventListener('click', function () {
+      
+   document.getElementById("mod24").style.display ='block'          
+    history.pushState({ modalOpe83: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe83) {
+     document.getElementById("mod24").style.display ='none'           
+   }
+ 
+   });                 
+      });        
+document.getElementById("hold").addEventListener('click', function () {
+      
+   document.getElementById("mod30").style.display ='none' 
+   });         
+function create (){
+     event.preventDefault(); 
+     const button17= document.getElementById('nextB');  
+  const originalText17 = button17.innerHTML; // Store original button text
+        showLoading(button17);
+
+        // Simulate an asynchronous operation (e.g., API call)
+        setTimeout(() => {
+            resetButton17(button17, originalText17); // Reset the button after operation
+        }, 3000); // Adjust duration as needed
+       setTimeout(() => {
+document.getElementById("create1").style.display ='block'         
+        }, 1000);    
+  setTimeout(() => {
+document.getElementById("create1").style.display ='none'         
+        }, 3000);     
+setTimeout(() => {
+document.getElementById("mod14").style.display ='none'         
+        }, 3000);              
+        }     
+   function showLoading(button17) {
+    button17.disabled = true;
+    button17.innerHTML = '<div class="loader"></div>'; // Show loader animation
+   
+   
+}
+
+function resetButton17(button17, originalText17) {
+    button17.disabled = false;
+    button17.innerHTML = originalText17; // Restore original text
+    }               
+  </script>
+</body>
+</html>

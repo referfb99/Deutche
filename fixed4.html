@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Internet Connection Detection</title>
+  <script>
+    window.addEventListener('load', () => {
+      // Function to test internet connectivity
+      async function testConnection() {
+        try {
+          // Attempt to fetch a known public IP
+          await fetch('https://1.1.1.1', { mode: 'no-cors' });
+          return true; // Connection is likely available
+        } catch (error) {
+          return false; // No internet connection
+        }
+      }
+
+      // Event listener for when the browser regains connection
+      window.addEventListener('online', async () => {
+        const isConnected = await testConnection();
+        if (isConnected) {
+          console.log('Internet connection restored. Reloading page...');
+          location.reload();
+        } else {
+          console.log('Connection detected, but internet access could not be verified.');
+        }
+      });
+
+      // Optional: Notify user when offline
+      window.addEventListener('offline', () => {
+        console.log('Internet connection lost.');
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Internet Connection Detection</h1>
+  <p>Turn your internet connection off and on to test the page reload functionality.</p>
+</body>
+</html>

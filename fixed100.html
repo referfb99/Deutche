@@ -1,0 +1,698 @@
+<div class="button-container">
+    <div class="button spend active" id="spend-btn-732" onclick="showContainer(1, '#4b0082')">Spend</div>
+    <div class="button save" id="save-btn-984" onclick="showContainer(2, 'green')">Save</div>
+    <div class="button borrow" id="borrow-btn-562" onclick="showContainer(3, '#154dffee')">Borrow</div>
+    <div class="button invest" id="invest-btn-419" onclick="showContainer(4, '#4b0082')">Invest</div>
+</div>
+<div id="overlay1" class="overlay1"></div>
+<div class="updated" id="updated-142">Last updated a few seconds ago</div>
+<div class="actions">
+    <button id="hand1" class="btn transfer">
+        <div class="icon">↑</div>
+        <span>Transfer</span>
+    </button>     
+    <button style="margin-right: -14.5%;" id="save6" class="btn transfer">
+        <div class="icon">$</div>
+        <span>Account</span>
+    </button>        
+</div>
+
+<div class="quick-access" id="quick-access-763">
+    <h2>Quick Access</h2>
+    <a href="#" id="quick-link-931"></a>
+</div>
+
+<div class="card-container">
+    <div id="joy" style="margin-left: 3%;" class="card">
+        <div id="transport" class="card-icon">
+            <img src="https://img.icons8.com/ios-filled/50/FF5252/car.png" alt="Transport">
+        </div>
+        <p class="card-title" id="card-title-632">Transport</p>
+    </div>
+    <div id="joy2" class="card">
+        <div class="card-icon" id="card-icon-834">
+            <img src="https://img.icons8.com/ios-filled/50/FFD600/sun.png" alt="Solar">
+        </div>
+        <p class="card-title" id="card-title-745">Solar</p>
+    </div>
+    <div id="joy3" class="card">
+        <div class="card-icon" id="card-icon-926">
+            <img src="https://img.icons8.com/ios-filled/50/00C853/graduation-cap.png" alt="Education">
+        </div>
+        <p class="card-title" id="card-title-556">Education</p>
+    </div>
+    <div id="joy4" class="card">
+        <div class="card-icon" id="card-icon-489">
+            <img src="https://img.icons8.com/ios-filled/50/FF8F00/light-on.png" alt="Electricity">
+        </div>
+        <p class="card-title" id="card-title-379">Electricity</p>
+    </div>
+</div>
+
+<div class="transactions-container">
+    <div class="transactions-header">
+        <h2 id="transactions-title-831">Transactions</h2>
+        <a href="#" id="view-all-617">View All</a>
+    </div>
+    <div id="nico2" style="color: #333; font-size: 14px; text-align: center; justify-content: center; align-items: center; display: none;">
+        No Transactions Yet
+    </div>
+
+    <div class="line" id="line-299"></div>
+
+    <div id="nico" style="display: none;"> 
+        <div class="transaction" style="display: flex;">
+            <div class="transaction-info" id="transaction-info-472">
+                <img src="first.jpg" alt="Gift icon">
+                <div class="transaction-details" id="transaction-details-524">
+                    <div style="font-size: 16px;" class="name" id="transaction-name">Nicolearia Just Sent You</div>
+                </div>
+            </div>
+            <div style="margin-left: 29%; font-size: 15px;" class="transaction-amount" id="transaction-amount-654">
+                + $2,876.00
+                <span style="margin-left: 2%;" class="transaction-status" id="transaction-status">Successful</span>
+            </div>    
+        </div>
+    </div>
+</div>
+<div style="border: none; background-color: white; width: 96%; margin-left: 2%;" class="account-number5b" id="account-section-291">
+    <label>Your Account Number</label>
+    <div class="number">
+        <span style="color: black;" id="account-number2">2071225368</span>
+        <!-- Using Icon8 Copy Icon -->
+        <span style="margin-left: 12%; color: #6a1b9a; font-size: 14px;" id="copy-text-812">Copy</span>           
+        <img style="margin-left: -24%;" 
+            src="https://img.icons8.com/ios-filled/50/4caf50/copy.png" 
+            alt="Copy Icon" 
+            class="copy-icon5b" 
+            id="copy-btn2"
+        />
+    </div>
+</div>
+
+<div style="margin-top: 6%; text-align: center; justify-content: center; align-items: center; position: relative; margin-top: -3%; color: #4fc521;font-weight: 760; display: none; font-size: 14px;" id="ant1b">Copied Successfully!!</div> 
+
+<div class="container25">
+    <div class="header11" id="header11-473">You Might Like</div>
+    <div class="cards2">
+        <div class="card3" id="card3-592">
+            <h4 id="card3-title-187">How To Spot Scams</h4>
+            <img style="width: 100%; height: 110px; margin-top: 4.1%;" src="scan.jpg" alt="" id="scan-img-328"></img>
+        </div>
+        <div class="card3" id="card3-612">
+            <h4 id="card3-title-296">Newly Added: More Ways to Send Money</h4>
+            <img style="width: 100%; height: 110px; margin-top: -2%;" src="scan1.jpg" alt="" id="scan1-img-471"></img>
+        </div>
+    </div>
+</div>
+
+<div class="icon-container" id="icon-container-857">
+    <div class="icon-item active" id="homeIcon" onclick="openModal('home')">
+        <span class="material-symbols-outlined">home</span>
+        <p>Home</p>
+    </div>
+    <div class="icon-item" id="sendIcon" onclick="openModal('send')">
+        <span id="sendIcon1" class="material-symbols-outlined">send</span>
+        <p>Send</p>
+    </div>
+    <div class="icon-item" id="payIcon" onclick="openModal('pay')">
+        <span class="material-symbols-outlined">receipt_long</span>
+        <p>Pay</p>
+    </div>
+    <div class="icon-item" id="cardIcon" onclick="openModal('card')">
+        <span class="material-symbols-outlined">credit_card</span>
+        <p>Cards</p>
+    </div>
+    <div class="icon-item" id="moreIcon" onclick="openModal('more')">
+        <span class="material-symbols-outlined">apps</span>
+        <p>More</p>
+    </div>
+</div>
+
+<!-- Modals -->
+<div id="sendModal" class="modal">
+    <div style="text-align: center; justify-content: center; align-items: center; padding: 20px; margin-left: -5%;" class="modal-content" id="modal-content-482">
+        <div class="header5" id="modal-header5-341">
+            <div id="hand3" class="back-arrow1"></div>     
+            <h1>Transfer</h1>
+        </div>
+        <div class="row3d" id="row3d-543"></div>  
+        <img style="margin-top: 10%;" src="https://img.icons8.com/?size=100&id=AusdhqUWnr5N&format=png&color=4b2b7f" alt="" id="transfer-img-361">
+        <div style="display: flex; text-align: center; justify-content: center; align-items: center;">
+            <h2 style="text-align: center; justify-content: center; align-items: center; font-size: 18px; font-weight: bold; color: #636363; margin-top: 13px;" id="number5">$0.00</h2>
+            <span style="font-size: 18px; font-weight: bold; color: #636363; margin-top: -2px; padding: 10px;" id="available-text-739">Available!!!</span>
+        </div>
+        <h2 style="text-align: center; justify-content: center; align-items: center; font-size: 20px; font-weight: bold; color: #636363; margin-top: -20px; display: none;" id="epa1">500</h2>
+
+        <div id="amount" style="font-size: 50px; color: #000; font-weight: bold; font-family: Arial, sans-serif; text-align: center; justify-content: center; align-items: center; margin-top: 23px;"></div> <!-- Initially display the midpoint value -->
+        <div id="instructions">
+            <h5 style="text-align: center; justify-content: center; align-items: center; font-size: 18px; font-family: Arial, sans-serif;" id="cup">Please Slide Below To Set The Amount You Want To Transfer. When Done Click On Transfer Below 👇👇</h5>
+            <div class="arrow-container" style="margin-left: 38px; font-weight: bold;" id="arrow-container-532">
+                <span class="arrow left" id="arrow-left-219"><</span>
+                <span class="arrow right" id="arrow-right-623">></span>
+            </div>
+        </div>
+        <input type="range" id="slider" min="0" max="2876.82" step="0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001" style="width: 337px;">
+        <button style="margin-top: 11%; width: 90%; background-color: #4b2b7f;" id="pot" class="next-button">Next</button>
+    </div>
+</div>
+<div id="payModal" class="modal">
+    <div class="modal-content" id="pay-modal-content-482">
+        <div style="margin-top: 5%;" class="header5" id="pay-header-194">
+            <div style="margin-left: -93%;" id="hand4" class="back-arrow1"></div>     
+            <h1>Pay 🇺🇲</h1>
+        </div>
+        <div class="row3d" id="pay-row3d-324"></div>  
+        <div class="card-container" style="width: 91.5%; margin-top: 14%;" id="pay-card-container-671">
+            <div id="joy5" style="margin-left: 3%;" class="card">
+                <div id="transport" class="card-icon">
+                    <img src="https://img.icons8.com/ios-filled/50/FF5252/car.png" alt="Transport" id="transport-img-512">
+                </div>
+                <p class="card-title" id="transport-title-384">Transport</p>
+            </div>
+            <div id="joy6" class="card">
+                <div class="card-icon">
+                    <img src="https://img.icons8.com/ios-filled/50/FFD600/sun.png" alt="Solar" id="solar-img-275">
+                </div>
+                <p class="card-title" id="solar-title-187">Solar</p>
+            </div>
+            <div id="joy7" class="card">
+                <div class="card-icon">
+                    <img src="https://img.icons8.com/ios-filled/50/00C853/graduation-cap.png" alt="Education" id="education-img-463">
+                </div>
+                <p class="card-title" id="education-title-849">Education</p>
+            </div>
+            <div id="joy8" class="card">
+                <div class="card-icon">
+                    <img src="https://img.icons8.com/ios-filled/50/FF8F00/light-on.png" alt="Electricity" id="electricity-img-910">
+                </div>
+                <p class="card-title" id="electricity-title-284">Electricity</p>
+            </div>
+        </div>
+    </div>
+    <ol style="color: #333; font-size: 15px; user-select: none;" id="pay-instructions-983">
+        <li>Fast and secure payment processing.</li>
+        <li>Real-time transaction updates.</li>
+        <li>Seamless and user-friendly experience.</li>
+        <li>Transparent fees with no hidden charges.</li>
+        <li>Mobile-friendly for payments on the go.</li>
+        <li>Encrypted transactions to protect your data.</li>
+        <li>Integration with loyalty and rewards programs.</li>
+    </ol>
+</div>
+
+<div id="cardModal" class="modal">
+    <div class="modal-content" id="card-modal-content-214">
+        <div class="container37" id="card-container-389">
+            <div class="header5d" id="card-header-928">
+                <div onclick="closeModal()" class="back-arrow1" id="back-arrow-card-472"></div>     
+                <h1 style="font-size: 20px;">Card 🇺🇲</h1>
+            </div>
+            <div style="margin-top: -3%;" class="row3d" id="card-row3d-342"></div>   
+            <img style="width: 93%; height: 50%; margin-left: 3%; border-radius: 10px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); margin-top: 13%;" src="carrd.jpg" alt="" id="card-image-678">
+            <ul class="menu" id="card-menu-812">
+                <li id="frank1" class="menu-item">
+                    <div class="menu-item-text">
+                        <img class="cashback" src="https://img.icons8.com/?size=100&id=22185&format=png&color=0057fdcb" alt="Cashback" id="request-card-img-451">
+                        <div>
+                            <div style="margin-left: 5%; font-size: 18px; font-weight: 670; color: #4b2b7f;" class="menu-item-title" id="request-card-title-834">Request A Card</div>
+                            <div style="margin-left: 5%; font-size: 14px; color: #333;" class="menu-item-subtitle" id="request-card-subtitle-238">We will send it to you wherever you are.</div>
+                        </div>
+                    </div>     
+                    <img class="arrow-icon" src="https://img.icons8.com/ios-filled/50/999999/chevron-right.png" alt="Arrow" id="request-card-arrow-963">
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="moreModal" class="modal">
+    <div class="modal-content" id="more-modal-content-413">
+        <span style="margin-top: 3%; margin-left: 3%;" class="close" onclick="closeModal()" id="more-close-191">×</span>
+        <div class="container3a" id="more-container-732">
+            <div class="header3a" style="color: black;" id="more-header-482">More</div>
+            <div style="margin-top: -7%; margin-bottom: 5%;" class="row3d" id="more-row3d-271"></div>  
+            <div id="save5" class="profile">
+                <img src="https://img.icons8.com/?size=100&id=AjTPlMclWxjF&format=png&color=000000" alt="Profile Picture" id="profile-img-846">
+                <div class="profile-info">
+                    <div class="name" id="profile-name-591">Tuaka Nwineewiituaka</div>
+                    <div class="details" id="profile-details-374">Account Details</div>
+                </div>
+            </div>
+            <ul class="menu" id="more-menu-618">
+                <li id="save1" class="menu-item">
+                    <div class="menu-item-text">
+                        <img class="cashback" src="https://img.icons8.com/?size=100&id=22185&format=png&color=0057fdcb" alt="Cashback" id="saved-cards-img-382">
+                        <div>
+                            <div class="menu-item-title" id="saved-cards-title-714">Saved Cards</div>
+                            <div class="menu-item-subtitle" id="saved-cards-subtitle-283">Manage connected cards</div>
+                        </div>
+                    </div>
+                    <img class="arrow-icon" src="https://img.icons8.com/ios-filled/50/999999/chevron-right.png" alt="Arrow" id="saved-cards-arrow-462">
+                </li>
+                <li id="save2" class="menu-item">
+                    <div class="menu-item-text">
+                        <img class="cashback" src="https://img.icons8.com/?size=100&id=nof1CGGnYa33&format=png&color=15fd61ad" alt="Cashback" id="cashback-img-682">
+                        <div>
+                            <div class="menu-item-title" id="cashback-title-914">Cashback</div>
+                            <div class="menu-item-subtitle" id="cashback-subtitle-781">See how much you've earned</div>
+                        </div>
+                    </div>
+                    <img class="arrow-icon" src="https://img.icons8.com/ios-filled/50/999999/chevron-right.png" alt="Arrow" id="cashback-arrow-193">
+                </li>
+                <li id="save3" class="menu-item">
+                    <div class="menu-item-text">
+                        <img class="account-limits" src="https://img.icons8.com/?size=100&id=tTIl1sEbXudG&format=png&color=0057fdcb" alt="Account Limits" id="account-limits-img-495">
+                        <div>
+                            <div class="menu-item-title" id="account-limits-title-382">Account Limits</div>
+                            <div class="menu-item-subtitle" id="account-limits-subtitle-679">How much you can spend and receive</div>
+                        </div>
+                    </div>
+                    <img class="arrow-icon" src="https://img.icons8.com/ios-filled/50/999999/chevron-right.png" alt="Arrow" id="account-limits-arrow-743">
+                </li>
+                <li id="save4" class="menu-item">
+                    <div class="menu-item-text">
+                        <img class="spending-report" src="https://img.icons8.com/?size=100&id=57715&format=png&color=ff1515" alt="Spending Report" id="spending-report-img-317">
+                        <div>
+                            <div class="menu-item-title" id="spending-report-title-914">Spending Report</div>
+                            <div class="menu-item-subtitle" id="menu-item-subtitle-001">Monitor your expenses</div>
+                    </div>
+                </div>
+                <img class="arrow-icon" id="arrow-icon-001" src="https://img.icons8.com/ios-filled/50/999999/chevron-right.png" alt="Arrow">
+            </li>
+        </ul>
+
+        <!-- Sign Out -->
+        <div class="sign-out" id="sign-out-001">Sign Out</div>
+    </div>          
+        </div>
+    </div>
+
+ </div>
+  
+    <div class="container container-2">  <div class="container21">
+    <div class="header3" id="header3-001">🇺🇲 Dollar Savings</div>
+    <div id="amount2-001" class="amount2">$0.00</div>
+    <p3 id="ella3" class="add-pocket">
+        <div class="icon1" id="icon1-001">↑</div><span id="add-pocket-text-001">Add Pocket</span></p3>
+ <div id="dot2" class="dot">•••</div>
+    <div id="pockets-001" class="pockets">Pockets</div>
+  
+    <div class="description" id="description-001">
+      Put money away daily, weekly, monthly or as you spend.
+    </div>
+    <div class="image-container" id="image-container-001">
+     <img style="width: 70%; height: 40%; pointer-events: none;" src="pocket.jpg" alt="" id="image-pocket-001"></img>
+    </div>
+    <p3 id="ella2" class="save-now">Save Now</p3>
+  </div>
+  </div>
+    <div class="container container-3">
+         <div class="container24">
+    <div class="header4" id="header4-001">🇺🇲 You Owe</div>
+    <div id="amount3-001" class="amount3">$0.00</div>
+    <a id="ella5" class="get-loan-btn">
+      <div class="icon2" id="icon2-001">↑</div><span id="get-loan-text-001">Get Loan</span></a>
+    <div id="dot3" class="dot1">•••</div>
+    <div class="loan-title" id="loan-title-001">Get a Loan</div>
+    <div class="description1" id="description1-001">
+      Life happens and anyone can get low on cash. Get an overdraft, a personal loan, or a salary loan quickly if you qualify.
+    </div>
+    <div class="image-container" id="image-container-002">
+     <img style="width: 70%; height: 40%; pointer-events: none;" src="pocket1.jpg" alt="" id="image-pocket1-001"></img>
+    </div>
+   </div>
+    <button style="background-color:  #4a148c;  width: 80%; margin-top: 17px; margin-left: 9.5%;" id="frank6" class="next-button">Get a Loan</button>
+  
+    </div>
+    <div class="container container-4">
+        <div class="container27">
+      <img style ="margin-top: 7%;" src="invest.jpg" alt="" id="invest-image-001">
+        <h1 id="investments-title-001">Investments made easy</h1>
+        <p class="subtitle" id="subtitle-001">Buy stocks with as little as $10.</p>
+    <div style="color: white; user-select: none; /* Disables text selection */ -webkit-user-select: none; /* For Safari */ -moz-user-select: none; /* For Firefox */ -ms-user-select: none;" id="style-info-001">hhh</div> 
+        <button style="background-color:  #4a148c; margin-top: 14%;" id="frank9" class="next-button">Find a Stock</button>
+        <p class="disclaimer" id="disclaimer-001">
+            We do not give investment advice. Please, consult your legal, financial and tax advisers before you buy stocks.
+        </p>
+        <p class="powered-by" id="powered-by-001">Powered by <span class="bamboo">bamboo</span></p>
+    </div>
+    </div>
+  </div>
+
+ 
+
+  <div id="sidebar" class="sidebar">
+   
+      <div class="accounts-container1">
+   <button id="closeSidebarBtn">×</button> 
+    <h1 id="accounts-title-001">Accounts</h1>
+    <div class="currency-container">
+      <div class="currency-details">
+        <div class="currency-icon" id="currency-icon-001">🇺🇲</div>
+        <div class="currency-text">
+          <p9 style="color: #4a148c; font-weight: 750; font-size: 16px;" class="currency-name" id="currency-name-001">United states dollar</p9>
+          <p class="currency-code" id="currency-code-001">$</p>
+        </div>
+        <div id="balance" class="currency-balance">$0.00</div>
+     
+      </div>
+    </div>
+    <div class="toggle-container" id="toggle-container-001">
+ <img style="border: 1px solid #000000; padding: 5px; border-radius: 4px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.9); margin-left: 0.4%;" src="https://img.icons8.com/ios/50/000000/visible--v1.png" alt="Hide Balances Icon" class="hide-icon" id="hide-icon-001"> 
+    <p9 style="color: #4a148c; font-weight: 750; margin-left: 3% ; " id="hide-balances-text-001">Hide Balances</p9>  
+      <label class="toggle-switch">
+        <input type="checkbox" id="toggle" id="toggle-001">
+        <span class="slider" id="slider-001"></span>
+      </label>
+     
+    </div>
+    <button style="background-color: #d9c8e7; color: #2c2c2c; font-size: 16px; margin-top: 14%; margin-left: -1px;" class="add-currency-btn" id="add-currency-btn-001">Add New Currency</button>
+  </div>
+  </div>
+      <div id="mod1" class="modal69">
+    <div class="container32" id="container32-001">
+        <div class="header5" id="header5-001">
+      <div id="back1" class="back-arrow1" id="back-arrow1-001"></div>     
+            <h1 id="transport-header-001">Transport 🇺🇲</h1>
+        </div>
+     <div class="row3d" id="row3d-001"></div>  
+        <form id="transportForm" id="transportForm-001">
+            <label for="serviceProvider" id="service-provider-label-001">Service Provider</label>
+            <select id="serviceProvider" id="service-provider-select-001">
+                <option value="" disabled selected id="choose-provider-option-001">Choose a Provider</option>     
+                </select>
+
+            <div class="amount-container2" id="amount-container2-001">
+                <label for="amount" id="amount-label-001">Amount</label>
+      <div class="balance" id="balance-001">    
+                <span id="balance-text-001">Balance:</span><span id="number1" id="number1-001">$0.00</span>
+            </div>
+            </div>
+            <input type="text" id="amount9" placeholder="$0.00" maxlength="16" max="100000000000000000" id="amount-input-001">
+
+            <button type="button" id="nextButton" class="next-button" id="next-button-001">Next</button>
+        </form>
+    </div>  
+ </div>
+<div id="mod2" class="modal69" id="mod2-001">
+    <div class="container32" id="container32-002">
+        <div class="header5" id="header5-002">
+      <div id="back2" class="back-arrow1" id="back-arrow1-002"></div>     
+            <h1 id="solar-header-001">Solar 🇺🇲</h1>
+        </div>
+       <div class="row3d" id="row3d-002"></div>
+        <form id="transportForm" id="transportForm-002">
+            <label for="serviceProvider" id="service-provider-label-002">Service Provider</label>
+            <select id="serviceProvider2" id="service-provider-select-002">
+                <option value="" disabled selected id="choose-provider-option-002">Choose a Provider</option>
+            </select>
+
+            <div class="amount-container2" id="amount-container2-002">
+                <label for="amount" id="amount-label-002">Amount</label>
+                <div class="balance" id="balance-002">    
+                <span id="balance-text-002">Balance:</span><span id="number2" id="number2-001">$0.00</span>
+            </div>
+            </div>
+            
+            <input type="text" id="amount10" placeholder="$0.00" maxlength="16" max="100000000000000000" id="amount-input-002">
+
+            <button type="button" id="nextButton2" class="next-button" id="next-button-002">Next</button>
+        </form>
+    </div>  
+ </div>
+ 
+ <div id="mod3" class="modal69" id="mod3-001">
+    <div class="container32" id="container32-003">
+        <div class="header5" id="header5-003">
+      <div id="back3" class="back-arrow1" id="back-arrow1-003"></div>     
+            <h1 id="education-header-001">Education 🇺🇲</h1>
+        </div>
+    <div class="row3d" id="row3d-003"></div>  
+        <form id="transportForm" id="transportForm-003">
+            <label for="serviceProvider" id="service-provider-label-003">Service Provider</label>
+            <select id="serviceProvider3" id="service-provider-select-003">
+                <option value="" disabled selected id="choose-provider-option-003">Choose a Provider</option>
+          </select>
+
+            <div class="amount-container2" id="amount-container2-003">
+                <label for="amount" id="amount-label-003">Amount</label>
+               <div class="balance" id="balance-003">    
+                <span id="balance-text-003">Balance:</span><span id="number3" id="number3-001">$0.00</span>
+            </div>
+            </div>
+           
+            <input type="text" id="amount11" placeholder="$0.00" maxlength="16" max="100000000000000000" id="amount-input-003">
+
+            <button type="button" id="nextButton3" class="next-button" id="next-button-003">Next</button>
+        </form>
+    </div>  
+ </div>
+ <div id="mod4" class="modal69" id="mod4-001">
+    <div class="container32" id="container32-004">
+        <div class="header5" id="header5-004">
+      <div id="back4" class="back-arrow1" id="back-arrow1-004"></div>     
+            <h1 id="electricity-header-001">Electricity 🇺🇲</h1>
+        </div>
+        <div class="row3d" id="row3d-004"></div>  
+        <form id="transportForm" id="transportForm-004">
+            <label for="serviceProvider" id="service-provider-label-004">Service Provider</label>
+            <select id="serviceProvider4" id="service-provider-select-004">
+                <option value="" disabled selected id="choose-provider-option-004">Choose a Provider</option>
+                    </select>
+
+            <div class="amount-container2" id="amount-container2-004">
+                <label for="amount" id="amount-label-004">Amount</label>
+                <div class="balance" id="balance-004">    
+                <span id="balance-text-004">Balance:</span><span id="number4" id="number4-001">$0.00</span>
+            </div>
+            </div>
+            </div>
+            <input type="text" id="amount12" placeholder="$0.00" maxlength="16" max="100000000000000000" id="amount-input-004">
+
+            <button type="button" id="nextButton4" class="next-button" id="next-button-004">Next</button>
+        </form>
+    </div>  
+ </div>
+ <div id="mod6" class="modal69" id="mod6-001">
+       <div class="header41" id="header41-001">
+        <svg id="wad" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 10.586L17.657 4.93l1.414 1.414L13.414 12l5.657 5.657-1.414 1.414L12 13.414l-5.657 5.657-1.414-1.414L10.586 12 4.93 6.343l1.414-1.414z"/>
+        </svg>
+    </div>
+    <div class="content55" id="content55-001">
+        <div class="icon-container55" id="icon-container55-001">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 10.586L17.657 4.93l1.414 1.414L13.414 12l5.657 5.657-1.414 1.414L12 13.414l-5.657 5.657-1.414-1.414L10.586 12 4.93 6.343l1.414-1.414z"/>
+            </svg>
+        </div>
+        <div class="title55" id="title55-001">Unable To Make Payment</div>
+        <div class="message55" id="message55-001">
+            Please, try paying using the transfer option if the problem continues.
+        </div>
+    </div>
+    <div id="wada" class="footer2" id="footer2-001">Okay</div>
+ </div>
+   <div id="mod7" class="modal69" id="mod7-001">
+   <div class="container3b" id="container3b-001">
+    <div class="header3b" id="header3b-001">
+      <div id="sav1" class="back-arrow" id="back-arrow-001"></div>
+      <h1 id="saved-cards-header">Saved Cards</h1>
+    </div>
+     <div style="margin-top: -7%;" class="row3d" id="row3d-001"></div>  
+    <div class="content3b" id="content3b-001">
+      <div class="icon-placeholder" id="icon-placeholder-001"></div>
+      <p class="info-text3b" id="info-text3b-001">You have no saved cards. You’ll see your cards here after you add money to your account with a card.</p>
+    </div>
+  </div>    
+   </div>
+<div id="mod8" class="modal69" id="mod8-001">
+   <div class="container3c" id="container3c-001">
+   <div class="header3c" id="header3c-001">
+      <div id="sav2" class="back-arrow3c" id="back-arrow3c-001"></div>
+      <h1 id="cashback-header">Cashback</h1>
+    </div>
+    <div style="margin-top: -7%; margin-bottom: 5%;" class="row3d" id="row3d-002"></div>  
+    <div class="content3c" id="content3c-001">
+      <p class="available-text3c" id="available-text3c-001">Available</p>
+      <h2 id="number6" id="number6-001">$0.00</h2>
+      <div class="cards3c" id="cards3c-001">
+        <div class="card3c" id="card3c-001">
+          <p id="redeemed-text">Redeemed</p>
+          <h3 id="redeemed-amount">$0.00</h3>
+        </div>
+        <div class="card3c" id="card3c-002">
+          <p id="withdrawn-text">Withdrawn</p>
+          <h3 id="withdrawn-amount">$0.00</h3>
+        </div>
+      </div>
+      <button id="hand2" class="withdraw-button3c" id="withdraw-button3c-001">Withdraw Now</button>
+      <p class="info-text3c" id="info-text3c-002">Complete your tasks soon to earn a cashback.</p>
+    </div>
+  </div>  
+    
+</div>
+ <div id="mod9" class="modal69" id="mod9-001">
+  <div class="container3d" id="container3d-001">
+    <div class="header3d" id="header3d-001">
+        <svg id="sav3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 10.586L17.657 4.93l1.414 1.414L13.414 12l5.657 5.657-1.414 1.414L12 13.414l-5.657 5.657-1.414-1.414L10.586 12 4.93 6.343l1.414-1.414z"/>
+        </svg>
+        <div class="header-title3d" id="header-title3d-001">Account Limits 🇺🇲</div>
+    </div>
+    <div class="section3d" id="section3d-001">
+        <div class="section-title3d" id="section-title3d-001">Sending (Per Transaction)</div>
+        <div class="row3d" id="row3d-003">
+            <span id="sending-amount">$500,000</span>
+            <span class="highlight3d" id="highlight3d-001">Unlimited</span>
+        </div>
+        <div class="row3d" id="row3d-004">
+            <span id="daily-transfer-title">Daily Transfer Limit</span>
+            <span id="daily-transfer-amount">$1,000,000 per day</span>
+        </div>
+    </div>
+    <div class="section3d" id="section3d-002">
+        <div class="section-title" id="section-title-002">Transfers</div>
+        <div class="row3d" id="row3d-005">
+            <span id="free-transfers">Free Transfers</span>
+            <span id="free-transfers-remaining">4 left this month</span>
+        </div>
+    </div> 
+     </div>
+ </div>
+ <div id="mod10" class="modal69" id="mod10-001">
+<div class="header5a" id="header5a-001">
+      <div id="back1a" class="back-arrow1a" id="back-arrow1a-001"></div>     
+            <h1 id="sending-reports-header">Sending Reports</h1>
+        </div> 
+        <div style="margin-top: -1%; margin-bottom: 5%;" class="row3d" id="row3d001"></div>  
+<div class="icona" id="icona002"></div>
+<div class="titlea" id="titlea003">Spending reports are coming soon</div>
+<div class="subtitlea" id="subtitlea004">We'll let you know when they're ready</div>     
+
+</div>
+<div id="mod11" class="modal69"> 
+    <div class="account-details5b" id="account-details5b005">
+        <div class="header5b" id="header5b006">
+            <div id="sav5" class="back-arrow5b"></div>     
+            <h1 id="account-details-title007">Account Details 🇺🇲</h1>
+        </div>
+        <div style="margin-top: 6%; text-align: center; justify-content: center; align-items: center;" class="profile" id="profile008">
+            <img src="https://img.icons8.com/?size=100&id=AjTPlMclWxjF&format=png&color=000000" alt="Profile Picture" id="profile-img009">
+        </div>   
+        <div class="user-info5b" id="user-info5b010">
+            <h2 id="user-name011">NWINEEWII, JACK TUAKA</h2>
+            <p class="tier5b" id="user-tier012"><span>🏅</span> T3</p>
+        </div>
+        <div class="account-number5b" id="account-number5b013">
+            <label id="account-number-label014">Your Account Number</label>
+            <div class="number" id="account-number-div015">
+                <span id="account-number1">2071225368</span>
+                <span style="position: fixed; margin-left: 67%; color: #6a1b9a;" id="copy-text016">Copy</span>           
+                <img 
+                    src="https://img.icons8.com/ios-filled/50/4caf50/copy.png" 
+                    alt="Copy Icon" 
+                    class="copy-icon5b" 
+                    id="copy-btn1"
+                />
+            </div>
+        </div>
+        <div style="margin-top: 6%; text-align: center; justify-content: center; align-items: center; position: fixed; margin-top: -3%; color: #4fc521; font-weight: 760; display: none;" id="ant1a017">
+            Copied Successfully!! 
+        </div> 
+        <div class="limits5b" id="limits5b018">
+            <div id="balance-limit019">
+                <p id="balance-limit-text020">Balance Limit</p>
+                <h3 id="balance-limit021">Unlimited</h3>
+                <p class="status5b completed" id="balance-status022">COMPLETED</p>
+            </div>
+            <div id="transfer-limit023">
+                <p id="transfer-limit-text024">Transfer Limit</p>
+                <h3 id="transfer-limit025">Unlimited</h3>
+                <p class="status5b completed" id="transfer-status026">COMPLETED</p>
+            </div>
+        </div>
+        <div class="user-contact5b" id="user-contact5b027">
+            <h3 id="account-name028">NWINEEWII, JACK TUAKA</h3>
+            <p id="email-address029">Account Name</p>
+            <h3 id="user-email030">tuakajack6@gmail.com</h3>
+            <p id="email-text031">Email Address</p>
+        </div>
+    </div>
+</div>
+<div id="mod12" class="modal69">
+    <div class="container37" id="container37032">
+        <div class="header5d" id="header5d033">
+            <div id="frank3" class="back-arrow1"></div>     
+            <h1 style="font-size: 20px;" id="get-card-title034">Get A Card 🇺🇲</h1>
+        </div>
+        <img style="width: 93%; height: 50%; margin-left: 2%; border-radius: 10px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); margin-top: 13%;" src="carrd.jpg" alt="" id="card-image035">
+        <div style="align-items: center; justify-content: center; text-align: center;" id="card-description036">
+            <div style ="font-size: 18px; font-weight: 670; color: #4b2b7f; margin-top: 7%;" id="card-title037">Physical Visa Card</div>       
+            <div style="font-size: 14px; color black; font-weight: 500;" id="card-description-text038">Withdarw from Atm's pay on Pos machines and pay online.</div>  
+        </div>
+        <ul class="menu" id="menu039">
+            <li class="menu-item" id="menu-item040">
+                <div class="menu-item-text" id="menu-item-text041">
+                    <img class="cashback" src="https://img.icons8.com/?size=100&id=22185&format=png&color=0057fdcb" alt="Cashback" id="cashback-icon042">
+                    <div id="menu-item-title043">
+                        <div style="margin-left: 5%; font-size: 16px; font-weight: 670; color: #4b2b7f;" class="menu-item-title">Card Issuing Fee</div>
+                    </div>
+                </div>     
+                <div style="color: black; font-weight: 500; font-size: 16px;" id="card-fee044">$25</div>
+            </li>
+        </ul> 
+        <ul class="menu" id="menu045">
+            <li class="menu-item" id="menu-item046">
+                <div class="menu-item-text" id="menu-item-text047">
+                    <div id="menu-item-title048">
+                        <div style="margin-left: 23%; font-size: 16px; font-weight: 670; color: #4b2b7f;" class="menu-item-title">Delivery cost</div>
+                    </div>
+                </div>     
+                <div style="color: black; font-weight: 500; font-size: 16px; padding: 8px;" id="delivery-cost049">Based on delivering location</div>
+            </li>
+        </ul>
+        <div style="text-align: center; justify-content: center; align-items: center; margin-left: 6%;" id="next-button-div050">    
+            <button style="margin-top: 14%; width: 93%; background-color: #4b2b7f;" type="button" id="error1" class="next-button">Next</button>
+        </div> 
+    </div>
+</div>
+
+<div id="mod13" class="modal69">
+    <div class="header41" id="header41051">
+        <svg id="frank8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 10.586L17.657 4.93l1.414 1.414L13.414 12l5.657 5.657-1.414 1.414L12 13.414l-5.657 5.657-1.414-1.414L10.586 12 4.93 6.343l1.414-1.414z"/>
+        </svg>
+    </div>
+    <div class="content55" id="content55052">
+        <div class="icon-container55" id="icon-container55053">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 10.586L17.657 4.93l1.414 1.414L13.414 12l5.657 5.657-1.414 1.414L12 13.414l-5.657 5.657-1.414-1.414L10.586 12 4.93 6.343l1.414-1.414z"/>
+            </svg>
+        </div>
+        <div class="title55" id="title55054">You're Not Eligible</div>
+        <div class="message55" id="message55055">
+            Please, use your account actively and you'll be eligible for this option.            
+        </div>
+    </div>
+    <div id="frank4" class="footer2" id="footer2056">Okay</div>
+</div>
+<div id="mod14" class="modal69">
+    <div class="container37" id="container37057">
+        <div class="header5d" id="header5d058">
+            <div id="ella1" class="back-arrow1"></div>     
+            <h1 style="font-size: 19px;" id="add-pockets059">Add Pockets</h1>
+        </div>
+        <div style="justify-content: center; align-items: center; text-align: center;" id="image060">
+            <img style="margin-top: 15%;" src="https://img.icons8.com/?size=100&id=GKinyLj1lSYM&format=png&color=4b2b7f" alt="" id="icon061">
+        </div>
+        <div style="justify-content: center; align-items: center; text-align: center;" id="label062">
+            <label style="color: #333; font-weight: 500; font-size: 16px; margin-top: 10px;" id="pocket-name-label063">Enter Your Pocket Name</label>   
+        </div>
+        <form onsubmit="create()">
+            <input style="font-size: 16px; font-weight: 500; margin-top: 10px;" required id="input064">
+            <div id="create1" style="display: none; color: #3fbe42; font-weight: 500; font-size: 16px;" id="success-message065">Pocket Created Successfully!!</div>
+            <button style="background-color: #4b2b7f; margin-top: 20%;" type="submit" id="nextB" class="next-button">Next</button>
+        </form>
+    </div>
+</div>                   

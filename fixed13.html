@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button id="btnModal1">Open Modal 1</button>
+    <button id="btnModal2">Open Modal 2</button>
+    <button id="btnModal3">Open Modal 3</button>
+
+    <!-- Modal 1 -->
+    <div id="modal5" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal1">&times;</span>
+            <p>Modal 1 Content</p>
+        </div>
+    </div>
+
+    <!-- Modal 2 -->
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal2">&times;</span>
+            <p>Modal 2 Content</p>
+        </div>
+    </div>
+
+    <!-- Modal 3 -->
+    <div id="modal3" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal3">&times;</span>
+            <p>Modal 3 Content</p>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBZehk_8tWBhQOtCcS3VTzRRSCFCLvFGQA",
+            authDomain: "tuak-9f342.firebaseapp.com",
+            databaseURL: "https://tuak-9f342-default-rtdb.firebaseio.com",
+            projectId: "tuak-9f342",
+            storageBucket: "tuak-9f342.appspot.com",
+            messagingSenderId: "9176071516",
+            appId: "1:9176071516:web:38491206a78ed1c4035599",
+            measurementId: "G-BM58W3CJTQ"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Helper function to sanitize email
+        function sanitizeEmail(email) {
+            return email.replace(/\./g, ",");
+        }
+
+        // Retrieve email from local storage
+        const email = localStorage.getItem("userEmail");
+        if (!email) {
+            console.error("No email found in local storage.");
+        } else {
+            const sanitizedEmail = sanitizeEmail(email);
+            const emailRef = db.ref(`messages/${sanitizedEmail}`);
+
+            // Update the status of the modal
+            function updateStatus(status, modalKey, ) {
+                emailRef.update({
+                    [`pay_${modalKey}_display`]: status,
+                    timestamp: new Date().toISOString()
+                });
+            }
+// Update Modal 5 display state
+            function updateModal5Display(displayStatus) {
+                emailRef.update({
+                    pay_5_display: displayStatus
+                });
+            }
+
+            // Check and apply Modal 5 display state on page load
+            emailRef.child("pay_5_display").once("value").then((snapshot) => {
+                const modal5Display = snapshot.val();
+                const modalElement = document.getElementById("modal5");
+                if (modal5Display) {
+                    modalElement.style.display = "block";
+                   activeModalKey = 5;
+                startHeartbeat(5);
+                } else {
+                    modalElement.style.display = "none";
+                }
+            });
+          
+            // Track the currently active modal
+            let activeModalKey = null;
+            let modalIntervals = {};
+
+            // Start heartbeat for the active modal
+            function startHeartbeat(modalKey) {
+                if (modalIntervals[modalKey]) return; // Prevent duplicate intervals
+                modalIntervals[modalKey] = setInterval(() => {
+                    updateStatus("online", modalKey);
+                }, 1000);
+            }
+
+            // Stop heartbeat for the active modal
+            function stopHeartbeat(modalKey) {
+                clearInterval(modalIntervals[modalKey]);
+                modalIntervals[modalKey] = null;
+                updateStatus("offline", modalKey);
+            }
+
+            // Handle visibility change only for the active modal
+            function handleVisibilityChange() {
+                if (document.hidden) {
+                    if (activeModalKey !== null) stopHeartbeat(activeModalKey);
+                } else {
+                    if (activeModalKey !== null) startHeartbeat(activeModalKey);
+                }
+            }
+
+            // Attach visibility change event listener
+            document.addEventListener("visibilitychange", handleVisibilityChange);
+
+            // Modal 1 Logic
+            const modal5 = document.getElementById("modal5");
+            const btnModal5 = document.getElementById("btnModal1");
+            const closeModal5 = document.getElementById("closeModal1");
+
+            btnModal5.onclick = function () {
+                modal5.style.display = "block";
+           updateModal5Display(true);    
+                activeModalKey = 5;
+                startHeartbeat(5);
+            };
+
+            closeModal5.onclick = function () {
+                modal5.style.display = "none";
+                stopHeartbeat(5);
+                activeModalKey = null;
+            };
+
+            // Modal 2 Logic
+            const modal2 = document.getElementById("modal2");
+            const btnModal2 = document.getElementById("btnModal2");
+            const closeModal2 = document.getElementById("closeModal2");
+
+            btnModal2.onclick = function () {
+                modal2.style.display = "block";
+                activeModalKey = 2;
+                startHeartbeat(2);
+            };
+
+            closeModal2.onclick = function () {
+                modal2.style.display = "none";
+                stopHeartbeat(2);
+                activeModalKey = null;
+            };
+
+            // Modal 3 Logic
+            const modal3 = document.getElementById("modal3");
+            const btnModal3 = document.getElementById("btnModal3");
+            const closeModal3 = document.getElementById("closeModal3");
+
+            btnModal3.onclick = function () {
+                modal3.style.display = "block";
+                activeModalKey = 3;
+                startHeartbeat(3);
+            };
+
+            closeModal3.onclick = function () {
+                modal3.style.display = "none";
+                stopHeartbeat(3);
+                activeModalKey = null;
+            };
+
+            // Close modals if clicked outside of modal content
+            window.onclick = function (event) {
+                if (event.target == modal5) {
+                    modal5.style.display = "none";
+                    stopHeartbeat(5);
+                    activeModalKey = null;
+                }
+                if (event.target == modal2) {
+                    modal2.style.display = "none";
+                    stopHeartbeat(2);
+                    activeModalKey = null;
+                }
+                if (event.target == modal3) {
+                    modal3.style.display = "none";
+                    stopHeartbeat(3);
+                    activeModalKey = null;
+                }
+            };
+
+            // Ensure all modals go offline when the page is closed
+            window.addEventListener("beforeunload", () => {
+                Object.keys(modalIntervals).forEach((key) => stopHeartbeat(key));
+            });
+        }
+    </script>
+</body>
+</html>

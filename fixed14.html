@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Display Images for All Emails</title>
+  <style>
+    #imageContainer {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .email-section {
+      margin-bottom: 20px;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
+      padding: 5px;
+      border-radius: 10px;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Display Images for All Emails</h1>
+  
+  <div id="imageContainer">
+    <p>Loading images...</p>
+  </div>
+
+  <!-- Firebase v8 SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+  <script>
+    // Firebase Configuration (Use your own config)
+    const firebaseConfig = {
+      apiKey: "AIzaSyBZehk_8tWBhQOtCcS3VTzRRSCFCLvFGQA",
+      authDomain: "tuak-9f342.firebaseapp.com",
+      databaseURL: "https://tuak-9f342-default-rtdb.firebaseio.com",
+      projectId: "tuak-9f342",
+      storageBucket: "tuak-9f342.appspot.com",
+      messagingSenderId: "9176071516",
+      appId: "1:9176071516:web:38491206a78ed1c4035599",
+      measurementId: "G-BM58W3CJTQ"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Real-time listener for the `messages` node
+    db.ref('messages').on('value', snapshot => {
+      const messages = snapshot.val();
+      const imageContainer = document.getElementById('imageContainer');
+      imageContainer.innerHTML = ""; // Clear previous content
+
+      if (messages) {
+        Object.keys(messages).forEach(emailKey => {
+          const messageData = messages[emailKey];
+          const emailSection = document.createElement('div');
+          emailSection.className = "email-section";
+          
+          // Display email title
+          const emailTitle = document.createElement('h3');
+          emailTitle.textContent = `Email: ${emailKey.replace(/,/g, ".")}`;
+          emailSection.appendChild(emailTitle);
+
+          // Display imageUrl
+          if (messageData.imageUrl) {
+            const imgElement = document.createElement('img');
+            imgElement.src = messageData.imageUrl;
+            imgElement.alt = "Image URL";
+            emailSection.appendChild(imgElement);
+          }
+
+          // Display imageUrl1
+          if (messageData.imageUrl1) {
+            const imgElement1 = document.createElement('img');
+            imgElement1.src = messageData.imageUrl1;
+            imgElement1.alt = "Image URL 1";
+            emailSection.appendChild(imgElement1);
+          }
+
+          // Append to main container
+          imageContainer.appendChild(emailSection);
+        });
+      } else {
+        imageContainer.innerHTML = "<p>No messages found in the database.</p>";
+      }
+    });
+  </script>
+</body>
+</html>

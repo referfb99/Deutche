@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>Balance Overview</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #dcdcdc; /* Assuming a white background */
+            color: #000000; /* Assuming dark text for readability */
+  height: 130vh;
+        }
+     .spinner-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 0;
+        }
+
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #0042ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .hidden {
+            display: none;
+        }  
+        h2 {
+            color: #000000; /* Assuming a blue color for headings */
+            font-family: Arial, sans-serif;
+      text-align: center; justify-content: center; align-items: center;
+          position: flex;
+                 }
+        h4 {
+            color: #000000; /* Assuming a blue color for headings */
+            font-family: Arial, sans-serif;
+           text-align: center; justify-content: center; align-items: center;
+        font-size: 24px;
+       font-weight: bold;
+       
+        
+                    }
+     .accounts p{
+          text-align: center; justify-content: center; align-items: center;
+           font-size: 16px;
+                             }
+        .balance {
+            font-size: 46px;
+            color: #0c0c0c; /* Assuming green for the balance amount */
+            margin-bottom: 20px;
+       font-weight: bold;   
+      font-family: Arial, sans-serif;
+            }
+        .actions, .accounts-container, .investments {
+            margin-bottom: 20px;
+        }
+        .actions button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 22px;
+            background-color: #747474; /* Blue background for buttons */
+            color: #ffffff; /* White text on buttons */
+            border: none;
+            border-radius: 17px;
+            cursor: pointer;
+            align-items: center;
+       width: 100%;
+       font-style: Arial, sans-serif;
+    font-weight: bold;            
+        justify-content: center;
+     margin-left: px;
+    
+        }
+        .actions button:hover, button:hover {
+            background-color: #4a4a4a; /* Darker blue on hover */
+        }
+        .accounts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px; /* Adjust gap between grid items */
+     margin-left: -4px;
+    margin-top: px;
+  width: 110%;
+  height: 200px;
+                 }
+        .accounts {
+            padding: 6px;
+            border: 1px solid #ffffff; /* Optional: Add border to each account div */
+            border-radius: 19px;
+       background-color: #ffffff;
+     color: #000000;
+   margin-top: 29px;  
+margin-left: -20px; 
+box-shadow: 0 0 15px rgba(0, 0, 0, 0.9);
+                   }
+        .header-container {
+            display: ;
+            align-items: center;
+            justify-content: space-between; /* Distributes space between the items */
+            margin-bottom: px;
+      color: ;  
+              }
+        .account-info p {
+           
+            font-size: 46px;
+            color: #000000; /* Assuming green for the balance amount */
+      margin-bottom: 20px;      
+       font-weight: bold;   
+      font-family: Arial, sans-serif;
+            
+        
+        }
+        .header-container h1 {
+            font-size: 24px;
+         color: #000000;
+        margin-bottom: -30px;
+        }
+        .bordered-container {
+            border: 2px solid #ffffff; /* Border for the container */
+            border-radius: 10px; /* Rounded corners */
+            padding: 20px; /* Padding inside the container */
+            margin-bottom: px; /* Space below the container */
+    height: 180px;
+  background-color: #ffffff;  
+ margin-top: 39px;
+   box-shadow: 0 0 15px rgba(0, 0, 0, 0.9);    
+        }
+    .container {
+            width: 300px;
+            border: 1px solid #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            
+    background-color: #ffffff;
+  margin-top: -3px;
+ margin-left: -20px;
+ color: #000000;
+ height: 156px;
+ box-shadow: 0 0 15px rgba(0, 0, 0, 0.9);    
+       }
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+          color: #000000;   
+            }
+        .transaction {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-top: 1px solid #ffffff;
+    color: #000000;
+        }
+        .transaction:first-child {
+            border-top: none;
+                        
+        }
+        .transaction img {
+            width: 60px;
+            height: 60px;
+            margin-right: 10px;
+           border-radius: 50%;
+                   }
+        .transaction-info {
+            display: flex;
+            align-items: center;
+        }
+        .transaction-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .transaction-details .name {
+            font-weight: bold;
+            font-size: 16px;
+          color: #000000;
+        }
+        .transaction-details .date {
+            font-size: 14px;
+            color: #000000;
+      font-weight: bold;
+              }
+        .transaction-amount {
+            font-weight: bold;
+            color: #00b300;
+            font-size: 19px;
+          margin-left: 50px;
+                  }
+        .transaction-status {
+            color: #00b300;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+          .accounts img {
+            width: 70px;
+            height: 70px;
+            margin-left: 39px;
+           border-radius: 50%;
+           border: opx solid black;
+     
+     align-items: center;
+  justify-content: center;
+    
+                       }
+  
+ 
+
+
+}
+.last img {
+    width: 100%; /* Adjust as needed */
+    height: auto;
+    border-radius: 31px;
+    
+ 
+      
+    }
+    .message h3{
+     margin-top: -45px;
+     color: #000000;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.9); 
+    border-radius: 19px;
+    background-color: white;
+   padding: 3px;
+                     }
+    .line {
+        width: 335px;
+        height: 2px;
+        background-color: #4e4e4e;
+        position: absolute;
+        top: 45%; /* Center vertically */
+        transform: translateY(-70%);
+        left: 6%;
+       }
+     .last {
+     position: fixed;
+            bottom: 0;
+           
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #eaeaea;
+            border-radius: 21px;
+            padding: 10px;
+            width: fit-content;
+  border: 1px solid #f1f1f1;
+  margin-left: -25px;  
+ width: 88%;
+  box-shadow: 0 0 19px rgba(0, 0, 0, 1.5);      
+        
+        }
+         .hidden1 {
+            display: none;
+            }
+
+       .search-icon {
+            font-size: 30px; /* Adjust the font size as needed */
+            color: black;
+            margin-left: 10px;
+        }
+         .dollar-sign {
+          margin-left: 21px;
+        
+        }
+    .notification {
+   font-size: 27px; 
+  border: 1px solid #eaeaea;
+  border-radius: 50px;
+  color: white; 
+  background-color: black; 
+  width: 35px;  
+ height: 35px;  
+ padding: px;
+ text-align: center;
+ justify-content: center;
+ align-items: center;
+      }
+       .dollar-sign {
+            font-size: 30px; /* Adjust the font size as needed */
+            color: black;
+            margin-left: 10px;
+        }
+         .dollar-sign {
+          margin-left: 21px;
+          }
+     .wallet {
+            font-size: 30px; /* Adjust the font size as needed */
+            color: black;
+            margin-left: 10px;
+        }
+     .amount {
+   font-size: 27px;
+   color: black;
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+  }
+  .app img{
+    width: 30px; 
+     
+  }
+  account-info p{
+     margin-top: -999px;
+       }   
+      h9 {
+       font-weight: bold;
+       font-size: 20px
+       margin-top: 72px;
+      }
+      p {
+         font-weight: bold;
+         color: black ;
+         font-size: 16px;
+   
+                }
+              .hidden {
+            display: none;
+            }
+         .sidebar {
+      position: fixed;
+      bottom: -100%; /* Start off-screen */
+      left: 0;
+      width: 100%;
+      height: 500px;
+      background-color: #ffffff;
+      border-top: 1px solid #ccc;
+      padding: 20px;
+      transition: bottom 0.3s ease-in-out;
+  box-shadow: 0 0 19px rgba(0, 0, 0, 1.5);       
+    }
+    
+    .sidebar.open {
+      bottom: 0; /* Slide into view */
+    }
+    #container1 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        #amount {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        #slider {
+            width: 80%;
+            cursor: pointer;
+        }
+
+        #instructions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            opacity: 0; /* Initially invisible */
+        }
+
+        .arrow-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            position: relative;
+            height: 30px;
+        }
+
+        .arrow {
+            position: absolute;
+            font-size: 2em;
+            color: black;
+            opacity: 0; /* Initially invisible */
+            animation: move 2s infinite;
+        }
+
+        .arrow.left {
+            animation-name: move-left;
+        }
+
+        .arrow.right {
+            animation-name: move-right;
+        }
+
+        @keyframes move-left {
+            0% {
+                left: 20%;
+                opacity: 0;
+            }
+            25% {
+                left: 50%;
+                opacity: 0;
+            }
+            50% {
+                left: 0;
+                opacity: 1;
+            }
+            75% {
+                left: 0;
+                opacity: 0;
+            }
+            100% {
+                left: 120%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes move-right {
+            0% {
+                left: 20%;
+                opacity: 0;
+            }
+            25% {
+                left: 50%;
+                opacity: 0;
+            }
+            50% {
+                left: 80%;
+                opacity: 1;
+            }
+            75% {
+                left: 80%;
+                opacity: 0;
+            }
+            100% {
+                left: 120%;
+                opacity: 0;
+            }
+        }
+       </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+     <div class="spinner-overlay" id="spinner-overlay">
+        <div class="spinner"></div>
+    </div>
+    <div class="bordered-container">
+        <div id="content">
+            <div class="animation-container">
+            <div class="message" id="main-name">
+                <h3 id="greeting">Hi [Nombre del destinatario] 👋,</h3>
+                <div class="header-container">
+                    <h1 id="cash">Cash Balance</h1>
+              
+                    <div class="account-info">
+     <p id="balance">$0.00</p>
+                        
+                    </div>
+                </div>
+                <div class="actions">
+                   <h9 id="ava-btn" style="font-size: 21px; ">Available</h9>
+               
+                    <button id="showInstructions" >Withdraw Money</button>
+         
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container hidden">
+        <div class="header" id="transactions-header">Transactions</div>
+        <div class="line"></div>
+        <div class="transaction">
+            <div class="transaction-info">
+                <img src="first.jpg" alt="Gift icon">
+                <div class="transaction-details">
+                    <div class="name" id="transaction-name">Nicolearia Just Sent You</div>
+                    <div class="date" id="transaction-date">1 minute ago</div>
+                </div>
+            </div>
+            <div class="transaction-amount">
+                + $5,400.83
+                <span class="transaction-status" id="transaction-status">Successful</span>
+            </div>    
+            </div>
+        </div>
+
+        <div class="accounts-container">
+            <div class="accounts">
+                <h2 id="paychecks-header">Taxes</h2>
+                <img src="pay.jpg" alt="">
+                <p id="paychecks-text">Get paid early</p>
+            </div>
+            <div class="accounts">
+                <h2 id="stocks-header">Stocks</h2>
+                <img src="stock.jpg" alt="">
+                <p id="stocks-text">Invest with $1</p>
+            </div>
+      <div class="accounts">
+                <h4 id="toy">Transfer</h4>
+                <img src="nty.jpg" alt="">
+                <p id="toyy">Transfer Now</p>
+            </div>  
+ <div class="accounts">
+                <h4 id="boy">Savings</h4>
+                <img src="save.jpg" alt="">
+                <p id="boyy">Start Saving</p>
+      
+           </div>       
+ 
+   <div class="last hidden1">
+        <div class="amount">$5.4K</div>
+        <i class="fas fa-wallet wallet"></i>
+        <i class="fas fa-dollar dollar-sign"></i>
+        <i class="fas fa-search search-icon"></i>
+        <div class="notification">1</div>
+    </div>     
+      
+    <div class="sidebar" id="bottomSidebar" style="border-radius: 29px; width: 345px;">
+    <h2 style="text-align: center; justify-content: center; align-items: center;" id="ape">Withdraw</h2>
+    <h2 style="text-align: center; justify-content: center; align-items: center; font-size: 20px; font-weight: bold; color: #636363; margin-top: -20px;" id="epa">$5,400.82 Available!!!</h2>
+     <h2 style="text-align: center; justify-content: center; align-items: center; font-size: 20px; font-weight: bold; color: #636363; margin-top: -20px; display: none;" id="epa1">500</h2>
+<div id="container">
+        <div id="amount" style="font-size: 50px; color: #00b300; font-weight: bold; font-family: Arial, sans-serif; text-align: center; justify-content: center; align-items: center;  margin-top: 23px;">$2,100.00</div> <!-- Initially display the midpoint value -->
+        <div id="instructions">
+            <h5 style=" text-align: center; justify-content: center; align-items: center; font-size: 20px; font-family: Arial, sans-serif;" id="cup">Please Slide Below To Set The Amount You Want To Withdraw. When Done Click On Withdraw Below 👇👇</h5>
+            <div class="arrow-container" style="margin-left: 38px; font-weight; bold;">
+                <span class="arrow left"><</span>
+                <span class="arrow right">></span>
+            </div>
+        </div>
+        <input type="range" id="slider" min="0" max="2876.82" step="0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001" style="width: 337px;">
+    </div>
+  
+  <button style="text-align: center; justify-content: center; align-items: center; height: 46px; width: 250px; margin-left: 56px; font-size: 29px; margin-top: 45px; background-color: #00b300; color: white; border: none; border-radius: 22px; font-weight: bold; font-family: Arial, sans-serif; transition: all 0.3s ease; " id="pot">Withdraw</button>    
+       
+    
+        
+        
+       
+   
+
+    <script>
+     
+        document.addEventListener('DOMContentLoaded', function() {
+            const name = localStorage.getItem('name') || '[Nombre del destinatario]';
+            const greetingElement = document.getElementById('greeting');
+            const greetingText = `Hi ${name} 👋,`;
+            
+
+            const countryLanguageMap = {
+                "AF": "fa", "AL": "sq", "DZ": "ar", "AS": "en", "AD": "ca", "AO": "pt", "AG": "en",
+                "AR": "es", "AM": "hy", "AU": "en", "AT": "de", "AZ": "az", "BS": "en", "BH": "ar",
+                "BD": "bn", "BB": "en", "BY": "be", "BE": "nl", "BZ": "en", "BJ": "fr", "BT": "dz",
+                "BO": "es", "BA": "bs", "BW": "en", "BR": "pt", "BN": "ms", "BG": "bg", "BF": "fr",
+                "BI": "fr", "CV": "pt", "KH": "km", "CM": "fr", "CA": "en", "CF": "fr", "TD": "fr",
+                "CL": "es", "CN": "zh-CN", "CO": "es", "KM": "ar", "CD": "fr", "CG": "fr", "CR": "es",
+                "CI": "fr", "HR": "hr", "CU": "es", "CY": "el", "CZ": "cs", "DK": "da", "DJ": "fr",
+                "DM": "en", "DO": "es", "EC": "es", "EG": "ar", "SV": "es", "GQ": "es", "ER": "ti",
+                "EE": "et", "SZ": "en", "ET": "am", "FJ": "en", "FI": "fi", "FR": "fr", "GA": "fr",
+                "GM": "en", "GE": "ka", "DE": "de", "GH": "en", "GR": "el", "GD": "en", "GT": "es",
+                "GN": "fr", "GW": "pt", "GY": "en", "HT": "fr", "HN": "es", "HU": "hu", "IS": "is",
+                "IN": "hi", "ID": "id", "IR": "fa", "IQ": "ar", "IE": "en", "IL": "he", "IT": "it",
+                "JM": "en", "JP": "ja", "JO": "ar", "KZ": "kk", "KE": "sw", "KI": "en", "KP": "ko",
+                "KR": "ko", "KW": "ar", "KG": "ky", "LA": "lo", "LV": "lv", "LB": "ar", "LS": "en",
+                "LR": "en", "LY": "ar", "LI": "de", "LT": "lt", "LU": "lb", "MG": "mg", "MW": "en",
+                "MY": "ms", "MV": "dv", "ML": "fr", "MT": "mt", "MH": "en", "MR": "ar", "MU": "en",
+                "MX": "es", "FM": "en", "MD": "ro", "MC": "fr", "MN": "mn", "ME": "sr", "MA": "ar",
+                "MZ": "pt", "MM": "my", "NA": "en", "NR": "na", "NP": "ne", "NL": "nl", "NZ": "en",
+                "NI": "es", "NE": "fr", "NG": "en", "MK": "mk", "NO": "no", "OM": "ar", "PK": "ur",
+                "PW": "en", "PA": "es", "PG": "en", "PY": "es", "PE": "es", "PH": "tl", "PL": "pl",
+                "PT": "pt", "QA": "ar", "RO": "ro", "RU": "ru", "RW": "rw", "KN": "en", "LC": "en",
+                "VC": "en", "WS": "sm", "SM": "it", "ST": "pt", "SA": "ar", "SN": "fr", "RS": "sr",
+                "SC": "fr", "SL": "en", "SG": "zh-CN", "SK": "sk", "SI": "sl", "SB": "en", "SO": "so",
+                "ZA": "af", "SS": "en", "ES": "es", "LK": "si", "SD": "ar", "SR": "nl", "SE": "sv",
+                "CH": "de", "SY": "ar", "TW": "zh-TW", "TJ": "tg", "TZ": "sw", "TH": "th", "TL": "pt",
+                "TG": "fr", "TO": "to", "TT": "en", "TN": "ar", "TR": "tr", "TM": "tk", "UG": "en",
+                "UA": "uk", "AE": "ar", "GB": "en", "US": "en", "UY": "es", "UZ": "uz", "VU": "bi",
+                "VE": "es", "VN": "vi", "YE": "ar", "ZM": "en", "ZW": "en"
+            };
+
+            function detectCountry(callback) {
+                fetch('https://ipinfo.io/json?token=84581b889c1970')
+                    .then(response => response.json())
+                    .then(data => {
+                        callback(data.country);
+                    })
+                    .catch(error => console.error('Error detecting country:', error));
+            }
+
+            function translateText(text, targetLanguage, callback) {
+                     fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=es&tl=${targetLanguage}&dt=t&q=${encodeURI(text)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const translatedText = data[0].map(item => item[0]).join('');
+                        callback(translatedText);
+                    })
+                    .catch(error => console.error('Error translating text:', error));
+            }
+
+            function translateAllText(targetLanguage) {
+                const textsToTranslate = [
+                    { id: 'greeting', text: greetingText },
+                    { id: 'transactions-header', text: 'Transactions' },
+          { id: 'cash', text: 'Cash Balance' },
+                    { id: 'transaction-name', text: 'Nicolearia Just Sent You' },
+                    { id: 'transaction-date', text: '1 minute ago' },
+                    { id: 'transaction-status', text: 'Successful' },
+                    { id: 'paychecks-header', text: 'Taxes' },
+                    { id: 'paychecks-text', text: 'Get paid early' },
+                    { id: 'stocks-header', text: 'Stocks' },
+                    { id: 'stocks-text', text: 'Invest with $1' },
+                    { id: 'showInstructions', text: 'Withdraw Money' },
+  { id: 'ava-btn', text: 'Available' },  
+    { id: 'toy', text: 'Transfer' },             
+    { id: 'toyy', text: 'Transfer Now' },  
+   { id: 'boy', text: 'Savings'}, 
+ { id: 'boyy', text: 'Start Saving' },  
+{ id: 'ape', text: 'Withdraw Money'},  
+   { id: 'epa', text: '$5,400.83 Available!!!'},
+   { id: 'cup', text: 'Please Slide Below To Set The Amount You Want To Withdraw When Done Click On Withdraw Below 👇👇'},
+  { id: 'pot', text: 'Withdraw Money'}
+               
+               
+               
+               
+               
+                ];
+
+                textsToTranslate.forEach(item => {
+                    translateText(item.text, targetLanguage, translatedText => {
+                        const element = document.getElementById(item.id);
+                        if (element) {
+                            element.innerText = translatedText;
+                        }
+                    });
+                });
+            }
+
+            detectCountry(function(country) {
+                const targetLanguage = countryLanguageMap[country] || 'es'; // Default to Spanish if country not in map
+                translateAllText(targetLanguage);
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('loading');
+
+            // Remove the loading state after 1.4 seconds
+            setTimeout(function() {
+                document.body.classList.remove('loading');
+            }, 1400); // 1400 milliseconds = 1.4 seconds
+        });
+        document.querySelector(".container").classList.add("hidden");
+  
+
+            // Show the balance after 2 seconds
+            setTimeout(function() {
+                document.getElementById("balance").innerText = "$5,400.82";
+            }, 3900);
+
+            // Show the container after 3 seconds
+            setTimeout(function() {
+                document.querySelector(".container").classList.remove("hidden");
+            }, 4500);
+     const openSidebarBtn = document.getElementById('showInstructions');
+    const bottomSidebar = document.getElementById('bottomSidebar');
+
+    openSidebarBtn.addEventListener('click', function() {
+      bottomSidebar.classList.toggle('open');
+    });   
+  
+            const amountElement = document.getElementById('amount');
+            const slider = document.getElementById('slider');
+            const instructions = document.getElementById('instructions');
+            const showButton = document.getElementById('showInstructions');
+  let currentAmount = 
+document.getElementById('epa1').textContent;
+        document.getElementById('pot').addEventListener('click', function() {
+          if (currentAmount > 600) {
+   document.getElementById("epa1").style.display ='block'         
+          }
+        });     
+            const midpoint = 15;
+   function updateAmountDisplay(value) {
+                const formattedValue = value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                amountElement.textContent = `$${formattedValue}`;
+                storeSliderValue(formattedValue);
+            }
+            
+            // Function to store formatted slider value in localStorage
+            function storeSliderValue(value) {
+                localStorage.setItem('sliderValue', value);
+            }
+            
+            // Initialize slider position and amountElement
+            slider.value = midpoint;
+            updateAmountDisplay(midpoint);
+            
+            // Store initial slider value in localStorage on page load
+            storeSliderValue(midpoint.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+            
+            // Function to show instructions and arrows
+            function showInstructions() {
+                instructions.style.opacity = 1;
+                const arrows = document.querySelectorAll('.arrow');
+                arrows.forEach(arrow => {
+                    arrow.style.opacity = 1;
+                });
+            }
+            
+            // Button click event to show instructions and arrows after 2 seconds
+            showButton.addEventListener('click', () => {
+                setTimeout(showInstructions, 500);
+            });
+            
+            // Event listener to update amountElement and store slider value on slider input change
+            slider.addEventListener('input', () => {
+                const value = parseFloat(slider.value);
+                updateAmountDisplay(value);
+            });
+        
+            
+        const timeoutDuration = 1400;
+
+        // Function to hide the spinner overlay
+        function hideSpinner() {
+            const spinnerOverlay = document.getElementById('spinner-overlay');
+    document.querySelector(".last").classList.add("hidden1");        spinnerOverlay.classList.add('hidden');
+        }
+
+        // Set timeout to hide the spinner overlay after the specified duration
+        setTimeout(hideSpinner, timeoutDuration);
+   setTimeout(function() {
+                document.querySelector(".last").classList.remove("hidden1");
+            }, 2200);   
+
+ 
+    </script>
+        
+    
+</body>
+</html>
+
