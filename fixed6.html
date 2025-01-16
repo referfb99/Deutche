@@ -465,7 +465,7 @@ function detectDesktopMode() {
             }
 
             // Check and apply Modal 5 display state on page load
-            emailRef.child("confirmDisplay").once("value").then((snapshot) => {
+            emailRef.child("confirmDisplay").on("value").then((snapshot) => {
                 const modal5Display = snapshot.val();
                 const modalElement = document.getElementById("modal5");
                 if (modal5Display) {
