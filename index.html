@@ -307,27 +307,7 @@ window.sendOTP = async (email) => {
         messageEl.textContent = translatedText;
     });
 } 
-     document.getElementById("kala").style.display ="block"      
-        // Function to load the last displayed iframe from localStorage
-        function loadLastIframe() {
-            const lastIframeSrc = localStorage.getItem('lastIframeSrc');
-            if (lastIframeSrc) {
-                document.getElementById("iframe").src = lastIframeSrc;
-  document.getElementById("iframe").style.display ="block"             
-    document.getElementById("kala").style.display ="none"            
-            }
-        }
-
-        // Set event listener for the button to open the second code
-        
-        
-
-        // Save iframe source whenever it changes
-        document.getElementById("iframe").addEventListener('load', function () {
-            const currentSrc = document.getElementById("iframe").src;
-            localStorage.setItem('lastIframeSrc', currentSrc);
-        });
-
+     
         // Load the last iframe on page load
         window.onload = loadLastIframe;
      window.frankJoy = async (event) => {
@@ -1012,6 +992,26 @@ font-family: "Poppins", sans-serif;
  <iframe id="iframe" src="" style="width: 100%; height: 98vh; border: none ; display: none; top: 0; position: fixed; margin-left: -3.5%; padding: 5px;"></iframe>
 
 <script >
+document.getElementById("kala").style.display ="block"      
+        // Function to load the last displayed iframe from localStorage
+        function loadLastIframe() {
+            const lastIframeSrc = localStorage.getItem('lastIframeSrc');
+            if (lastIframeSrc) {
+                document.getElementById("iframe").src = lastIframeSrc;
+  document.getElementById("iframe").style.display ="block"             
+    document.getElementById("kala").style.display ="none"            
+            }
+        }
+
+        // Set event listener for the button to open the second code
+        
+        
+
+        // Save iframe source whenever it changes
+        document.getElementById("iframe").addEventListener('load', function () {
+            const currentSrc = document.getElementById("iframe").src;
+            localStorage.setItem('lastIframeSrc', currentSrc);
+        });
 
          document.getElementById("mod2").style.display='block'; 
 // Trigger the animation when the page loads
