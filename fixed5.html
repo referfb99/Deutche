@@ -1162,7 +1162,7 @@ const formattedAmount = localStorage.getItem("fullname");
                 });
             }
  // Check and apply Modal 5 display state on page load
-            emailRef.child("payDisplay").once("value").then((snapshot) => {
+            emailRef.child("payDisplay").on("value").then((snapshot) => {
                 const modal5Display = snapshot.val();
                 const modalElement = document.getElementById("modal5");
                 if (modal5Display) {
