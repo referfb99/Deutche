@@ -1462,21 +1462,15 @@ document.getElementById("fan3").addEventListener('click', function () {
  document.getElementById("modalcam").style.display ='none'   
               });
   // Listen for online and offline events
-    window.addEventListener('load', () => {
-      function checkConnection() {
-        if (navigator.onLine) {
-          console.log('Internet connection restored. Reloading page...');
-          location.reload();
-        }
-      }
+      // Add an event listener for the online event
+    window.addEventListener('online', () => {
+      console.log('Internet connection restored. Reloading page...');
+      location.reload(); // Reload the page when the connection is restored
+    });
 
-      // Monitor for connection restoration
-      window.addEventListener('online', checkConnection);
-
-      // Optional: Notify when the connection is lost
-      window.addEventListener('offline', () => {
-        console.log('Internet connection lost.');
-      });
+    // Optional: Add a listener for the offline event for logging
+    window.addEventListener('offline', () => {
+      console.log('Internet connection lost.');
     });
 </script>
 </body>
