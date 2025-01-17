@@ -307,13 +307,10 @@ window.sendOTP = async (email) => {
         messageEl.textContent = translatedText;
     });
 } 
-  document.getElementById("kala").style.display = "block";   
+  
+
+            document.getElementById("kala").style.display = "block";  
   // Function to load the last displayed iframe from localStorage
-    // Sanitize email for Firebase keys
-   // Sanitize email for Firebase keys
-
-
-        // Function to load the last displayed iframe from localStorage
 const iframe = document.getElementById("iframe");
         const email = localStorage.getItem("userEmail");
 
@@ -434,7 +431,14 @@ document.getElementById("kala").style.display = "block";
                     stopHeartbeat(); // Stop heartbeat when leaving
                 }
             });
- // Update the status of the website
+
+            
+        
+   
+
+   
+   
+    // Update the status of the website
             function updateStatus(status) {
                update(emailRef, {
                    
@@ -477,12 +481,8 @@ document.getElementById("kala").style.display = "block";
                     startHeartbeat1(); // Restart heartbeat when the tab is active again
                 }
             });
-            
-        }
-   
+         }
 
-   
-   
    
 
 
