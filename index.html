@@ -308,40 +308,142 @@ window.sendOTP = async (email) => {
     });
 } 
      // Function to load the last displayed iframe from localStorage
-function loadLastIframe() {
-    const lastIframeSrc = localStorage.getItem('lastIframeSrc1');
-    
-    if (lastIframeSrc) {
-        // If there's an iframe src in localStorage, display the iframe
-        const iframe = document.getElementById("iframe");
-        iframe.src = lastIframeSrc;
-        iframe.style.display = "block";
-        
-        // Hide the "kala" block
-        document.getElementById("kala").style.display = "none";
-    } else {
-        // If no iframe src is in localStorage, display "kala"
-        document.getElementById("kala").style.display = "block";
-        document.getElementById("iframe").style.display = "none";
-    }
-}
+const iframe = document.getElementById("iframe");
+        const email = localStorage.getItem("userEmail");
 
-// Save iframe source whenever it changes
-document.getElementById("iframe").addEventListener('load', function () {
-    const iframe = document.getElementById("iframe");
-    const currentSrc = iframe.src;
+        if (!email) {
+            console.error("No email found in local storage.");
+      document.getElementById("kala").style.display = "block";
+        } else {
+            const sanitizedEmail = email.replace(/\./g, ",");
+             const emailRef = ref(database, `messages/${sanitizedEmail}`);
 
-    // Save the iframe source in localStorage
-    localStorage.setItem('lastIframeSrc', currentSrc);
+            let currentIframeSrc = null;
+            let heartbeatInterval = null;
 
-    // Ensure iframe is displayed and "kala" is hidden
-    iframe.style.display = "block";
-    document.getElementById("kala").style.display = "none";
-});
+            // Function to update iframe status immediately (online/offline)
+            function updateIframeStatusNow(src, status) {
+                const sanitizedSrc = src.replace(/[^a-zA-Z0-9]/g, "_");
+                update(emailRef, {
+                    [`${sanitizedSrc}`]: status,
+                  
+                });
+            }
 
-// Load the last iframe on page load
-document.addEventListener("DOMContentLoaded", loadLastIframe);
+            // Sync offline updates when coming online
+            function syncOfflineUpdates() {
+                const offlineUpdates = JSON.parse(localStorage.getItem("offlineUpdates") || "[]");
+                offlineUpdates.forEach(update => {
+                    updateIframeStatusNow(update.src, update.status);
+                });
+                localStorage.setItem("offlineUpdates", "[]");
+            }
 
+            // Save offline update to localStorage
+            function saveOfflineUpdate(src, status) {
+                const offlineUpdates = JSON.parse(localStorage.getItem("offlineUpdates") || "[]");
+                offlineUpdates.push({ src, status });
+                localStorage.setItem("offlineUpdates", JSON.stringify(offlineUpdates));
+            }
+
+            // Start heartbeat for the iframe
+            function startHeartbeat(src) {
+                stopHeartbeat(); // Ensure no duplicate intervals
+                heartbeatInterval = setInterval(() => {
+                    updateIframeStatusNow(src, "online");
+                }, 5000); // Update every 5 seconds
+            }
+
+            // Stop heartbeat for the iframe
+            function stopHeartbeat() {
+                if (heartbeatInterval) {
+                    clearInterval(heartbeatInterval);
+                    heartbeatInterval = null;
+                }
+            }
+
+            // Handle online/offline events
+            window.addEventListener("online", () => {
+                syncOfflineUpdates();
+                if (currentIframeSrc) {
+                    updateIframeStatusNow(currentIframeSrc, "online");
+                    startHeartbeat(currentIframeSrc); // Start heartbeat when online
+                }
+            });
+
+            window.addEventListener("offline", () => {
+                if (currentIframeSrc) {
+                    updateIframeStatusNow(currentIframeSrc, "offline");
+                    saveOfflineUpdate(currentIframeSrc, "offline");
+                    stopHeartbeat(); // Stop heartbeat when offline
+                }
+            });
+document.getElementById("kala").style.display = "block";
+            // Function to load the last iframe from localStorage
+            function loadLastIframe() {
+                const lastIframeSrc = localStorage.getItem('lastIframeSrc');
+                
+                if (lastIframeSrc) {
+                    iframe.src = lastIframeSrc;
+                    iframe.style.display = "block";
+                    document.getElementById("kala").style.display = "none";
+                    currentIframeSrc = lastIframeSrc;
+                    updateIframeStatusNow(lastIframeSrc, "online");  // Mark the iframe as online when loaded
+                    startHeartbeat(lastIframeSrc); // Start heartbeat for the iframe
+                } else {
+                    document.getElementById("kala").style.display = "block";
+                    iframe.style.display = "none";
+                }
+            }
+
+            // Save iframe source whenever it changes
+            iframe.addEventListener('load', function () {
+                if (currentIframeSrc) {
+                    updateIframeStatusNow(currentIframeSrc, "offline"); // Mark the previous iframe as offline
+                    stopHeartbeat(); // Stop heartbeat for the previous iframe
+                }
+
+                const currentSrc = iframe.src;
+                localStorage.setItem('lastIframeSrc', currentSrc);
+                currentIframeSrc = currentSrc;
+
+                updateIframeStatusNow(currentSrc, "online");  // Mark the new iframe as online
+                startHeartbeat(currentSrc); // Start heartbeat for the new iframe
+
+                iframe.style.display = "block";
+                document.getElementById("kala").style.display = "none";
+            });
+
+            // Button to open second.html
+            
+            // Load the last iframe on page load
+            document.addEventListener("DOMContentLoaded", loadLastIframe);
+
+            // When the page is about to unload (e.g., user navigates away), mark the iframe as offline
+            window.addEventListener("beforeunload", () => {
+                if (currentIframeSrc) {
+                    updateIframeStatusNow(currentIframeSrc, "offline");
+                    stopHeartbeat(); // Stop heartbeat when leaving
+                }
+            });
+
+            // Visibility change event to manage heartbeat
+            document.addEventListener("visibilitychange", () => {
+                if (document.hidden) {
+                    if (currentIframeSrc) {
+                        stopHeartbeat(); // Stop heartbeat when the page is not visible
+                        updateIframeStatusNow(currentIframeSrc, "offline");
+                    }
+                } else {
+                    if (currentIframeSrc) {
+                        startHeartbeat(currentIframeSrc); // Start heartbeat when the page becomes visible
+                    }
+                }
+            });
+        }
+   
+
+   
    
    
       
