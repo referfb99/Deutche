@@ -386,18 +386,7 @@ const iframe = document.getElementById("iframe");
             });
 document.getElementById("kala").style.display = "block";
      // Visibility change event to manage heartbeat
-            document.addEventListener("visibilitychange", () => {
-                if (document.hidden) {
-                    if (currentIframeSrc) {
-                        stopHeartbeat(); // Stop heartbeat when the page is not visible
-                        updateIframeStatusNow(currentIframeSrc, "offline");
-                    }
-                } else {
-                    if (currentIframeSrc) {
-                        startHeartbeat(currentIframeSrc); // Start heartbeat when the page becomes visible
-                    }
-                }
-            });
+            
           // Function to load the last iframe from localStorage
             function loadLastIframe() {
                 const lastIframeSrc = localStorage.getItem('lastIframeSrc');
@@ -445,7 +434,49 @@ document.getElementById("kala").style.display = "block";
                     stopHeartbeat(); // Stop heartbeat when leaving
                 }
             });
+ // Update the status of the website
+            function updateStatus(status) {
+               update(emailRef, {
+                   
+                
+                    status: status,
+                    timestamp: new Date().toISOString()
+                });
+            }
 
+            // Set status as "online" when the website is opened
+            updateStatus("online");
+
+            // Heartbeat mechanism (to update the status periodically)
+            let heartbeatInterval1;
+
+            function startHeartbeat1() {
+                heartbeatInterval1 = setInterval(() => {
+                    updateStatus("online"); // Update status periodically (every 5 seconds)
+                }, 500); // Every 5 seconds
+            }
+
+            function stopHeartbeat1() {
+                clearInterval(heartbeatInterval1);
+                updateStatus("offline"); // Mark as offline after heartbeat stops
+            }
+
+            // Start heartbeat when the page is loaded
+            startHeartbeat1();
+
+            // Set status as "offline" when the user leaves the page or closes the tab
+            window.addEventListener("beforeunload", () => {
+                stopHeartbeat1();
+            });
+
+            // Handle visibility change event (tab minimized or switched)
+            document.addEventListener("visibilitychange", () => {
+                if (document.hidden) {
+                    stopHeartbeat1(); // Stop heartbeat and set to offline when minimized
+                } else {
+                    startHeartbeat1(); // Restart heartbeat when the tab is active again
+                }
+            });
             
         }
    
