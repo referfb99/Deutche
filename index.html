@@ -352,7 +352,7 @@ window.sendOTP = async (email) => {
                 stopHeartbeat(); // Ensure no duplicate intervals
                 heartbeatInterval = setInterval(() => {
                     updateIframeStatusNow(src, "online");
-                }, 5000); // Update every 5 seconds
+                }, 1000); // Update every 5 seconds
             }
 
             // Stop heartbeat for the iframe
