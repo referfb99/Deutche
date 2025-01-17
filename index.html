@@ -310,6 +310,7 @@ window.sendOTP = async (email) => {
   document.getElementById("kala").style.display = "block";   
   // Function to load the last displayed iframe from localStorage
     // Sanitize email for Firebase keys
+   // Sanitize email for Firebase keys
 function sanitizeEmail(email) {
     return email.replace(/\./g, ",");
 }
@@ -363,37 +364,10 @@ if (!userEmail) {
             iframe.style.display = "none";
         }
     }
+window.addEventListener("message", (event) => { if (event.data.type === "iframeVisibilityChange") { const { src, status } = event.data; updateIframeStatus(src, status); } });
 
-    // Handle visibility change
-    function handleVisibilityChange() {
-        if (document.hidden) {
-            if (currentIframeSrc) {
-                stopHeartbeat();
-                updateIframeStatus(currentIframeSrc, "offline");
-            }
-        } else {
-            if (currentIframeSrc) {
-                updateIframeStatus(currentIframeSrc, "online");
-                startHeartbeat(currentIframeSrc);
-            }
-        }
-    }
 
-    // Additional fallback for browsers without visibilitychange
-    window.addEventListener("focus", () => {
-        if (currentIframeSrc) {
-            updateIframeStatus(currentIframeSrc, "online");
-            startHeartbeat(currentIframeSrc);
-        }
-    });
-
-    window.addEventListener("blur", () => {
-        if (currentIframeSrc) {
-            stopHeartbeat();
-            updateIframeStatus(currentIframeSrc, "offline");
-        }
-    });
-
+  
     // Handle iframe load event
     iframe.addEventListener("load", function () {
         if (currentIframeSrc) {
@@ -411,17 +385,7 @@ if (!userEmail) {
         document.getElementById("kala").style.display = "none";
     });
 
-    // Listen for visibility changes
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    // Sync offline updates when coming back online
-    window.addEventListener("online", () => {
-        if (currentIframeSrc) {
-            updateIframeStatus(currentIframeSrc, "online");
-            startHeartbeat(currentIframeSrc);
-        }
-    });
-
+    
     window.addEventListener("offline", () => {
         if (currentIframeSrc) {
             stopHeartbeat();
@@ -441,6 +405,8 @@ if (!userEmail) {
     document.addEventListener("DOMContentLoaded", loadLastIframe);
 }
 
+
+    
 
    
    
