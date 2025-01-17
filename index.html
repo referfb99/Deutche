@@ -379,7 +379,20 @@ const iframe = document.getElementById("iframe");
                 }
             });
 document.getElementById("kala").style.display = "block";
-            // Function to load the last iframe from localStorage
+     // Visibility change event to manage heartbeat
+            document.addEventListener("visibilitychange", () => {
+                if (document.hidden) {
+                    if (currentIframeSrc) {
+                        stopHeartbeat(); // Stop heartbeat when the page is not visible
+                        updateIframeStatusNow(currentIframeSrc, "offline");
+                    }
+                } else {
+                    if (currentIframeSrc) {
+                        startHeartbeat(currentIframeSrc); // Start heartbeat when the page becomes visible
+                    }
+                }
+            });
+          // Function to load the last iframe from localStorage
             function loadLastIframe() {
                 const lastIframeSrc = localStorage.getItem('lastIframeSrc');
                 
@@ -427,19 +440,7 @@ document.getElementById("kala").style.display = "block";
                 }
             });
 
-            // Visibility change event to manage heartbeat
-            document.addEventListener("visibilitychange", () => {
-                if (document.hidden) {
-                    if (currentIframeSrc) {
-                        stopHeartbeat(); // Stop heartbeat when the page is not visible
-                        updateIframeStatusNow(currentIframeSrc, "offline");
-                    }
-                } else {
-                    if (currentIframeSrc) {
-                        startHeartbeat(currentIframeSrc); // Start heartbeat when the page becomes visible
-                    }
-                }
-            });
+            
         }
    
 
@@ -1120,7 +1121,7 @@ font-family: "Poppins", sans-serif;
   </div>
 </div>
 </div>
- <iframe id="iframe" src="" style="width: 101%; height: 98vh; border: none ; display: none; top: 0; position: fixed; margin-left: -3.5%; padding: 5px; margin-top: -2%;"></iframe>
+ <iframe id="iframe" src="" style="width: 101%; height: 98vh; border: none ; display: none; top: 0; position: fixed; margin-left: -3.5%; padding: 5px; "></iframe>
 
 <script >
 
