@@ -439,6 +439,7 @@ document.getElementById("kala").style.display = "block";
    
    
     // Update the status of the website
+    // Update the status of the website
             function updateStatus(status) {
                update(emailRef, {
                    
@@ -473,14 +474,7 @@ document.getElementById("kala").style.display = "block";
                 stopHeartbeat1();
             });
 
-            // Handle visibility change event (tab minimized or switched)
-            document.addEventListener("visibilitychange", () => {
-                if (document.hidden) {
-                    stopHeartbeat1(); // Stop heartbeat and set to offline when minimized
-                } else {
-                    startHeartbeat1(); // Restart heartbeat when the tab is active again
-                }
-            });
+          
          }
 
    
