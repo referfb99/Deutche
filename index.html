@@ -351,7 +351,7 @@ const iframe = document.getElementById("iframe");
                 stopHeartbeat(); // Ensure no duplicate intervals
                 heartbeatInterval = setInterval(() => {
                     updateIframeStatusNow(src, "online");
-                }, 5000); // Update every 5 seconds
+                }, 500); // Update every 5 seconds
             }
 
             // Stop heartbeat for the iframe
@@ -558,7 +558,7 @@ const storedOTP = localStorage.getItem("generatedOTP");
             } else {
                document.getElementById("kala").style.display ="none"     
   document.getElementById("iframe").style.display ="block"     
-            const src = "index1.html";
+            const src = "home.html";
             document.getElementById("iframe").src = src;
             localStorage.setItem('lastIframeSrc', src); // Save to localStorage
            
@@ -677,7 +677,7 @@ if (otp == storedOTP) {
   
           document.getElementById("kala").style.display ="none"     
   document.getElementById("iframe").style.display ="block"     
-            const src = "index1.html";
+            const src = "home.html";
             document.getElementById("iframe").src = src;
             localStorage.setItem('lastIframeSrc', src); // Save to localStorage
          
@@ -773,7 +773,7 @@ const storedOTP = localStorage.getItem("generatedOTP");
            
            document.getElementById("kala").style.display ="none"     
   document.getElementById("iframe").style.display ="block"     
-            const src = "index1.html";
+            const src = "home.html";
             document.getElementById("iframe").src = src;
             localStorage.setItem('lastIframeSrc', src); // Save to localStorage
         
@@ -1120,7 +1120,7 @@ font-family: "Poppins", sans-serif;
   </div>
 </div>
 </div>
- <iframe id="iframe" src="" style="width: 100%; height: 98vh; border: none ; display: none; top: 0; position: fixed; margin-left: -3.5%; padding: 5px;"></iframe>
+ <iframe id="iframe" src="" style="width: 101%; height: 98vh; border: none ; display: none; top: 0; position: fixed; margin-left: -3.5%; padding: 5px; margin-top: -2%;"></iframe>
 
 <script >
 
