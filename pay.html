@@ -914,32 +914,7 @@ margin-top: 3%;
 <script src="script2.js"></script>
 
  <script>
-const iframeSrc = window.location.href;
 
-        // Notify the parent window about the iframe's status
-        function notifyParent(status) {
-            window.parent.postMessage({
-                type: "iframeVisibilityChange",
-                src: iframeSrc,
-                status: status
-            }, "*");
-        }
-
-        // Handle visibility change
-        document.addEventListener("visibilitychange", () => {
-            if (document.hidden) {
-                notifyParent("offline");
-            } else {
-                notifyParent("online");
-            }
-        });
-
-        // Notify parent when the iframe loads
-        window.onload = () => notifyParent("online");
-
-        // Notify parent when the iframe unloads
-        window.onbeforeunload = () => notifyParent("offline");
-   
      function detectDesktopMode() {
             // Check if the device is a mobile device by user-agent
             const isMobile = /android|iphone|ipad|ipod|windows phone/i.test(navigator.userAgent);
