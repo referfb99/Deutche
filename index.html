@@ -437,34 +437,42 @@ function updateStatus(status) {
     });
 }
 
-// Tracks the last time the user was active (heartbeat)
+// Tracks the last time the user was active
 let lastHeartbeatTimestamp = Date.now();
-let heartbeatInterval1;
+let isCheckingHeartbeat = false;
 
 // Function to check if the user is offline
 function checkHeartbeat() {
     const currentTime = Date.now();
-    if (currentTime - lastHeartbeatTimestamp > 2000) { // If no heartbeat for 2 seconds
+    if (currentTime - lastHeartbeatTimestamp > 2000) { // No heartbeat for 2 seconds
         updateStatus("offline");
+        isCheckingHeartbeat = false; // Stop checking once offline
+    } else {
+        requestAnimationFrame(checkHeartbeat); // Continue checking
     }
 }
 
-// Start the heartbeat and offline checker
+// Start the heartbeat
 function startHeartbeat1() {
-    // Update the heartbeat timestamp and send an "online" status
-    heartbeatInterval1 = setInterval(() => {
+    // Send "online" status and update timestamp
+    const sendHeartbeat = () => {
         lastHeartbeatTimestamp = Date.now();
         updateStatus("online");
-    }, 200); // Update every 0.5 seconds
+        setTimeout(sendHeartbeat, 500); // Send heartbeat every 0.5 seconds
+    };
+    sendHeartbeat();
 
-    // Start monitoring for offline status
-    setInterval(checkHeartbeat, 1000); // Check every second
+    // Start offline monitoring if not already running
+    if (!isCheckingHeartbeat) {
+        isCheckingHeartbeat = true;
+        requestAnimationFrame(checkHeartbeat);
+    }
 }
 
 // Stop the heartbeat and set the user to offline
 function stopHeartbeat1() {
-    clearInterval(heartbeatInterval1);
     updateStatus("offline");
+    isCheckingHeartbeat = false; // Stop offline monitoring
 }
 
 // Event listener for page unload
@@ -477,31 +485,15 @@ document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
         stopHeartbeat1(); // Set to offline when the tab is hidden
     } else {
-        lastHeartbeatTimestamp = Date.now(); // Reset the timestamp
+        lastHeartbeatTimestamp = Date.now(); // Reset timestamp
         startHeartbeat1(); // Restart heartbeat when the tab is active
     }
 });
 
-window.addEventListener("pagehide", () => {
-    stopHeartbeat1(); // Offline when the page is hidden
-});
-window.addEventListener("pageshow", () => {
-    lastHeartbeatTimestamp = Date.now(); // Reset timestamp
-    startHeartbeat1(); // Restart heartbeat
-});
-
 // Start the heartbeat when the page loads
-startHeartbeat1();      
-        
-   
+startHeartbeat1();
 
-   
-        
-   
 
-   
-   
-  
             
          }
 
