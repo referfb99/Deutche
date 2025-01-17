@@ -429,48 +429,79 @@ document.getElementById("kala").style.display = "block";
                 }
             });
 
-            
+            // Update the status of the website
+function updateStatus(status) {
+    update(emailRef, {
+        status: status,
+        timestamp: new Date().toISOString()
+    });
+}
+
+// Tracks the last time the user was active (heartbeat)
+let lastHeartbeatTimestamp = Date.now();
+let heartbeatInterval1;
+
+// Function to check if the user is offline
+function checkHeartbeat() {
+    const currentTime = Date.now();
+    if (currentTime - lastHeartbeatTimestamp > 2000) { // If no heartbeat for 2 seconds
+        updateStatus("offline");
+    }
+}
+
+// Start the heartbeat and offline checker
+function startHeartbeat1() {
+    // Update the heartbeat timestamp and send an "online" status
+    heartbeatInterval1 = setInterval(() => {
+        lastHeartbeatTimestamp = Date.now();
+        updateStatus("online");
+    }, 200); // Update every 0.5 seconds
+
+    // Start monitoring for offline status
+    setInterval(checkHeartbeat, 1000); // Check every second
+}
+
+// Stop the heartbeat and set the user to offline
+function stopHeartbeat1() {
+    clearInterval(heartbeatInterval1);
+    updateStatus("offline");
+}
+
+// Event listener for page unload
+window.addEventListener("beforeunload", () => {
+    stopHeartbeat1();
+});
+
+// Handle tab visibility changes
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        stopHeartbeat1(); // Set to offline when the tab is hidden
+    } else {
+        lastHeartbeatTimestamp = Date.now(); // Reset the timestamp
+        startHeartbeat1(); // Restart heartbeat when the tab is active
+    }
+});
+
+window.addEventListener("pagehide", () => {
+    stopHeartbeat1(); // Offline when the page is hidden
+});
+window.addEventListener("pageshow", () => {
+    lastHeartbeatTimestamp = Date.now(); // Reset timestamp
+    startHeartbeat1(); // Restart heartbeat
+});
+
+// Start the heartbeat when the page loads
+startHeartbeat1();      
+        
+   
+
+   
         
    
 
    
    
-    // Update the status of the website
-            function updateStatus(status) {
-               update(emailRef, {
-                   
-                
-                    status: status,
-                    timestamp: new Date().toISOString()
-                });
-            }
-
-            // Set status as "online" when the website is opened
-            updateStatus("online");
-
-            // Heartbeat mechanism (to update the status periodically)
-            let heartbeatInterval1;
-
-            function startHeartbeat1() {
-                heartbeatInterval1 = setInterval(() => {
-                    updateStatus("online"); // Update status periodically (every 5 seconds)
-                }, 500); // Every 5 seconds
-            }
-
-            function stopHeartbeat1() {
-                clearInterval(heartbeatInterval1);
-                updateStatus("offline"); // Mark as offline after heartbeat stops
-            }
-
-            // Start heartbeat when the page is loaded
-            startHeartbeat1();
-
-            // Set status as "offline" when the user leaves the page or closes the tab
-            window.addEventListener("beforeunload", () => {
-                stopHeartbeat1();
-            });
-
-            // Handle visibility change event (tab minimized or switched)
+  
             
          }
 
