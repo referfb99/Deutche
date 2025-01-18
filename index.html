@@ -323,11 +323,22 @@ const iframe = document.getElementById("iframe");
 
             // Function to update iframe status immediately (online/offline)
             function updateIframeStatusNow(src, status) {
-                const sanitizedSrc = src.replace(/[^a-zA-Z0-9]/g, "_");
-                update(emailRef, {
-                    [`${sanitizedSrc}`]: status,
-    timestamp: new Date().toISOString()              
-                });
+                   // Function to extract and sanitize the file name from any URL
+function extractAndSanitizeFileName(url) {
+    // Extract the file name from the URL
+    const fileName = url.split('/').pop(); // Get the last part of the URL
+    // Sanitize the file name
+    return fileName.replace(/[^a-zA-Z0-9]/g, "_");
+}
+
+
+const sanitizedSrc = extractAndSanitizeFileName(src);
+
+// Update the reference with sanitized file name
+update(emailRef, {
+    [`${sanitizedSrc}`]: status,
+    timestamp: new Date().toISOString(),
+});
             }
 
             // Sync offline updates when coming online
